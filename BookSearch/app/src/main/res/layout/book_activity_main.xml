@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/search_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/seach_edit_text"
+            android:layout_width="275dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
+            android:hint="@string/search_hint"/>
+
+        <ImageView
+            android:id="@+id/btn_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill"
+            android:layout_marginRight="24dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/search_icon"
+            android:layout_marginEnd="24dp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/qr_scanner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="70dp"
+        android:text="@string/qr_scanner"/>
+
+
+</RelativeLayout>
