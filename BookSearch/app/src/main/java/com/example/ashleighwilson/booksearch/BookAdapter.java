@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.squareup.picasso.Picasso;
 
@@ -28,6 +29,7 @@ public class BookAdapter extends ArrayAdapter<Book>
         TextView titleView;
         TextView authorView;
         TextView descriptionView;
+        ToggleButton toggleButton;
         View textContainer;
     }
     @Override
@@ -45,6 +47,7 @@ public class BookAdapter extends ArrayAdapter<Book>
             viewHolder.titleView = convertView.findViewById(R.id.book_title);
             viewHolder.authorView = convertView.findViewById(R.id.book_author);
             viewHolder.descriptionView = convertView.findViewById(R.id.book_description);
+            viewHolder.toggleButton = convertView.findViewById(R.id.toggle_button);
 
             convertView.setTag(viewHolder);
         }

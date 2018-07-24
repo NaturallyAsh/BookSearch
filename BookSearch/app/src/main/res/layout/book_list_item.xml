@@ -1,24 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/list_bucket">
 
-<RelativeLayout
-    android:id="@+id/list_bucket"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/book_image"
+        android:layout_width="80dp"
+        android:layout_height="150dp"
+        android:paddingEnd="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingStart="8dp" />
+
 
     <LinearLayout
-        android:id="@+id/book_container"
         android:layout_width="300dp"
         android:layout_height="200dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:orientation="vertical"
         android:paddingEnd="18dp"
         android:paddingLeft="18dp"
         android:paddingRight="18dp"
         android:paddingStart="18dp">
+
+        <ToggleButton
+            android:id="@+id/toggle_button"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/toggle_button"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_gravity="end"
+            android:text=""
+            android:textOff=""
+            android:textOn=""
+            android:layout_marginEnd="8dp"
+            />
 
         <TextView
             android:id="@+id/book_title"
@@ -38,26 +55,17 @@
             android:id="@+id/book_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp" />
+            android:layout_marginTop="6dp"/>
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/book_image"
-        android:layout_width="80dp"
-        android:layout_height="150dp"
-        android:paddingEnd="8dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingStart="8dp" />
+</LinearLayout>
 
-</RelativeLayout>
-
-    <LinearLayout
+   <!-- <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_centerInParent="true"
-        android:layout_below="@id/list_bucket">
+        android:layout_below="@id/book_container">
 
         <Button
             android:id="@+id/bookshelf_btn"
@@ -72,4 +80,4 @@
 
     </LinearLayout>
 
-</RelativeLayout>
+</RelativeLayout> -->
