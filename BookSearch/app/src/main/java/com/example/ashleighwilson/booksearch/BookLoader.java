@@ -9,6 +9,11 @@ class BookLoader extends AsyncTaskLoader<List<Book>>
 {
     private String mUrl;
 
+    public BookLoader(Context context)
+    {
+        super(context);
+    }
+
     public BookLoader(Context context, String url)
     {
         super(context);

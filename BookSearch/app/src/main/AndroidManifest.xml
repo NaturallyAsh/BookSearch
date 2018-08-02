@@ -29,21 +29,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
-
         <activity
-            android:name=".SpinnerAdapter"
-            android:label="Spinner"
+            android:name=".FavoritesActivity"
+            android:label="Favorites"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
-
         </activity>
-        <provider
-            android:authorities="com.example.ashleighwilson.booksearch"
-            android:name=".data.BookProvider"
-            android:exported="false"/>
+
     </application>
 
 </manifest>

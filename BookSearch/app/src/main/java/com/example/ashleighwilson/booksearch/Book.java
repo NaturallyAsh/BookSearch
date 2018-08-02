@@ -7,6 +7,24 @@ public class Book
     private String mDescription;
     private String mInfoLink;
     private String mBookCover;
+    private int mID;
+
+    public Book (int id, String title, String authors, String description, String bookCover)
+    {
+        mID = id;
+        mTitle = title;
+        mAuthors = authors;
+        mDescription = description;
+        mBookCover = bookCover;
+    }
+
+    public Book (String title, String authors, String description, String bookCover)
+    {
+        mTitle = title;
+        mAuthors = authors;
+        mDescription = description;
+        mBookCover = bookCover;
+    }
 
     public Book(String bookCover, String title, String authors, String description, String
                 infoLink)
@@ -18,9 +36,18 @@ public class Book
         mInfoLink = infoLink;
     }
 
+    public Book()
+    {
+    }
+
     public String getmTitle()
     {
         return mTitle;
+    }
+
+    public void setmTitle(String title)
+    {
+        this.mTitle = title;
     }
 
     public String getmAuthors()
@@ -28,9 +55,19 @@ public class Book
         return mAuthors;
     }
 
+    public void setmAuthors(String authors)
+    {
+        this.mAuthors = authors;
+    }
+
     public String getmDescription()
     {
         return mDescription;
+    }
+
+    public void setmDescription (String description)
+    {
+        this.mDescription = description;
     }
 
     public String getmBookCover()
@@ -38,8 +75,23 @@ public class Book
         return mBookCover;
     }
 
+    public void setmBookCover(String bookCover)
+    {
+        this.mBookCover = bookCover;
+    }
+
     public String getmInfoLink()
     {
         return mInfoLink;
+    }
+
+    public int getID()
+    {
+        return mID;
+    }
+
+    public void setID(int ID)
+    {
+        this.mID = ID;
     }
 }

@@ -1,5 +1,7 @@
 package com.example.ashleighwilson.booksearch;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -96,6 +98,29 @@ public class SearchUtils
         return jsonResponse;
     }
 
+    //Extract Bitmap from given URL string
+    /*private static Bitmap getThumbnail(String imageURL)
+    {
+        URL url = createURL(imageURL);
+        Bitmap thumbnail = null;
+        try {
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(15000);
+            connection.setRequestMethod("GET");
+            connection.connect();
+            if (connection.getResponseCode() == 200)
+            {
+                InputStream stream = connection.getInputStream();
+                thumbnail = BitmapFactory.decodeStream(stream);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return thumbnail;
+    } */
+
     private static String readFromStream(InputStream inputStream) throws IOException
     {
         StringBuilder output = new StringBuilder();
@@ -158,9 +183,15 @@ public class SearchUtils
                     authors = "No authors listed";
                 }
                 JSONObject imagelinks = volumeInfo.getJSONObject("imageLinks");
-                String smallThumbnail = imagelinks.optString("smallThumbnail");
+                String thumbnail = imagelinks.optString("smallThumbnail");
+                //String imageUrl = "";
+                //Bitmap thumbnail = null;
+                //if (imagelinks != null)
+                  //  imageUrl = imagelinks.optString("smallThumbnail");
+                //if (!imageUrl.isEmpty())
+                  //  thumbnail = getThumbnail(imageUrl);
 
-                books.add(new Book(smallThumbnail, bookTitle, authors, bookDescription, infoLink));
+                books.add(new Book(thumbnail, bookTitle, authors, bookDescription, infoLink));
             }
         } catch (JSONException e) {
             Log.e("SearchUtils", "Problem parsing the book JSON results", e);
