@@ -99,7 +99,7 @@ public class SearchUtils
     }
 
     //Extract Bitmap from given URL string
-    /*private static Bitmap getThumbnail(String imageURL)
+    private static Bitmap getThumbnail(String imageURL)
     {
         URL url = createURL(imageURL);
         Bitmap thumbnail = null;
@@ -119,7 +119,7 @@ public class SearchUtils
         }
 
         return thumbnail;
-    } */
+    }
 
     private static String readFromStream(InputStream inputStream) throws IOException
     {
@@ -183,13 +183,13 @@ public class SearchUtils
                     authors = "No authors listed";
                 }
                 JSONObject imagelinks = volumeInfo.getJSONObject("imageLinks");
-                String thumbnail = imagelinks.optString("smallThumbnail");
-                //String imageUrl = "";
-                //Bitmap thumbnail = null;
-                //if (imagelinks != null)
-                  //  imageUrl = imagelinks.optString("smallThumbnail");
-                //if (!imageUrl.isEmpty())
-                  //  thumbnail = getThumbnail(imageUrl);
+                String mthumbnail = imagelinks.optString("smallThumbnail");
+                String imageUrl = "";
+                Bitmap thumbnail = null;
+                if (imagelinks != null)
+                    imageUrl = imagelinks.optString("smallThumbnail");
+                if (!imageUrl.isEmpty())
+                    thumbnail = getThumbnail(imageUrl);
 
                 books.add(new Book(thumbnail, bookTitle, authors, bookDescription, infoLink));
             }

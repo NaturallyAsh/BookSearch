@@ -10,11 +10,11 @@ import android.net.Uri;
 import android.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -29,10 +29,10 @@ public class BookActivity extends AppCompatActivity implements
 
     private TextView mEmptyStateView;
     private BookAdapter mAdapter;
-    private ListView bookListView;
     private String QUERY_KEY;
     private String searchURL;
     private String baseApiUrl;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -53,14 +53,14 @@ public class BookActivity extends AppCompatActivity implements
         searchURL = String.format(baseApiUrl + QUERY_KEY);
         Log.i(TAG, "Search URL = " + searchURL);
 
-        bookListView = findViewById(R.id.list_view);
-
+        recyclerView = findViewById(R.id.rvView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
 
         mAdapter = new BookAdapter(BookActivity.this, new ArrayList<Book>());
-        bookListView.setAdapter(mAdapter);
+        recyclerView.setAdapter(mAdapter);
 
         mEmptyStateView = findViewById(R.id.empty_state);
-        bookListView.setEmptyView(mEmptyStateView);
 
         ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
@@ -77,15 +77,17 @@ public class BookActivity extends AppCompatActivity implements
             mEmptyStateView.setText(R.string.no_connection);
         }
 
-        bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener()
+        {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position,
-                                long l)
+            public void onItemClicked(RecyclerView recyclerView, int position, View v)
             {
-                Book currentBook = mAdapter.getItem(position);
-                Uri bookUri = Uri.parse(String.valueOf(currentBook.getmInfoLink()));
-                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, bookUri);
-                startActivity(websiteIntent);
+                Book currentBook = mAdapter.getBook(position);
+                String bookLink = currentBook.getmInfoLink();
+                Uri bookUri = Uri.parse(bookLink);
+                Intent intent = new Intent(Intent.ACTION_VIEW, bookUri);
+                startActivity(intent);
+
             }
         });
 
@@ -101,19 +103,26 @@ public class BookActivity extends AppCompatActivity implements
     public void onLoadFinished(Loader<List<Book>> loader, List<Book> books)
     {
         View loadingIndicator = findViewById(R.id.loading_progress);
-        loadingIndicator.setVisibility(View.GONE);
-        mEmptyStateView.setText(R.string.no_books);
-        mAdapter.clear();
 
         if (books != null && !books.isEmpty())
         {
-            mAdapter.addAll(books);
+            mEmptyStateView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            mAdapter.setData(books);
         }
+        else
+        {
+            recyclerView.setVisibility(View.GONE);
+            mEmptyStateView.setVisibility(View.VISIBLE);
+            mEmptyStateView.setText(R.string.no_books);
+        }
+
+        loadingIndicator.setVisibility(View.GONE);
     }
 
     @Override
     public void onLoaderReset(Loader<List<Book>> loader)
     {
-        mAdapter.clear();
+        mAdapter.setData(null);
     }
 }

@@ -1,24 +1,29 @@
 package com.example.ashleighwilson.booksearch;
 
+import android.graphics.Bitmap;
+
 public class Book
 {
     private String mTitle;
     private String mAuthors;
     private String mDescription;
     private String mInfoLink;
-    private String mBookCover;
+    private Bitmap mBookCover;
+    //private String mBookCover;
+    private byte[] mImageByteArray;
     private int mID;
 
-    public Book (int id, String title, String authors, String description, String bookCover)
+    public Book (int id, Bitmap bookCover, String title, String authors, String description, String infoLink)
     {
         mID = id;
         mTitle = title;
         mAuthors = authors;
         mDescription = description;
         mBookCover = bookCover;
+        mInfoLink = infoLink;
     }
 
-    public Book (String title, String authors, String description, String bookCover)
+    public Book (Bitmap bookCover, String title, String authors, String description)
     {
         mTitle = title;
         mAuthors = authors;
@@ -26,7 +31,7 @@ public class Book
         mBookCover = bookCover;
     }
 
-    public Book(String bookCover, String title, String authors, String description, String
+    public Book(Bitmap bookCover, String title, String authors, String description, String
                 infoLink)
     {
         mTitle = title;
@@ -36,8 +41,13 @@ public class Book
         mInfoLink = infoLink;
     }
 
-    public Book()
+    public Book(Bitmap bookCover)
     {
+        mBookCover = bookCover;
+    }
+
+    public Book() {
+
     }
 
     public String getmTitle()
@@ -70,12 +80,12 @@ public class Book
         this.mDescription = description;
     }
 
-    public String getmBookCover()
+    public Bitmap getmBookCover()
     {
         return mBookCover;
     }
 
-    public void setmBookCover(String bookCover)
+    public void setmBookCover(Bitmap bookCover)
     {
         this.mBookCover = bookCover;
     }
@@ -93,5 +103,13 @@ public class Book
     public void setID(int ID)
     {
         this.mID = ID;
+    }
+
+    public byte[] getmImageByteArray() {
+        return mImageByteArray;
+    }
+
+    public void setmImageByteArray(byte[] mImageByteArray) {
+        this.mImageByteArray = mImageByteArray;
     }
 }

@@ -9,7 +9,7 @@
     style="@style/AppTheme.Card.Margins">
 
 <LinearLayout
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/list_bucket">
 
@@ -46,8 +46,7 @@
             android:text=""
             android:textOff=""
             android:textOn=""
-            android:layout_marginEnd="8dp"
-            />
+            android:layout_marginEnd="8dp"/>
 
         <TextView
             android:id="@+id/book_title"
@@ -68,6 +67,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"/>
+
+        <TextView
+            android:id="@+id/info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"/>
 
     </LinearLayout>
 

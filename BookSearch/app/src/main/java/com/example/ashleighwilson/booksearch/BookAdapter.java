@@ -1,8 +1,9 @@
 package com.example.ashleighwilson.booksearch;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -13,10 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.example.ashleighwilson.booksearch.data.BookDatabase;
 import com.example.ashleighwilson.booksearch.data.BookDbHelper;
-import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +28,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     BookDbHelper database;
     boolean starred = false;
     Book book;
+    private Bitmap bp;
 
     public BookAdapter(Context context, ArrayList<Book> booksInfo) {
         this.booksInfo = booksInfo;
@@ -49,13 +50,15 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     @Override
     public void onBindViewHolder(final BookViewHolder holder, final int position) {
 
-        Book currentBook = booksInfo.get(position);
+        final Book currentBook = booksInfo.get(position);
 
         holder.titleView.setText(currentBook.getmTitle());
         holder.authorView.setText(currentBook.getmAuthors());
         holder.descriptionView.setText(currentBook.getmDescription());
-        String bookCoverUrl = currentBook.getmBookCover();
-        Picasso.get().load(Uri.parse(bookCoverUrl)).error(R.drawable.no_book_cover).into(holder.bookCover);
+        holder.infoLink.setText(currentBook.getmInfoLink());
+        bp = currentBook.getmBookCover();
+        holder.bookCover.setImageBitmap(bp);
+
 
         holder.toggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,8 +70,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
                     holder.toggleButton.setBackground(favFilled);
                     holder.toggleButton.setTag("filled");
 
-                    //database.addBook(currentBook);
-                    database.addLongBook(booksInfo.get(position));
+                    database.addByteBook(booksInfo.get(position));
                 } else {
                     Drawable favEmpty = ResourcesCompat.getDrawable(v.getResources(),
                             R.drawable.ic_action_favorite_border, null);
@@ -89,6 +91,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         TextView titleView;
         TextView authorView;
         TextView descriptionView;
+        TextView infoLink;
         ToggleButton toggleButton;
         boolean starred = false;
 
@@ -100,6 +103,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
             this.titleView = itemView.findViewById(R.id.book_title);
             this.authorView = itemView.findViewById(R.id.book_author);
             this.descriptionView = itemView.findViewById(R.id.book_description);
+            this.infoLink = itemView.findViewById(R.id.info);
             this.toggleButton = itemView.findViewById(R.id.toggle_button);
             toggleButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -143,6 +147,13 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
 
     public Book getBook(int position) {
         return booksInfo.get(position);
+    }
+
+    private byte[] convertToBitmap(Bitmap bitmap)
+    {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
+        return bos.toByteArray();
     }
 }
 
