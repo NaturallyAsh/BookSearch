@@ -98,17 +98,6 @@ public class BookDbHelper extends SQLiteOpenHelper
         onCreate(db);
     }
 
-    /*public Cursor fetchAllBooks()
-    {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Cursor cursor = db.query(BookDbHelper.BookEntry.TABLE_NAME, allColumns, null, null,
-                null, null, null);
-
-        cursor.close();
-
-        return cursor;
-    } */
-
     public void addBook(Book book)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -162,11 +151,11 @@ public class BookDbHelper extends SQLiteOpenHelper
         {
             do {
                 Book book = new Book(
-                        ImageUtils.getImage(cursor.getBlob(0)),
-                        cursor.getString(1),
+                        ImageUtils.getImage(cursor.getBlob(1)),
                         cursor.getString(2),
                         cursor.getString(3),
-                        cursor.getString(4));
+                        cursor.getString(4),
+                        cursor.getString(5));
                 bookList.add(book);
             }while (cursor.moveToNext());
         }
