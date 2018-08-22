@@ -32,7 +32,7 @@ public class BookDbHelper extends SQLiteOpenHelper
 
 
     private static final String DATABASE_NAME = "book.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4;
     public static final String CONTENT_AUTHORITY = "com.example.ashleighwilson.booksearch";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_BOOKS = "booksearch";

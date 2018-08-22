@@ -115,7 +115,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
                         toggleButton.setBackground(favFilled);
                         toggleButton.setTag("filled");
 
-                        database.addBook(booksInfo.get(getAdapterPosition()));
+                        //database.addBook(booksInfo.get(getAdapterPosition()));
                     } else {
                         Drawable favEmpty = ResourcesCompat.getDrawable(v.getResources(),
                                 R.drawable.ic_action_favorite_border, null);
