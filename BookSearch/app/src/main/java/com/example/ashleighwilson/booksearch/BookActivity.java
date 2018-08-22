@@ -17,6 +17,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.ashleighwilson.booksearch.data.ItemClickSupport;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -79,24 +79,3 @@
 </LinearLayout>
 
 </android.support.v7.widget.CardView>
-
-   <!-- <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_centerInParent="true"
-        android:layout_below="@id/book_container">
-
-        <Button
-            android:id="@+id/bookshelf_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:clickable="false"
-            android:text="@string/bookshelf_btn_string"/>
-
-        <include
-            layout="@layout/activity_spinner">
-        </include>
-
-    </LinearLayout>
-
-</RelativeLayout> -->

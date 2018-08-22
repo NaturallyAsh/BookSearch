@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 import com.example.ashleighwilson.booksearch.Book;
-import com.example.ashleighwilson.booksearch.utils.ImageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
