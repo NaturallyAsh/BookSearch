@@ -1,12 +1,17 @@
 package com.example.ashleighwilson.booksearch;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.ashleighwilson.booksearch.data.BookDbHelper;
+import com.example.ashleighwilson.booksearch.data.ImageUtils;
 
 import java.util.ArrayList;
 
@@ -17,6 +22,7 @@ public class FavoritesActivity extends AppCompatActivity {
     private FavAdapter favAdapter;
     public ArrayList<Book> allBooks = new ArrayList<>();
     public BookDbHelper dbHelper;
+    public TextView emptyView;
 
 
     @Override
@@ -29,27 +35,28 @@ public class FavoritesActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         dbHelper = new BookDbHelper(getApplicationContext());
-        allBooks = dbHelper.getAllBooks();
+        //allBooks = dbHelper.getAllBooks();
+
+        emptyView = findViewById(R.id.empty_view);
 
         favListView = findViewById(R.id.fav_list);
-        favListView.setLayoutManager(new LinearLayoutManager(this));
         favListView.setHasFixedSize(true);
 
-        //showBooksFromDB();
         favAdapter = new FavAdapter(this, allBooks);
 
-        favListView.setAdapter(favAdapter);
+        favListView.setLayoutManager(new LinearLayoutManager(this));
+
+
+        //favListView.setAdapter(favAdapter);
+        showBooksFromDB();
 
     }
-}
 
-    /*public void showBooksFromDB()
+    public void showBooksFromDB()
     {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        allBooks.clear();
 
-        String selectQuery = "SELECT * FROM " + BookDbHelper.BookEntry.TABLE_NAME;
-
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = dbHelper.getBooks();
 
         if (cursor.moveToFirst())
         {
@@ -65,7 +72,27 @@ public class FavoritesActivity extends AppCompatActivity {
         }
         cursor.close();
 
-        favAdapter = new FavAdapter(this, allBooks);
-        favListView.setAdapter(favAdapter);
-    } */
+        if (!(allBooks.size()<1))
+        {
+            favListView.setVisibility(View.VISIBLE);
+            favListView.setAdapter(favAdapter);
+            favAdapter.notifyDataSetChanged();
+        }
+        else
+        {
+            favListView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+            favListView.setAdapter(favAdapter);
+            favAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        showBooksFromDB();
+    }
+
+}
 
