@@ -1,7 +1,7 @@
 package com.example.ashleighwilson.booksearch.data;
 
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import com.example.ashleighwilson.booksearch.R;

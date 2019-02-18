@@ -15,26 +15,23 @@
         android:id="@+id/search_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="40dp">
 
         <EditText
             android:id="@+id/seach_edit_text"
             android:layout_width="275dp"
             android:layout_height="60dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="20dp"
             android:hint="@string/search_hint"/>
 
         <ImageView
             android:id="@+id/btn_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill"
-            android:layout_marginRight="24dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:src="@drawable/search_icon"
-            android:layout_marginEnd="24dp" />
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="30dp"
+            app:srcCompat="@drawable/search_icon" />
     </LinearLayout>
 
     <Button

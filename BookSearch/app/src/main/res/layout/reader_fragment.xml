@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/reader_bottombar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:background="#424242"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/reader_chapsIV"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="6dp"
+            android:src="@drawable/ic_list_white_24dp"/>
+
+        <ImageView
+            android:id="@+id/reader_themeIV"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="6dp"
+            android:src="@drawable/ic_compare_white_24dp"/>
+
+
+    </LinearLayout>
+
+    <in.nashapp.epublibdroid.EpubReaderView
+        android:id="@+id/epub_reader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/reader_bottombar">
+
+    </in.nashapp.epublibdroid.EpubReaderView>
+
+</RelativeLayout>

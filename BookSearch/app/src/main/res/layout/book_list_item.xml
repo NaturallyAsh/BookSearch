@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardView"
@@ -14,7 +14,7 @@
     android:id="@+id/list_bucket">
 
     <!--descendantFocusability blocks descendants from receiving focus
-      this helped my xml to become clickable-->
+      this helped my anim to become clickable-->
 
     <ImageView
         android:id="@+id/book_image"
@@ -78,4 +78,4 @@
 
 </LinearLayout>
 
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

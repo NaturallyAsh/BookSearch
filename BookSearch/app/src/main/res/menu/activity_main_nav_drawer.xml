@@ -8,6 +8,10 @@
            android:id="@+id/favorites"
            android:icon="@drawable/ic_action_favorite"
            android:title="@string/favorites_menu"/>
+        <item
+            android:id="@+id/menu_reader"
+            android:icon="@drawable/ic_library_books_white_24dp"
+            android:title="@string/ereader_string"/>
     </group>
 
     <item android:title="@string/nav_communicate">

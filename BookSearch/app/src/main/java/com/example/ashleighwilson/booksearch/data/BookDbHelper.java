@@ -133,10 +133,8 @@ public class BookDbHelper extends SQLiteOpenHelper
     {
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.query(BookEntry.TABLE_NAME, allColumns, null, null,
+        return db.query(BookEntry.TABLE_NAME, allColumns, null, null,
                 null, null, null);
-
-        return cursor;
     }
 
     public ArrayList<Book> getAllBooks()
