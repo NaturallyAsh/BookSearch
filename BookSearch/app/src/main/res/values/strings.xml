@@ -22,4 +22,5 @@
     <string name="nav_communicate">Communicate</string>
     <string name="no_favorites">No books added to Favorites</string>
     <string name="ereader_string">eReader</string>
+    <string name="no_e_books_string">No e-Books</string>
 </resources>

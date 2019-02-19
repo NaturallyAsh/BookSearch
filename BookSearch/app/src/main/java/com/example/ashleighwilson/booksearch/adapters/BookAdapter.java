@@ -1,4 +1,4 @@
-package com.example.ashleighwilson.booksearch;
+package com.example.ashleighwilson.booksearch.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.example.ashleighwilson.booksearch.R;
 import com.example.ashleighwilson.booksearch.data.BookDbHelper;
+import com.example.ashleighwilson.booksearch.models.Book;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;

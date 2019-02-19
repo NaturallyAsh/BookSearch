@@ -7,7 +7,18 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/reader_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:padding="10dp"/>
+
+    <TextView
+        android:id="@+id/empty_reader_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/no_e_books_string"
+        android:gravity="center"
+        android:textSize="30sp"
+        android:visibility="gone"/>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/reader_add_button"

@@ -1,6 +1,10 @@
 package com.example.ashleighwilson.booksearch;
 
 import android.os.Bundle;
+
+import com.example.ashleighwilson.booksearch.models.Reader;
+
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,12 +57,12 @@ public class ReaderActivity extends AppCompatActivity {
         getFragmentManagerInstance().getFragments();
     }
 
-    public void switchToReader(String location) {
+    public void switchToReader(Reader reader) {
         FragmentTransaction transaction = getFragmentManagerInstance().beginTransaction();
         animateTransition(transaction, TRANSITION_HORIZONTAL);
         ReaderFragment readerFragment = new ReaderFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(ReaderListFragment.EPUB_LOCATION, location);
+        bundle.putParcelable(ReaderListFragment.EPUB_LOCATION, reader);
         readerFragment.setArguments(bundle);
         if (getFragmentManagerInstance().findFragmentByTag(FRAGMENT_EREADER_TAG) == null) {
             transaction.replace(R.id.reader_container, readerFragment, FRAGMENT_EREADER_TAG)
@@ -72,8 +76,23 @@ public class ReaderActivity extends AppCompatActivity {
         }
     }
 
-    public void onBackPressed() {
+    private Fragment checkFragmentInstance(int id, Object instanceClass)
+    {
+        Fragment result = null;
+        Fragment fragment = getFragmentManagerInstance().findFragmentById(id);
+        if (fragment != null && instanceClass.equals(fragment.getClass()))
+        {
+            result = fragment;
+        }
+        return result;
+    }
 
+    public void onBackPressed() {
+        Fragment f = checkFragmentInstance(R.id.reader_container, ReaderFragment.class);
+        if (f != null) {
+            ((ReaderFragment) f).goHome();
+        }
+        super.onBackPressed();
     }
 
     public void animateTransition(FragmentTransaction transaction, int direction)
@@ -94,5 +113,9 @@ public class ReaderActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         init();
+    }
+
+    public Toolbar getToolbar() {
+        return this.toolbar;
     }
 }

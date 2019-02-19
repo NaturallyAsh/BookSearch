@@ -1,20 +1,17 @@
 package com.example.ashleighwilson.booksearch.data;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import com.example.ashleighwilson.booksearch.Book;
+import com.example.ashleighwilson.booksearch.models.Book;
+import com.example.ashleighwilson.booksearch.models.Reader;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class BookDbHelper extends SQLiteOpenHelper
 {
@@ -22,45 +19,12 @@ public class BookDbHelper extends SQLiteOpenHelper
     private Context context;
     byte[] blob;
     private static BookDbHelper dbHelper = null;
-    String[] allColumns = new String[] {
-            BookDbHelper.BookEntry._ID,
-            BookDbHelper.BookEntry.COLUMN_BOOK_IMAGE,
-            BookDbHelper.BookEntry.COLUMN_BOOK_TITLE,
-            BookDbHelper.BookEntry.COLUMN_BOOK_AUTHOR,
-            BookDbHelper.BookEntry.COLUMN_BOOK_DESCRIPTION,
-            BookEntry.COLUMN_BOOK_INFOLINK};
-
 
     private static final String DATABASE_NAME = "book.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 8;
     public static final String CONTENT_AUTHORITY = "com.example.ashleighwilson.booksearch";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_BOOKS = "booksearch";
-
-    public static final class BookEntry implements BaseColumns
-    {
-
-        public final static String TABLE_NAME = "books";
-
-        //Type: INTEGER
-        public final static String _ID = BaseColumns._ID;
-
-        //Type: BLOB
-        public final static String COLUMN_BOOK_IMAGE = "image";
-
-        //Type: TEXT
-        public final static String COLUMN_BOOK_TITLE = "title";
-
-        //Type: TEXT
-        public final static String COLUMN_BOOK_AUTHOR = "author";
-
-        //Type: TEXT
-        public final static String COLUMN_BOOK_DESCRIPTION = "description";
-
-        //Type: TEXT
-        public final static String COLUMN_BOOK_INFOLINK = "info";
-    }
-
 
     public BookDbHelper(Context context)
     {
@@ -75,25 +39,72 @@ public class BookDbHelper extends SQLiteOpenHelper
         return dbHelper;
     }
 
+    String[] allColumns = new String[] {
+            BookDbHelper.BookEntry._ID,
+            BookDbHelper.BookEntry.COLUMN_BOOK_IMAGE,
+            BookDbHelper.BookEntry.COLUMN_BOOK_TITLE,
+            BookDbHelper.BookEntry.COLUMN_BOOK_AUTHOR,
+            BookDbHelper.BookEntry.COLUMN_BOOK_DESCRIPTION,
+            BookEntry.COLUMN_BOOK_INFOLINK};
+
+    String[] readerColumns = new String[] {
+          ReaderEntry._ID,
+          ReaderEntry.COLUMN_TITLE,
+          ReaderEntry.COLUMN_AUTHOR,
+          ReaderEntry.COLUMN_COVER,
+          ReaderEntry.COLUMN_PATH
+    };
+
+    public static final class BookEntry implements BaseColumns
+    {
+        public final static String TABLE_NAME = "books";
+        public final static String _ID = BaseColumns._ID;
+        public final static String COLUMN_BOOK_IMAGE = "image";
+        public final static String COLUMN_BOOK_TITLE = "title";
+        public final static String COLUMN_BOOK_AUTHOR = "author";
+        public final static String COLUMN_BOOK_DESCRIPTION = "description";
+        public final static String COLUMN_BOOK_INFOLINK = "info";
+    }
+
+    String SQL_CREATE_BOOKS_TABLE = "CREATE TABLE " + BookEntry.TABLE_NAME +
+            " ("
+            + BookEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + BookEntry.COLUMN_BOOK_IMAGE + " BLOB NOT NULL, "
+            + BookEntry.COLUMN_BOOK_TITLE + " TEXT, "
+            + BookEntry.COLUMN_BOOK_AUTHOR + " TEXT, "
+            + BookEntry.COLUMN_BOOK_DESCRIPTION + " TEXT, "
+            + BookEntry.COLUMN_BOOK_INFOLINK + " TEXT);";
+
+    public static final class ReaderEntry implements BaseColumns {
+        public static final String TABLE_NAME = "reader";
+        public static final String _ID = BaseColumns._ID;
+        public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_AUTHOR = "author";
+        public static final String COLUMN_PATH = "path";
+        public static final String COLUMN_COVER = "cover";
+
+    }
+
+    String SQL_CREATE_READER_TABLE = "CREATE TABLE " + ReaderEntry.TABLE_NAME +
+            " ("
+            + ReaderEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + ReaderEntry.COLUMN_TITLE + " TEXT, "
+            + ReaderEntry.COLUMN_AUTHOR + " TEXT, "
+            + ReaderEntry.COLUMN_COVER + " BLOB NOT NULL, "
+            + ReaderEntry.COLUMN_PATH + " TEXT);";
+
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        String SQL_CREATE_BOOKS_TABLE = "CREATE TABLE " + BookEntry.TABLE_NAME +
-                " ("
-                + BookEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + BookEntry.COLUMN_BOOK_IMAGE + " BLOB NOT NULL, "
-                + BookEntry.COLUMN_BOOK_TITLE + " TEXT, "
-                + BookEntry.COLUMN_BOOK_AUTHOR + " TEXT, "
-                + BookEntry.COLUMN_BOOK_DESCRIPTION + " TEXT, "
-                + BookEntry.COLUMN_BOOK_INFOLINK + " TEXT);";
-
         db.execSQL(SQL_CREATE_BOOKS_TABLE);
+        db.execSQL(SQL_CREATE_READER_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
         db.execSQL("DROP TABLE IF EXISTS " + BookEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + ReaderEntry.TABLE_NAME);
         onCreate(db);
     }
 
@@ -115,7 +126,7 @@ public class BookDbHelper extends SQLiteOpenHelper
 
     public void addByteBook(Book book)
     {
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(BookDbHelper.BookEntry.COLUMN_BOOK_IMAGE, ImageUtils.getImageBytes(book.getmBookCover()));
@@ -168,6 +179,73 @@ public class BookDbHelper extends SQLiteOpenHelper
                 BookDbHelper.BookEntry._ID + "=?",
                 null);
         db.close();
+    }
+
+    public long addReader(Reader reader) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        if (reader.getmId() != 0) {
+            values.put(ReaderEntry._ID, reader.getmId());
+        }
+        values.put(ReaderEntry.COLUMN_TITLE, reader.getmTitle());
+        values.put(ReaderEntry.COLUMN_AUTHOR, reader.getmAuthor());
+        values.put(ReaderEntry.COLUMN_COVER, ImageUtils.getImageBytes(reader.getmCoverImage()));
+        values.put(ReaderEntry.COLUMN_PATH, reader.getPathLocation());
+
+        long res = db.insert(ReaderEntry.TABLE_NAME, null, values);
+        db.close();
+
+        return res;
+    }
+
+    public Reader getReaderAt(int position) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(ReaderEntry.TABLE_NAME, readerColumns, null, null,
+                null, null, null);
+
+        if (cursor.moveToPosition(position)) {
+            Reader reader = new Reader();
+            reader.setmId(cursor.getInt(0));
+            reader.setmTitle(cursor.getString(1));
+            reader.setmAuthor(cursor.getString(2));
+            reader.setmCoverImage(ImageUtils.getImage(cursor.getBlob(3)));
+            reader.setPathLocation(cursor.getString(4));
+            cursor.close();
+            return reader;
+        }
+        return null;
+    }
+
+    public long removeReader(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        return db.delete(ReaderEntry.TABLE_NAME, ReaderEntry._ID + " =?",
+                new String[]{String.valueOf(id)});
+    }
+
+    public int getReaderCount() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] projection = {ReaderEntry._ID};
+
+        Cursor cursor = db.query(ReaderEntry.TABLE_NAME, projection, null, null,
+                null, null, null);
+
+        int count = cursor.getCount();
+        cursor.close();
+
+        return count;
+    }
+
+    public boolean hasPath(String path) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + ReaderEntry.TABLE_NAME + " WHERE " +
+                ReaderEntry.COLUMN_PATH + " =?";
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{path});
+
+        boolean exists = cursor.moveToFirst();
+        cursor.close();
+        return exists;
     }
 
 }

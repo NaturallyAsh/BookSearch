@@ -1,8 +1,10 @@
-package com.example.ashleighwilson.booksearch;
+package com.example.ashleighwilson.booksearch.data;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+
+import com.example.ashleighwilson.booksearch.models.Book;
 
 import org.json.JSONArray;
 import org.json.JSONException;

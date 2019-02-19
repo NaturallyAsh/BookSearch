@@ -9,8 +9,10 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.ashleighwilson.booksearch.adapters.FavAdapter;
 import com.example.ashleighwilson.booksearch.data.BookDbHelper;
 import com.example.ashleighwilson.booksearch.data.ImageUtils;
+import com.example.ashleighwilson.booksearch.models.Book;
 
 import java.util.ArrayList;
 

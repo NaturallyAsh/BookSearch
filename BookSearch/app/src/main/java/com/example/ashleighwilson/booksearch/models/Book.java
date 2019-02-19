@@ -1,4 +1,4 @@
-package com.example.ashleighwilson.booksearch;
+package com.example.ashleighwilson.booksearch.models;
 
 import android.graphics.Bitmap;
 
