@@ -20,10 +20,16 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include
-        layout="@layout/book_activity_main"
-        android:layout_height="wrap_content"
+    <FrameLayout
+        android:id="@+id/main_frag_container"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <Button
+        android:id="@+id/authenticate_button"
         android:layout_width="wrap_content"
-        android:layout_marginTop="55dp"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

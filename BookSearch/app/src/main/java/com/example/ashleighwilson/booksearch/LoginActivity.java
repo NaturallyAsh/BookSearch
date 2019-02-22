@@ -1,22 +1,21 @@
 package com.example.ashleighwilson.booksearch;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 
-import androidx.fragment.app.Fragment;
+import com.example.ashleighwilson.booksearch.service.GoodreadsClient;
+import com.example.ashleighwilson.booksearch.service.OAuthLoginActivity;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class LoginFragment extends Fragment {
+public class LoginActivity extends OAuthLoginActivity<GoodreadsClient> {
 
-    private static final String TAG = LoginFragment.class.getSimpleName();
+    private static final String TAG = LoginActivity.class.getSimpleName();
 
     public static final String CLIENT_KEY = BuildConfig.Goodreads_Api_Key;
     public static final String CLIENT_SECRET = BuildConfig.Goodreads_Secret;
@@ -30,25 +29,20 @@ public class LoginFragment extends Fragment {
     View progressContainer;
     @BindView(R.id.login_webView)
     WebView webView;
-    /*
-    OAuth workflow
-    /oauth/request_token
-    /oauth/authorize?oauth_token=foo&oauth_callback=http://my.callback.com
-    /oauth/access_token?oauth_token=foo
-     */
 
-    public LoginFragment() {
 
-    }
+
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.login_fragment, container, false);
-        ButterKnife.bind(this, rootView);
+    public void onCreate(Bundle savedInstanceState) {
+        //super.onCreateView(inflater, container, savedInstanceState);
+        //View rootView = inflater.inflate(R.layout.login_fragment, container, false);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.login_fragment);
+        ButterKnife.bind(this);
 
-        webView.getSettings().setJavaScriptEnabled(true);
+        /*webView.getSettings().setJavaScriptEnabled(true);
         webView.clearCache(true);
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -59,16 +53,24 @@ public class LoginFragment extends Fragment {
             public void onPageFinished(WebView view, String url) {
 
             }
-        });
+        });*/
         loginBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loginBT.setVisibility(View.GONE);
                 progressContainer.setVisibility(View.VISIBLE);
+                getClient().connect();
             }
         });
+    }
 
+    @Override
+    public void onLoginSuccess() {
+        Log.i(TAG, "success");
+    }
 
-        return rootView;
+    @Override
+    public void onLoginFailure(Exception e) {
+        Log.i(TAG, "failure");
     }
 }

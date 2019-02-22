@@ -1,37 +1,47 @@
 package com.example.ashleighwilson.booksearch;
 
+import android.app.Dialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+
+import com.auth0.android.authentication.AuthenticationException;
+import com.auth0.android.provider.AuthCallback;
+import com.auth0.android.provider.WebAuthProvider;
+import com.auth0.android.result.Credentials;
 import com.google.android.material.navigation.NavigationView;
+
+import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,
+public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener
 {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    public static String ISBN = "";
-    private EditText searchString;
-    private ImageView btnSearch;
-    private String QUERY_KEY;
-    private Button qrScan;
     public NavigationView mNavigationView;
+    private String QUERY_KEY;
+    private Button authenticat_BT;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -43,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //login();
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -50,77 +62,64 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        authenticat_BT = findViewById(R.id.authenticate_button);
+        authenticat_BT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
         mNavigationView = findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        searchString = findViewById(R.id.seach_edit_text);
-        btnSearch = findViewById(R.id.btn_search);
-        qrScan = findViewById(R.id.qr_scanner);
-        qrScan.setOnClickListener(this);
-        btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                QUERY_KEY = String.valueOf(searchString.getText());
-                if (QUERY_KEY.trim().length() == 0)
-                {
-                    Toast.makeText(getApplicationContext(), R.string.no_search_term,
-                            Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    Intent intent = new Intent(MainActivity.this, BookActivity.class);
-                    intent.putExtra("key", QUERY_KEY);
-                    Log.i(TAG, "QUERY_KEY = " + QUERY_KEY);
-                    startActivity(intent);
-                    searchString.setText("");
-                }
-            }
-        });
+        if (savedInstanceState == null) {
+            FragmentManager manager = getSupportFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+
+            UserFragment userFragment = new UserFragment();
+            transaction
+                    .add(R.id.main_frag_container, userFragment, TAG)
+                    .commit();
+        } else {
+            getSupportFragmentManager().findFragmentByTag(TAG);
+        }
+
+        Intent searchIntent = getIntent();
+        if (Intent.ACTION_SEARCH.equals(searchIntent.getAction())) {
+            QUERY_KEY = searchIntent.getStringExtra(SearchManager.QUERY);
+            Log.i(TAG, "QUERY_KEY = " + QUERY_KEY);
+            Intent intent = new Intent(MainActivity.this, BookActivity.class);
+            intent.putExtra("key", QUERY_KEY);
+            startActivity(intent);
+        }
+
     }
 
-    @Override
-    public void onClick(View v)
-    {
-        if (v.getId() == R.id.qr_scanner)
-        {
-            IntentIntegrator scanIntegrator = new IntentIntegrator(this);
-            scanIntegrator.initiateScan();
-        }
+    private void login() {
+        WebAuthProvider.init(getApplicationContext())
+                .withScheme("demo")
+                .withAudience(String.format("https://%s/userinfo", getString(R.string.com_auth0_domain)))
+                .start(MainActivity.this, new AuthCallback() {
+                    @Override
+                    public void onFailure(@NonNull Dialog dialog) {
+
+                    }
+
+                    @Override
+                    public void onFailure(AuthenticationException exception) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(@NonNull Credentials credentials) {
+
+                    }
+                });
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent intent)
-    {
-        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode,
-                resultCode, intent);
-        if (scanningResult != null)
-        {
-            String scanContent = scanningResult.getContents();
-            String scanFormat = scanningResult.getFormatName();
-
-            if (scanContent != null && scanFormat != null && scanFormat.equalsIgnoreCase("EAN_13"))
-            {
-                String bookSearchString = "isbn:" + scanContent;
-                QUERY_KEY = bookSearchString;
-
-                Intent intent1 = new Intent(MainActivity.this, BookActivity.class);
-                intent1.putExtra("key", QUERY_KEY);
-                startActivity(intent1);
-            }
-            else
-            {
-                Toast.makeText(getApplicationContext(), "Not a valid scan!",
-                        Toast.LENGTH_SHORT).show();
-            }
-        }
-        else
-        {
-            Toast.makeText(getApplicationContext(),"No book scan data" +
-                    "received", Toast.LENGTH_SHORT).show();
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -135,7 +134,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_nav, menu);
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false);
+
         return true;
     }
 
@@ -144,11 +150,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.anim.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.menu_qr:
+                IntentIntegrator scanIntegrator = new IntentIntegrator(this);
+                scanIntegrator.initiateScan();
         }
 
         return super.onOptionsItemSelected(item);
@@ -173,5 +178,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent)
+    {
+        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode,
+                resultCode, intent);
+        if (scanningResult != null)
+        {
+            String scanContent = scanningResult.getContents();
+            String scanFormat = scanningResult.getFormatName();
+
+            if (scanContent != null && scanFormat != null && scanFormat.equalsIgnoreCase("EAN_13"))
+            {
+                String bookSearchString = "isbn:" + scanContent;
+                QUERY_KEY = bookSearchString;
+
+                Intent intent1 = new Intent(getApplicationContext(), BookActivity.class);
+                intent1.putExtra("key", QUERY_KEY);
+                startActivity(intent1);
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), "Not a valid scan!",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(),"No book scan data" +
+                    "received", Toast.LENGTH_SHORT).show();
+        }
     }
 }

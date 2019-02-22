@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">BookSearch</string>
+    <string name="com_auth0_client_id">Du0BPJyhpg9m4LFWnV3U93IGPmJlVyoc</string>
+    <string name="com_auth0_domain">naturallyash.auth0.com</string>
+    <string name="GOODREADS_BASE_URL">https://www.goodreads.com</string>
+    <string name="oauth_authorize_param">/oauth/authorize</string>
+    <string name="oauth_mobil_param">/oauth/authorize?mobile=1</string>
+    <string name="oauth_access_token_param">/oauth/access_token</string>
+    <string name="oauth_request_token_param">/oauth/request_token</string>
     <string name="no_search_term">No search term entered</string>
     <string name="no_connection">No Connection!</string>
     <string name="no_books">No books found.</string>
@@ -23,4 +30,8 @@
     <string name="no_favorites">No books added to Favorites</string>
     <string name="ereader_string">eReader</string>
     <string name="no_e_books_string">No e-Books</string>
+    <string name="action_search">Search</string>
+    <string name="action_qr_scan">QR scan</string>
+    <string name="login_with_goodreads_string">Login with Goodreads</string>
+    <string name="logging_in_string">logging in</string>
 </resources>

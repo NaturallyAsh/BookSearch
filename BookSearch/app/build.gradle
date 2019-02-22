@@ -9,6 +9,14 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders = [auth0Domain: "@string/com_auth0_domain", auth0Scheme: "demo"]
+
+        buildConfigField("String", "Goodreads_Api_Key", GoodreadsApiKey)
+        buildConfigField("String", "Goodreads_Secret", GoodreadsSecret)
+        buildConfigField("String", "Goodreads_Callback_URL", GoodreadsCallbackUrl)
+        buildConfigField "String", "Goodreads_Base_Url", '"https://www.goodreads.com"'
+
     }
     buildTypes {
         release {
@@ -20,29 +28,43 @@ android {
         enabled = true
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
-    implementation 'com.google.android.material:material:1.0.0-beta01'
-    implementation 'androidx.exifinterface:exifinterface:1.0.0-beta01'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.appcompat:appcompat:1.1.0-alpha02'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0-alpha03'
+    implementation 'androidx.exifinterface:exifinterface:1.0.0'
     implementation 'com.google.android.gms:play-services-vision:17.0.2'
     implementation 'info.androidhive:barcode-reader:1.1.5'
     implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'androidx.annotation:annotation:1.0.0-beta01'
+    implementation 'androidx.annotation:annotation:1.1.0-alpha01'
     implementation 'com.google.zxing:core:3.2.0'
     implementation 'com.journeyapps:zxing-android-integration:2.3.0@aar'
     implementation 'com.journeyapps:zxing-android-embedded:2.3.0@aar'
     implementation 'com.journeyapps:zxing-android-legacy:2.3.0@aar'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0-beta01'
-    implementation 'androidx.cardview:cardview:1.0.0-beta01'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha02'
+    implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'in.nashapp.epublibdroid:epublibdroid:0.0.9'
     implementation('ru.bartwell:exfilepicker:2.4', {
         exclude group: "com.android.support"
     })
-
-
-
+    implementation 'com.jakewharton:butterknife:10.1.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+    implementation 'com.auth0.android:auth0:1.15.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.0.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.0.0'
+    implementation 'com.google.dagger:dagger:2.10'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
+    implementation 'com.squareup.okhttp3:okhttp:3.13.1'
+    implementation 'oauth.signpost:signpost-core:1.2'
+    implementation 'com.codepath.libraries:android-oauth-handler:1.3.1'
+    implementation 'com.github.scribejava:scribejava-core:6.3.0'
+    implementation 'com.loopj.android:android-async-http:1.4.9'
+    implementation 'cz.msebera.android:httpclient:4.4.1.2'
 }
