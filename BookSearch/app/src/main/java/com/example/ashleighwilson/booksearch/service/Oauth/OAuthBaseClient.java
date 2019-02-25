@@ -4,8 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.util.Log;
 
+import com.example.ashleighwilson.booksearch.MainActivity;
+import com.example.ashleighwilson.booksearch.PreferenceUser;
 import com.github.scribejava.core.builder.api.BaseApi;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
@@ -25,17 +28,24 @@ public class OAuthBaseClient {
     protected OAuthAccessHandler accessHandler;
     protected String callbackUrl;
     protected int requestIntentFlags = -1;
+    OnReceivedAuthUrl onReceivedAuthUrlListener;
+    //PreferenceUser preferenceUser =
 
     private static final String OAUTH1_REQUEST_TOKEN = "request_token";
     private static final String OAUTH1_REQUEST_TOKEN_SECRET = "request_token_secret";
     private static final String OAUTH1_VERSION = "1.0";
     private static final String OAUTH2_VERSION = "2.0";
 
+    public interface OnReceivedAuthUrl {
+        void AuthUrl(String url);
+    }
+
     protected static HashMap<Class<? extends OAuthBaseClient>, OAuthBaseClient> instances =
             new HashMap<Class<? extends OAuthBaseClient>, OAuthBaseClient>();
 
     public static OAuthBaseClient getInstance(Class<? extends OAuthBaseClient> klass, Context context) {
         OAuthBaseClient instance = instances.get(klass);
+
         if (instance == null) {
             try {
                 instance = (OAuthBaseClient) klass.getConstructor(Context.class).newInstance(context);
@@ -48,6 +58,7 @@ public class OAuthBaseClient {
     }
 
     public OAuthBaseClient(Context c, BaseApi apiInstance, String consumerUrl, String consumerKey, String consumerSecret, String callbackUrl) {
+        Log.i(TAG, "ON OAUTH");
         this.baseUrl = consumerUrl;
         this.callbackUrl = callbackUrl;
         client = new OAuthAsyncHttpClient(apiInstance, consumerKey,
@@ -56,34 +67,50 @@ public class OAuthBaseClient {
             // Store request token and launch the authorization URL in the browser
             @Override
             public void onReceivedRequestToken(OAuth1RequestToken requestToken, String authorizeUrl, String oAuthVersion) {
+                Log.i(TAG, "ON RECEIVED REQUEST TOKEN");
+                Log.i(TAG, "oauth version: " + oAuthVersion + " OAUTH VERSION: " + OAUTH1_VERSION +
+                        " request token: " + requestToken);
+
+
                 if (requestToken != null) {
                     if (oAuthVersion == OAUTH1_VERSION) {  // store for OAuth1.0a
                         OAuth1RequestToken oAuth1RequestToken = (OAuth1RequestToken) requestToken;
                         editor.putString(OAUTH1_REQUEST_TOKEN, oAuth1RequestToken.getToken());
                         editor.putString(OAUTH1_REQUEST_TOKEN_SECRET, oAuth1RequestToken.getTokenSecret());
+                        editor.putString(OAuthConstants.TOKEN, oAuth1RequestToken.getToken());
+                        editor.putString(OAuthConstants.TOKEN_SECRET, oAuth1RequestToken.getTokenSecret());
+                        editor.putInt(OAuthConstants.VERSION, 1);
                         editor.commit();
                     }
                 }
                 // Launch the authorization URL in the browser
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(authorizeUrl));
-                if (requestIntentFlags != -1) {
+                /*Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(authorizeUrl));
+               if (requestIntentFlags != -1) {
                     intent.setFlags(requestIntentFlags);
-                }
-                OAuthBaseClient.this.context.startActivity(intent);
+                }*/
+                onReceivedAuthUrlListener.AuthUrl(authorizeUrl);
+
+               //Log.i(TAG, "browser launched");
+               //Log.i(TAG, "auth url: " + authorizeUrl);
+               // OAuthBaseClient.this.context.startActivity(intent);
             }
 
             // Store the access token in preferences, set the token in the client and fire the success callback
             @Override
             public void onReceivedAccessToken(OAuth1AccessToken accessToken, String oAuthVersion) {
+                Log.i(TAG, "ON RECEIVED ACCESS TOKEN");
 
                 if (oAuthVersion == OAUTH1_VERSION) {
                     OAuth1AccessToken oAuth1AccessToken = (OAuth1AccessToken) accessToken;
 
+                    Log.i(TAG, "oauth get token: " + oAuth1AccessToken.getToken() + " get token secret: " +
+                            oAuth1AccessToken.getTokenSecret());
                     client.setAccessToken(accessToken);
                     editor.putString(OAuthConstants.TOKEN, oAuth1AccessToken.getToken());
                     editor.putString(OAuthConstants.TOKEN_SECRET, oAuth1AccessToken.getTokenSecret());
                     editor.putInt(OAuthConstants.VERSION, 1);
                     editor.commit();
+                    Log.i(TAG, "OAUTH VERSION 2");
                 } else if (oAuthVersion == OAUTH2_VERSION) {
                     /*OAuth2AccessToken oAuth2AccessToken = (OAuth2AccessToken) accessToken;
                     client.setAccessToken(accessToken);
@@ -93,13 +120,16 @@ public class OAuthBaseClient {
                     editor.putInt(OAuthConstants.VERSION, 2);
                     editor.commit();*/
 
-                    Log.i(TAG, "oauth version 2");
+                    Log.i(TAG, "OAUTH VERSION 1");
                 }
                 accessHandler.onLoginSuccess();
+                Log.i(TAG, "on login success called");
             }
 
             @Override
             public void onFailure(Exception e) {
+                Log.i(TAG, "ON FAILURE");
+
                 accessHandler.onLoginFailure(e);
             }
 
@@ -119,13 +149,19 @@ public class OAuthBaseClient {
     // Should open a browser in onReceivedRequestToken once the url has been received
     public void connect() {
         client.fetchRequestToken();
+        Log.i(TAG, "ON CONNECT");
+
     }
 
     // Retrieves access token given authorization url
-    public void authorize(Uri uri, OAuthAccessHandler handler) {
+    public void authorize(Uri uri, OAuthAccessHandler handler, OnReceivedAuthUrl url) {
+        Log.i(TAG, "ON AUTHORIZE");
+
+        this.onReceivedAuthUrlListener = url;
         this.accessHandler = handler;
         if (checkAccessToken() == null && uri != null) {
             // TODO: check UriServiceCallback with intent:// scheme
+            Log.i(TAG, "uri: " + uri);
             client.fetchAccessToken(getOAuth1RequestToken(), uri);
 
         } else if (checkAccessToken() != null) { // already have access token
@@ -135,7 +171,12 @@ public class OAuthBaseClient {
 
     // Return access token if the token exists in preferences
     public OAuth1AccessToken checkAccessToken() {
+        Log.i(TAG, "ON ACCESS TOKEN");
+
         int oAuthVersion = prefs.getInt(OAuthConstants.VERSION, 0);
+
+        Log.i(TAG, "oauth version : " + oAuthVersion + "prefs: " +prefs.contains(OAUTH1_REQUEST_TOKEN) +
+                prefs.contains(OAUTH1_REQUEST_TOKEN_SECRET));
 
         if (oAuthVersion == 1 && prefs.contains(OAuthConstants.TOKEN) && prefs.contains(OAuthConstants.TOKEN_SECRET)) {
             return new OAuth1AccessToken(prefs.getString(OAuthConstants.TOKEN, ""),
@@ -153,6 +194,8 @@ public class OAuthBaseClient {
 
     // Returns the request token stored during the request token phase
     protected OAuth1RequestToken getOAuth1RequestToken() {
+        Log.i(TAG, "ON SP REQUEST TOKEN");
+
         return new OAuth1RequestToken(prefs.getString(OAUTH1_REQUEST_TOKEN, ""),
                 prefs.getString(OAUTH1_REQUEST_TOKEN_SECRET, ""));
     }

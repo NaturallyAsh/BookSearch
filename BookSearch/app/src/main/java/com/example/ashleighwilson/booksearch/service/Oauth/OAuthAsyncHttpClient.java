@@ -53,6 +53,8 @@ public class OAuthAsyncHttpClient extends AsyncHttpClient {
                         OAuth10aService oAuth10aService = (OAuth10aService) service;
                         requestToken = oAuth10aService.getRequestToken();
                         authorizeUrl = oAuth10aService.getAuthorizationUrl((OAuth1RequestToken) requestToken);
+                        Log.i(TAG, "OAuth 1 is the version");
+
                     } else if (service.getVersion() == "2.0") {
                         //OAuth20Service oAuth20Service = (OAuth20Service) service;
                         //authorizeUrl = oAuth20Service.getAuthorizationUrl((PKCE) null);
@@ -66,8 +68,11 @@ public class OAuthAsyncHttpClient extends AsyncHttpClient {
             public void onPostExecute() {
                 if (e != null) {
                     handler.onFailure(e);
+                    Log.i(TAG, "handler on failure");
                 } else {
                     handler.onReceivedRequestToken(requestToken, authorizeUrl, service.getVersion());
+                    Log.i(TAG, "handler on received request token");
+
                 }
             }
         });
@@ -75,7 +80,7 @@ public class OAuthAsyncHttpClient extends AsyncHttpClient {
 
     // Get the access token by exchanging the requestToken to the defined URL
     // Once receiving the access token, fires the onReceivedAccessToken method on the handler
-    public void fetchAccessToken(final Token requestToken, final Uri uri) {
+    public void fetchAccessToken(final OAuth1RequestToken requestToken, final Uri uri) {
 
         new AsyncSimpleTask(new AsyncSimpleTask.AsyncSimpleTaskHandler() {
             Exception e = null;
@@ -136,7 +141,7 @@ public class OAuthAsyncHttpClient extends AsyncHttpClient {
         }
     }
 
-    public Token getAccessToken() {
+    public OAuth1AccessToken getAccessToken() {
         return this.accessToken;
     }
 
