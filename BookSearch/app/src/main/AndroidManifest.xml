@@ -9,6 +9,7 @@
 
     <application
         android:allowBackup="true"
+        android:name=".MyApp"
         android:icon="@drawable/book_icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -58,7 +59,9 @@
                     android:scheme="oauth"/>
             </intent-filter>
         </activity>
-
+        <service
+            android:name=".service.Oauth.OAuthSpiceService"
+            android:exported="false"/>
     </application>
 
 </manifest>

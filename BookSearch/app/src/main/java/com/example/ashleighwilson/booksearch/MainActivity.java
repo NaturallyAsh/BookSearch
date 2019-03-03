@@ -5,12 +5,16 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.auth0.android.authentication.AuthenticationException;
 import com.auth0.android.provider.AuthCallback;
 import com.auth0.android.provider.WebAuthProvider;
 import com.auth0.android.result.Credentials;
+import com.bumptech.glide.Glide;
+import com.example.ashleighwilson.booksearch.dagger.Injector;
+import com.example.ashleighwilson.booksearch.models.AuthUser;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.util.Log;
 import android.view.Menu;
@@ -28,10 +33,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
+import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener
@@ -41,6 +49,14 @@ public class MainActivity extends AppCompatActivity implements
     public NavigationView mNavigationView;
     private String QUERY_KEY;
     private Button authenticat_BT;
+    View navHeaderView;
+    CircleImageView circleImageView;
+    TextView headerTV;
+    DrawerLayout drawer;
+    @Inject
+    PreferenceUser preferenceUser;
+    @Inject
+    AuthUser currentUser;
 
 
     @Override
@@ -52,11 +68,10 @@ public class MainActivity extends AppCompatActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Injector.getInstance().inject(this);
 
-        //login();
 
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -71,7 +86,20 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
         mNavigationView = findViewById(R.id.nav_view);
-        mNavigationView.setNavigationItemSelectedListener(this);
+        //mNavigationView.setNavigationItemSelectedListener(this);
+        navHeaderView = mNavigationView.inflateHeaderView(R.layout.nav_header_main_nav);
+        circleImageView = navHeaderView.findViewById(R.id.nav_header_imageView);
+        headerTV = navHeaderView.findViewById(R.id.nav_header_tv);
+        if (preferenceUser.getCurrentUser() != null) {
+            if (preferenceUser.getCurrentUser().getImage_url() != null) {
+                Glide.with(this)
+                        .load(preferenceUser.getCurrentUser().getImage_url())
+                        .into(circleImageView);
+            } else {
+                Log.i(TAG, "user image null: " + preferenceUser
+                    .getCurrentUser().getImage_url());
+            }
+        }
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
@@ -98,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    private void login() {
+    /*private void login() {
         WebAuthProvider.init(getApplicationContext())
                 .withScheme("demo")
                 .withAudience(String.format("https://%s/userinfo", getString(R.string.com_auth0_domain)))
@@ -118,12 +146,12 @@ public class MainActivity extends AppCompatActivity implements
 
                     }
                 });
-    }
+    }*/
 
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -168,14 +196,13 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.favorites:
                 Intent intent = new Intent(this, FavoritesActivity.class);
                 startActivity(intent);
-                return true;
+                break;
             case R.id.menu_reader:
                 Intent readerIntent = new Intent(this, ReaderActivity.class);
                 startActivity(readerIntent);
-                return true;
+                break;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

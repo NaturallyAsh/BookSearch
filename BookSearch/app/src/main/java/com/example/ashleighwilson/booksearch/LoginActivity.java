@@ -11,27 +11,30 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 
-import com.example.ashleighwilson.booksearch.service.GoodreadsClient;
-import com.example.ashleighwilson.booksearch.service.OAuthLoginActivity;
-import com.example.ashleighwilson.booksearch.service.Oauth.OAuthAsyncHttpClient;
-import com.example.ashleighwilson.booksearch.service.Oauth.OAuthBaseClient;
-import com.github.scribejava.core.model.OAuth1AccessToken;
-import com.github.scribejava.core.model.OAuth1RequestToken;
+import com.example.ashleighwilson.booksearch.dagger.Injector;
+import com.example.ashleighwilson.booksearch.models.AuthUser;
+import com.example.ashleighwilson.booksearch.service.Oauth.OAuthAccessTokenRequest;
+import com.example.ashleighwilson.booksearch.service.Oauth.OAuthRequestTokenRequest;
+import com.example.ashleighwilson.booksearch.service.Oauth.OAuthSpiceService;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
+import javax.inject.Inject;
+
+import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import oauth.signpost.OAuth;
+import oauth.signpost.OAuthConsumer;
 
-public class LoginActivity extends OAuthLoginActivity<GoodreadsClient>
-    implements OAuthBaseClient.OAuthAccessHandler {
+public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
 
-    public static final String CLIENT_KEY = BuildConfig.Goodreads_Api_Key;
-    public static final String CLIENT_SECRET = BuildConfig.Goodreads_Secret;
-    public static final String OAUTH_REQUEST_TOKEN = "/oauth/request_token";
-    public static final String OAUTH_ACCESS_TOKEN = "/oauth/access_token";
-    public static final String OAUTH_AUTHORIZE = "/oauth/authorize?mobile=1";
+    OAuthConsumer oAuthConsumer;
+    boolean callbackProcessed;
+    private SpiceManager spiceManager = new SpiceManager(OAuthSpiceService.class);
 
     @BindView(R.id.login_Button)
     Button loginBT;
@@ -40,7 +43,11 @@ public class LoginActivity extends OAuthLoginActivity<GoodreadsClient>
     @BindView(R.id.login_webView)
     WebView webView;
 
+    @Inject
+    PreferenceUser preferenceUser;
 
+    @Inject
+    AuthUser currentUser;
 
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -52,12 +59,14 @@ public class LoginActivity extends OAuthLoginActivity<GoodreadsClient>
         setContentView(R.layout.login_fragment);
         ButterKnife.bind(this);
 
+        Injector.getInstance().inject(this);
+
         webView.getSettings().setJavaScriptEnabled(true);
         webView.clearCache(true);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                processUrl(url);
+                processOnPageStarted(url);
             }
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -70,41 +79,96 @@ public class LoginActivity extends OAuthLoginActivity<GoodreadsClient>
             public void onClick(View v) {
                 loginBT.setVisibility(View.GONE);
                 progressContainer.setVisibility(View.VISIBLE);
-                getClient().connect();
-                Log.i(TAG, "connection: " + getClient().toString());
+                processLoginButton();
             }
         });
     }
 
     @Override
-    public void onLoginSuccess() {
-        Log.i(TAG, "success");
-        progressContainer.setVisibility(View.GONE);
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
+    public void onStart() {
+        super.onStart();
+        spiceManager.start(this);
     }
 
     @Override
-    public void onLoginFailure(Exception e) {
-        Log.i(TAG, "failure");
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
-    public void AuthUrl(String url) {
-        //Log.i(TAG, "url: " + url);
-        webView.loadUrl(url);
+    public void onStop() {
+        if (spiceManager.isStarted()) {
+            spiceManager.shouldStop();
+        }
+        super.onStop();
     }
 
-    private synchronized void processUrl(String mUrl) {
-        Uri uri = Uri.parse(mUrl);
+    private void processLoginButton() {
+        OAuthRequestTokenRequest requestTokenRequest = new OAuthRequestTokenRequest();
+        spiceManager.execute(requestTokenRequest, new OAuthRequestTokenListener());
+    }
+
+    private synchronized void processOnPageStarted(String url) {
+        if (!url.startsWith(BuildConfig.Goodreads_Base_Url)) {
+            Log.i(TAG, "url starts with: " + BuildConfig.Goodreads_Base_Url);
+            return;
+        }
+        if (callbackProcessed) {
+            Log.i(TAG, "callback processed");
+            //return;
+        }
+
+        callbackProcessed = true;
+
+        Uri uri = Uri.parse(url);
 
         String oauth_token = uri.getQueryParameter(OAuth.OAUTH_TOKEN);
         String authorize = uri.getQueryParameter("authorize");
+        Log.i(TAG, "authorize: " + authorize);
 
-        if (authorize.equals("1")) {
-            //Log.i(TAG, "authorize equals: " + authorize);
+        Log.i(TAG, "url: " + url);
+        if (authorize != null) {
+            if (authorize.equals("1")) {
+                OAuthAccessTokenRequest accessTokenRequest = new OAuthAccessTokenRequest(oauth_token);
+                spiceManager.execute(accessTokenRequest, new OAuthAccessTokenListener());
+            }
+        } else {
+            Log.i(TAG, "authorize is null");
+        }
+    }
 
-            getClient().authorize(uri, this, this);
+    private class OAuthRequestTokenListener implements RequestListener<String> {
+
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+            spiceException.printStackTrace();
+        }
+
+        @Override
+        public void onRequestSuccess(String authorizeUrl) {
+            webView.loadUrl(authorizeUrl);
+        }
+    }
+
+    private class OAuthAccessTokenListener implements RequestListener<AuthUser> {
+
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+            spiceException.printStackTrace();
+        }
+
+        @Override
+        public void onRequestSuccess(AuthUser authUser) {
+            if (authUser == null) {
+                Log.i(TAG, "Authorization error. User null");
+                return;
+            }
+            progressContainer.setVisibility(View.GONE);
+            Log.i(TAG, "user image: " + authUser.getImage_url());
+            preferenceUser.setCurrentUser(authUser);
+
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
         }
     }
 }
