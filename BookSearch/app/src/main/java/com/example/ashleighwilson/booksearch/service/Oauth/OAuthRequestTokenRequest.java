@@ -1,10 +1,14 @@
 package com.example.ashleighwilson.booksearch.service.Oauth;
 
+import android.util.Log;
+
+import com.example.ashleighwilson.booksearch.BuildConfig;
 import com.example.ashleighwilson.booksearch.dagger.Injector;
 import com.octo.android.robospice.request.SpiceRequest;
 
 import javax.inject.Inject;
 
+import cz.msebera.android.httpclient.auth.AUTH;
 import oauth.signpost.OAuth;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
@@ -38,6 +42,7 @@ public class OAuthRequestTokenRequest extends SpiceRequest<String> {
                     oAuthConsumer,
                     OAuth.OUT_OF_BAND,
                     "mobile=1");
+            Log.i(TAG, "auth url: " + authUrl);
         } catch (Exception e) {
             e.printStackTrace();
         }

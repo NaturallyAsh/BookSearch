@@ -90,14 +90,17 @@ public class MainActivity extends AppCompatActivity implements
         navHeaderView = mNavigationView.inflateHeaderView(R.layout.nav_header_main_nav);
         circleImageView = navHeaderView.findViewById(R.id.nav_header_imageView);
         headerTV = navHeaderView.findViewById(R.id.nav_header_tv);
-        if (preferenceUser.getCurrentUser() != null) {
-            if (preferenceUser.getCurrentUser().getImage_url() != null) {
+        if (currentUser != null) {
+            Log.i(TAG, "current user: " + currentUser);
+            authenticat_BT.setVisibility(View.GONE);
+            if (currentUser.getImage_url() != null) {
                 Glide.with(this)
-                        .load(preferenceUser.getCurrentUser().getImage_url())
+                        .load(currentUser.getImage_url())
                         .into(circleImageView);
+                //headerTV.setVisibility(View.GONE);
+                headerTV.setText(currentUser.getName());
             } else {
-                Log.i(TAG, "user image null: " + preferenceUser
-                    .getCurrentUser().getImage_url());
+                authenticat_BT.setVisibility(View.VISIBLE);
             }
         }
 
@@ -125,29 +128,6 @@ public class MainActivity extends AppCompatActivity implements
         }
 
     }
-
-    /*private void login() {
-        WebAuthProvider.init(getApplicationContext())
-                .withScheme("demo")
-                .withAudience(String.format("https://%s/userinfo", getString(R.string.com_auth0_domain)))
-                .start(MainActivity.this, new AuthCallback() {
-                    @Override
-                    public void onFailure(@NonNull Dialog dialog) {
-
-                    }
-
-                    @Override
-                    public void onFailure(AuthenticationException exception) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(@NonNull Credentials credentials) {
-
-                    }
-                });
-    }*/
-
 
     @Override
     public void onBackPressed() {

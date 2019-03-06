@@ -95,11 +95,8 @@ public class AuthUser {
     @Element(required = false)
     long reviews_count;
 
-    /*@ElementList(required = false)
-    List<UserShelf> user_shelves = new ArrayList<>();
-
     @ElementList(required = false)
-    List<Update> updates = new ArrayList<>();*/
+    List<UserShelf> user_shelves = new ArrayList<>();
 
     @Element(required = false)
     String user_statuses;
@@ -125,6 +122,10 @@ public class AuthUser {
             return image_url;
         }
         return null;
+    }
+
+    public List<UserShelf> getUser_shelves() {
+        return user_shelves;
     }
 
     public String getLink(){return link;}

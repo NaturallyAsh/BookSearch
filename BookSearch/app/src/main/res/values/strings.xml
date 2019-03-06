@@ -34,4 +34,6 @@
     <string name="action_qr_scan">QR scan</string>
     <string name="login_with_goodreads_string">Login with Goodreads</string>
     <string name="logging_in_string">logging in</string>
+    <string name="must_be_logged_in_string">Must be logged in</string>
+    <string name="login_in_string">Log in</string>
 </resources>

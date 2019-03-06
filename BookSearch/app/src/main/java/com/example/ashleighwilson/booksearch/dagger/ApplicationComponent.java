@@ -6,6 +6,8 @@ import com.codepath.oauth.OAuthBaseClient;
 import com.example.ashleighwilson.booksearch.LoginActivity;
 import com.example.ashleighwilson.booksearch.MainActivity;
 import com.example.ashleighwilson.booksearch.PreferenceUser;
+import com.example.ashleighwilson.booksearch.ReviewsLoader;
+import com.example.ashleighwilson.booksearch.UserFragment;
 import com.example.ashleighwilson.booksearch.models.AuthUser;
 import com.example.ashleighwilson.booksearch.service.Oauth.OAuthAccessTokenRequest;
 import com.example.ashleighwilson.booksearch.service.Oauth.OAuthRequestTokenRequest;
@@ -24,4 +26,6 @@ public interface ApplicationComponent {
     void inject(AuthUser authUser);
     void inject(OAuthRequestTokenRequest request);
     void inject(OAuthAccessTokenRequest request);
+    void inject(UserFragment userFragment);
+    void inject(ReviewsLoader reviewsLoader);
 }

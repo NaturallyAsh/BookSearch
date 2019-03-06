@@ -67,7 +67,7 @@ public class OAuthAccessTokenRequest extends SpiceRequest<AuthUser> {
             Log.i(TAG, "registered user id: " + authUserResponse.getUser().getId());
 
             UserShowResponse userShowResponse = goodreadsAPI.get().user_show(registeredUser.getId());
-            //return authUserResponse.getUser();
+            Log.i(TAG, "user to string: " + userShowResponse);
             return userShowResponse.getUser();
         } catch (RetrofitError retrofitError) {
             retrofitError.printStackTrace();

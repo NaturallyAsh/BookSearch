@@ -1,6 +1,7 @@
 package com.example.ashleighwilson.booksearch;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.example.ashleighwilson.booksearch.dagger.Injector;
 import com.example.ashleighwilson.booksearch.models.AuthUser;
@@ -35,6 +36,7 @@ public class PreferenceUser {
     public boolean setCurrentUser(AuthUser currentUser) {
         String userJson = null;
         if (currentUser != null) {
+            Log.i(TAG, "gson: " + currentUser);
             userJson = currentUser.toJson();
         }
         SharedPreferences.Editor editor = sp.edit();
