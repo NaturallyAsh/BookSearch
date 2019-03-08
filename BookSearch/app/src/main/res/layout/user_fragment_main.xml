@@ -32,12 +32,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginStart="6dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:orientation="vertical"
+                android:layout_marginTop="6dp">
+
+                <TextView
+                    android:id="@+id/currently_reading_TV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/currently_reading_string"
+                    android:textStyle="bold"
+                    android:textSize="25sp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginStart="10dp"
+                    android:visibility="invisible"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/current_RV"
@@ -49,7 +62,20 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="15dp"
+                android:orientation="vertical"
+                android:layout_marginStart="6dp">
+
+                <TextView
+                    android:id="@+id/want_to_read_TV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/want_to_read_string"
+                    android:textStyle="bold"
+                    android:textSize="25sp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginStart="10dp"
+                    android:visibility="invisible"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/to_read_RV"
@@ -61,7 +87,20 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="15dp"
+                android:orientation="vertical"
+                android:layout_marginStart="6dp">
+
+                <TextView
+                    android:id="@+id/read_TV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/read_string"
+                    android:textStyle="bold"
+                    android:textSize="25sp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginStart="10dp"
+                    android:visibility="invisible"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/read_RV"

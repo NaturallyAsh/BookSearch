@@ -90,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
         mNavigationView = findViewById(R.id.nav_view);
-        //mNavigationView.setNavigationItemSelectedListener(this);
+        //mNavigationView.bringToFront();
+        mNavigationView.setNavigationItemSelectedListener(this);
         navHeaderView = mNavigationView.inflateHeaderView(R.layout.nav_header_main_nav);
         circleImageView = navHeaderView.findViewById(R.id.nav_header_imageView);
         headerTV = navHeaderView.findViewById(R.id.nav_header_tv);

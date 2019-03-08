@@ -2,11 +2,13 @@ package com.example.ashleighwilson.booksearch.dagger;
 
 import android.app.Application;
 
+import com.example.ashleighwilson.booksearch.CurrentlyReadingLoader;
 import com.example.ashleighwilson.booksearch.LoginActivity;
 import com.example.ashleighwilson.booksearch.MainActivity;
 import com.example.ashleighwilson.booksearch.PreferenceUser;
-import com.example.ashleighwilson.booksearch.ReviewsLoader;
+import com.example.ashleighwilson.booksearch.ReadBookLoader;
 import com.example.ashleighwilson.booksearch.UserFragment;
+import com.example.ashleighwilson.booksearch.WantToReadLoader;
 import com.example.ashleighwilson.booksearch.models.AuthUser;
 import com.example.ashleighwilson.booksearch.service.Oauth.OAuthAccessTokenRequest;
 import com.example.ashleighwilson.booksearch.service.Oauth.OAuthRequestTokenRequest;
@@ -26,5 +28,7 @@ public interface ApplicationComponent {
     void inject(OAuthRequestTokenRequest request);
     void inject(OAuthAccessTokenRequest request);
     void inject(UserFragment userFragment);
-    void inject(ReviewsLoader reviewsLoader);
+    void inject(CurrentlyReadingLoader currentlyReadingLoader);
+    void inject(WantToReadLoader wantToReadLoader);
+    void inject(ReadBookLoader readBookLoader);
 }

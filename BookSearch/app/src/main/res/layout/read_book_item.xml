@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/current_book_image"
+        android:id="@+id/read_book_image"
         android:layout_width="match_parent"
         android:layout_height="200dp"/>
 
@@ -16,13 +16,13 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/current_book_title"
+            android:id="@+id/read_book_title"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center"/>
 
         <TextView
-            android:id="@+id/current_book_author"
+            android:id="@+id/read_book_author"
             android:layout_width="match_parent"
             android:layout_height="20dp"
             android:gravity="center"/>

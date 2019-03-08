@@ -36,4 +36,7 @@
     <string name="logging_in_string">logging in</string>
     <string name="must_be_logged_in_string">Must be logged in</string>
     <string name="login_in_string">Log in</string>
+    <string name="currently_reading_string">Currently Reading</string>
+    <string name="want_to_read_string">Want To Read</string>
+    <string name="read_string">Read</string>
 </resources>

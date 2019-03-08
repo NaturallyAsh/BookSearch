@@ -5,8 +5,10 @@ import android.app.Application;
 import com.example.ashleighwilson.booksearch.LoginActivity;
 import com.example.ashleighwilson.booksearch.MainActivity;
 import com.example.ashleighwilson.booksearch.PreferenceUser;
-import com.example.ashleighwilson.booksearch.ReviewsLoader;
+import com.example.ashleighwilson.booksearch.CurrentlyReadingLoader;
+import com.example.ashleighwilson.booksearch.ReadBookLoader;
 import com.example.ashleighwilson.booksearch.UserFragment;
+import com.example.ashleighwilson.booksearch.WantToReadLoader;
 import com.example.ashleighwilson.booksearch.models.AuthUser;
 import com.example.ashleighwilson.booksearch.service.Oauth.OAuthAccessTokenRequest;
 import com.example.ashleighwilson.booksearch.service.Oauth.OAuthRequestTokenRequest;
@@ -70,7 +72,17 @@ public class Injector implements ApplicationComponent {
     }
 
     @Override
-    public void inject(ReviewsLoader reviewsLoader) {
-        component.inject(reviewsLoader);
+    public void inject(CurrentlyReadingLoader currentlyReadingLoader) {
+        component.inject(currentlyReadingLoader);
+    }
+
+    @Override
+    public void inject(WantToReadLoader wantToReadLoader) {
+        component.inject(wantToReadLoader);
+    }
+
+    @Override
+    public void inject(ReadBookLoader readBookLoader) {
+        component.inject(readBookLoader);
     }
 }

@@ -7,12 +7,10 @@ import com.example.ashleighwilson.booksearch.dagger.Injector;
 import com.example.ashleighwilson.booksearch.data.SimpleXmlConverterFactory;
 import com.example.ashleighwilson.booksearch.models.AuthUser;
 import com.example.ashleighwilson.booksearch.models.Reviews;
-import com.example.ashleighwilson.booksearch.models.Shelf;
 import com.example.ashleighwilson.booksearch.service.Oauth.Retrofit2.OkHttpOAuthConsumer2;
 import com.example.ashleighwilson.booksearch.service.Oauth.Retrofit2.SigningInterceptor;
 import com.example.ashleighwilson.booksearch.service.response.GoodreadsApi;
 import com.example.ashleighwilson.booksearch.service.response.ReviewsAndShelfResponse;
-import com.example.ashleighwilson.booksearch.service.response.ReviewsListResponse;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -24,9 +22,9 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class ReviewsLoader extends AsyncTask<Long, Void, Reviews> {
+public class CurrentlyReadingLoader extends AsyncTask<Long, Void, Reviews> {
 
-    private static final String TAG = ReviewsLoader.class.getSimpleName();
+    private static final String TAG = CurrentlyReadingLoader.class.getSimpleName();
     @Inject
     GoodreadsApi goodreadsApi;
     @Inject
@@ -39,7 +37,7 @@ public class ReviewsLoader extends AsyncTask<Long, Void, Reviews> {
         void ReviewsFetched(Reviews shelf);
     }
 
-    public ReviewsLoader(OnReviewsFetchedListener listener) {
+    public CurrentlyReadingLoader(OnReviewsFetchedListener listener) {
         this.listener = listener;
         Injector.getInstance().inject(this);
     }
