@@ -7,7 +7,7 @@ import org.simpleframework.xml.Element;
 /**
  * Created by alek on 30/12/14.
  */
-public class GoodreadsAuthor {
+public class Author {
     @Element(required = false)
     String about;
 
@@ -53,7 +53,7 @@ public class GoodreadsAuthor {
     @Element(required = false)
     String hometown;
 
-    @Element
+    @Element(required = false)
     long id;
 
     @Element(required = false)
@@ -65,7 +65,7 @@ public class GoodreadsAuthor {
     @Element(required = false)
     String influences;
 
-    @Element
+    @Element(required = false)
     String name;
 
     @Element(required = false)

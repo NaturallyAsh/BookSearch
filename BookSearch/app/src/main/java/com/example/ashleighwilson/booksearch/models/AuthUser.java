@@ -26,10 +26,10 @@ public class AuthUser {
     @Element(required = false, name = "id")
     long id_element = -1;
 
-    @Element
+    @Element(required = false)
     String name;
 
-    @Element
+    @Element(required = false)
     String link;
 
     @Element(required = false)
@@ -95,9 +95,6 @@ public class AuthUser {
     @Element(required = false)
     long reviews_count;
 
-    @ElementList(required = false)
-    List<UserShelf> user_shelves = new ArrayList<>();
-
     @Element(required = false)
     String user_statuses;
 
@@ -122,10 +119,6 @@ public class AuthUser {
             return image_url;
         }
         return null;
-    }
-
-    public List<UserShelf> getUser_shelves() {
-        return user_shelves;
     }
 
     public String getLink(){return link;}

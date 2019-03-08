@@ -2,7 +2,6 @@ package com.example.ashleighwilson.booksearch.dagger;
 
 import android.app.Application;
 
-import com.codepath.oauth.OAuthBaseClient;
 import com.example.ashleighwilson.booksearch.LoginActivity;
 import com.example.ashleighwilson.booksearch.MainActivity;
 import com.example.ashleighwilson.booksearch.PreferenceUser;

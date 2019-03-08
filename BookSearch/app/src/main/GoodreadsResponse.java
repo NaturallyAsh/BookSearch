@@ -18,11 +18,17 @@ public class GoodreadsResponse {
     @Element(name="Request", required=false)
     Request request;
 
+    @Element(name="shelf", required=false)
+    Shelf shelf;
+
     public Reviews getReviews() {return this.reviews;}
     public void setReviews(Reviews value) {this.reviews = value;}
 
     public Request getRequest() {return this.request;}
     public void setRequest(Request value) {this.request = value;}
+
+    public Shelf getShelf() {return this.shelf;}
+    public void setShelf(Shelf value) {this.shelf = value;}
 
     public static class Book {
 
@@ -33,7 +39,7 @@ public class GoodreadsResponse {
         Work work;
 
         @Element(name="isbn", required=false)
-        Isbn isbn;
+        String isbn;
 
         @Element(name="num_pages", required=false)
         String numPages;
@@ -75,7 +81,7 @@ public class GoodreadsResponse {
         TextReviewsCount textReviewsCount;
 
         @Element(name="isbn13", required=false)
-        Isbn13 isbn13;
+        String isbn13;
 
         @Element(name="edition_information", required=false)
         String editionInformation;
@@ -104,8 +110,8 @@ public class GoodreadsResponse {
         public Work getWork() {return this.work;}
         public void setWork(Work value) {this.work = value;}
 
-        public Isbn getIsbn() {return this.isbn;}
-        public void setIsbn(Isbn value) {this.isbn = value;}
+        public String getIsbn() {return this.isbn;}
+        public void setIsbn(String value) {this.isbn = value;}
 
         public String getNumPages() {return this.numPages;}
         public void setNumPages(String value) {this.numPages = value;}
@@ -146,8 +152,8 @@ public class GoodreadsResponse {
         public TextReviewsCount getTextReviewsCount() {return this.textReviewsCount;}
         public void setTextReviewsCount(TextReviewsCount value) {this.textReviewsCount = value;}
 
-        public Isbn13 getIsbn13() {return this.isbn13;}
-        public void setIsbn13(Isbn13 value) {this.isbn13 = value;}
+        public String getIsbn13() {return this.isbn13;}
+        public void setIsbn13(String value) {this.isbn13 = value;}
 
         public String getEditionInformation() {return this.editionInformation;}
         public void setEditionInformation(String value) {this.editionInformation = value;}
@@ -172,27 +178,7 @@ public class GoodreadsResponse {
 
     }
 
-    public static class Isbn {
-
-        @Attribute(name="nil", required=false)
-        Boolean nil;
-
-        public Boolean getNil() {return this.nil;}
-        public void setNil(Boolean value) {this.nil = value;}
-
-    }
-
     public static class Link {
-
-        @Element(name="#cdata-section", required=false)
-        String cdataSection;
-
-        public String getCdataSection() {return this.cdataSection;}
-        public void setCdataSection(String value) {this.cdataSection = value;}
-
-    }
-
-    public static class Body {
 
         @Element(name="#cdata-section", required=false)
         String cdataSection;
@@ -233,8 +219,8 @@ public class GoodreadsResponse {
         @Attribute(name="total", required=false)
         Integer total;
 
-        @ElementList(name="review", required=false, entry="review", inline=true)
-        List<Review> review;
+        @Element(name="review", required=false)
+        Review review;
 
         @Attribute(name="start", required=false)
         Integer start;
@@ -245,8 +231,8 @@ public class GoodreadsResponse {
         public Integer getTotal() {return this.total;}
         public void setTotal(Integer value) {this.total = value;}
 
-        public List<Review> getReview() {return this.review;}
-        public void setReview(List<Review> value) {this.review = value;}
+        public Review getReview() {return this.review;}
+        public void setReview(Review value) {this.review = value;}
 
         public Integer getStart() {return this.start;}
         public void setStart(Integer value) {this.start = value;}
@@ -551,7 +537,7 @@ public class GoodreadsResponse {
     public static class Shelf {
 
         @Attribute(name="review_shelf_id", required=false)
-        String reviewShelfId;
+        Long reviewShelfId;
 
         @Attribute(name="name", required=false)
         String name;
@@ -565,8 +551,8 @@ public class GoodreadsResponse {
         @Attribute(name="sortable", required=false)
         Boolean sortable;
 
-        public String getReviewShelfId() {return this.reviewShelfId;}
-        public void setReviewShelfId(String value) {this.reviewShelfId = value;}
+        public Long getReviewShelfId() {return this.reviewShelfId;}
+        public void setReviewShelfId(Long value) {this.reviewShelfId = value;}
 
         public String getName() {return this.name;}
         public void setName(String value) {this.name = value;}
@@ -579,16 +565,6 @@ public class GoodreadsResponse {
 
         public Boolean getSortable() {return this.sortable;}
         public void setSortable(Boolean value) {this.sortable = value;}
-
-    }
-
-    public static class Isbn13 {
-
-        @Attribute(name="nil", required=false)
-        Boolean nil;
-
-        public Boolean getNil() {return this.nil;}
-        public void setNil(Boolean value) {this.nil = value;}
 
     }
 

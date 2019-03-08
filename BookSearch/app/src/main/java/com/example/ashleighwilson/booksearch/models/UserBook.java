@@ -3,15 +3,140 @@ package com.example.ashleighwilson.booksearch.models;
 import com.google.gson.Gson;
 
 import org.simpleframework.xml.Element;
-import org.simpleframework.xml.ElementList;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import nl.siegmann.epublib.domain.Author;
 
 public class UserBook {
-    @Element(required = false)
+    @Element(name="image_url", required=false)
+    String imageUrl;
+
+    @Element(name="num_pages", required=false)
+    String numPages;
+
+    @Element(name="link", required=false)
+    String link;
+
+    @Element(name="format", required=false)
+    String format;
+
+    @Element(name="description", required=false)
+    String description;
+
+    @Element(name="average_rating", required=false)
+    String averageRating;
+
+    @Element(name="published", required=false)
+    String published;
+
+    @Element(name="title", required=false)
+    String title;
+
+    @Element(name="uri", required=false)
+    String uri;
+
+    @Element(name="id", required=false)
+    Id id;
+
+    @Element(name="publication_month", required=false)
+    String publicationMonth;
+
+    @Element(name="large_image_url", required=false)
+    String largeImageUrl;
+
+    @Element(name="publication_year", required=false)
+    String publicationYear;
+
+    @Element(name="small_image_url", required=false)
+    String smallImageUrl;
+
+    @Element(name="edition_information", required=false)
+    String editionInformation;
+
+    @Element(name="publisher", required=false)
+    String publisher;
+
+    @Element(name="publication_day", required=false)
+    String publicationDay;
+
+    @Element(name="ratings_count", required=false)
+    String ratingsCount;
+
+    @Element(name="title_without_series", required=false)
+    String titleWithoutSeries;
+
+    @Element(name="authors", required=false)
+    Authors author;
+
+    public String toJson() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
+
+    public static UserBook fromJson(String json) {
+        Gson gson = new Gson();
+        return gson.fromJson(json, UserBook.class);
+    }
+
+    public String getImageUrl() {return this.imageUrl;}
+    public void setImageUrl(String value) {this.imageUrl = value;}
+
+    public String getNumPages() {return this.numPages;}
+    public void setNumPages(String value) {this.numPages = value;}
+
+    public String getLink() {return this.link;}
+    public void setLink(String value) {this.link = value;}
+
+    public String getFormat() {return this.format;}
+    public void setFormat(String value) {this.format = value;}
+
+    public String getDescription() {return this.description;}
+    public void setDescription(String value) {this.description = value;}
+
+    public String getAverageRating() {return this.averageRating;}
+    public void setAverageRating(String value) {this.averageRating = value;}
+
+    public String getPublished() {return this.published;}
+    public void setPublished(String value) {this.published = value;}
+
+    public String getTitle() {return this.title;}
+    public void setTitle(String value) {this.title = value;}
+
+    public String getUri() {return this.uri;}
+    public void setUri(String value) {this.uri = value;}
+
+    public String getPublicationMonth() {return this.publicationMonth;}
+    public void setPublicationMonth(String value) {this.publicationMonth = value;}
+
+    public String getLargeImageUrl() {return this.largeImageUrl;}
+    public void setLargeImageUrl(String value) {this.largeImageUrl = value;}
+
+    public String getPublicationYear() {return this.publicationYear;}
+    public void setPublicationYear(String value) {this.publicationYear = value;}
+
+    public String getSmallImageUrl() {return this.smallImageUrl;}
+    public void setSmallImageUrl(String value) {this.smallImageUrl = value;}
+
+    public String getEditionInformation() {return this.editionInformation;}
+    public void setEditionInformation(String value) {this.editionInformation = value;}
+
+    public String getPublisher() {return this.publisher;}
+    public void setPublisher(String value) {this.publisher = value;}
+
+    public String getPublicationDay() {return this.publicationDay;}
+    public void setPublicationDay(String value) {this.publicationDay = value;}
+
+    public Id getId() {return this.id;}
+    public void setId(Id value) {this.id = value;}
+
+    public String getRatingsCount() {return this.ratingsCount;}
+    public void setRatingsCount(String value) {this.ratingsCount = value;}
+
+    public String getTitleWithoutSeries() {return this.titleWithoutSeries;}
+    public void setTitleWithoutSeries(String value) {this.titleWithoutSeries = value;}
+
+    public Authors getAuthor() {return this.author;}
+    public void setAuthor(Authors value) {this.author = value;}
+
+
+    /*@Element(required = false)
     String asin;
 
     @Element(required = false)
@@ -74,8 +199,8 @@ public class UserBook {
     @Element(required = false)
     String created_at;
 
-    /*@Element(required = false)
-    Work work;*/
+    @Element(required = false)
+    Work work;
 
     @Element(required = false)
     String description;
@@ -111,7 +236,7 @@ public class UserBook {
     String link;
 
     @ElementList(required = false)
-    List<GoodreadsAuthor> authors = new ArrayList<>();
+    List<Author> author = new ArrayList<>();
 
     @Element(required = false)
     long publication_month;
@@ -150,13 +275,13 @@ public class UserBook {
     String reviews_widget;
 
     @ElementList(required = false)
-    List<Shelve> popular_shelves = new ArrayList<>();
+    List<Shelves> popular_shelves = new ArrayList<>();
 
-    /*@ElementList(required = false)
+    @ElementList(required = false)
     List<BookLink> book_links = new ArrayList<>();
 
     @ElementList(required = false)
-    List<SeriesWork> series_works = new ArrayList<>();*/
+    List<SeriesWork> series_works = new ArrayList<>();
 
     @ElementList(required = false)
     List<UserBook> similar_books = new ArrayList<>();
@@ -192,7 +317,7 @@ public class UserBook {
     long work_id;
 
     @Element(required = false)
-    GoodreadsAuthor author;
+    Author author;
 
     public String getTitle() {
         return title;
@@ -200,16 +325,6 @@ public class UserBook {
 
     public String getDescription() {
         return description;
-    }
-
-    public String toJson() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
-    }
-
-    public static UserBook fromJson(String json) {
-        Gson gson = new Gson();
-        return gson.fromJson(json, UserBook.class);
     }
 
     public String getIsbn() {
@@ -255,15 +370,15 @@ public class UserBook {
                 '}';
     }
 
-    public GoodreadsAuthor getAuthor() {
+    public Author getAuthor() {
         if (author != null) {
             return author;
         }
 
-        if (authors.size() == 0) {
+        if (author.size() == 0) {
             return null;
         }
-        return authors.get(0);
+        return author.get(0);
     }
 
     public long getId() {
@@ -294,8 +409,8 @@ public class UserBook {
         return num_pages;
     }
 
-    public Shelve getPopularShelve() {
-        for (Shelve shelve: popular_shelves) {
+    public Shelves getPopularShelve() {
+        for (Shelves shelve: popular_shelves) {
             if (shelve.name.equals("to-read")) {
                 continue;
             } else if (shelve.name.equals("currently-reading")) {
@@ -322,5 +437,5 @@ public class UserBook {
 
     public String getLink() {
         return link;
-    }
+    }*/
 }

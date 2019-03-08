@@ -6,19 +6,19 @@ import com.example.ashleighwilson.booksearch.models.Reviews;
 
 import org.simpleframework.xml.Element;
 
-public class ReviewListResponse extends GoodreadsResponse{
+public class ReviewsListResponse extends GoodreadsResponse{
 
-    @Element(name = "reviews", required = false)
-    Reviews reviews;
+    @Element(name="reviews", required=false)
+    public Reviews reviews;
 
     @Override
     public String toString() {
-        return "ReviewListResponse{" +
+        return "ReviewsListResponse{" +
                 "review=" + reviews +
                 '}';
     }
 
-    Reviews getReview() {
+    public Reviews getReviews() {
         return reviews;
     }
 }

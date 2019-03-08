@@ -15,6 +15,8 @@ import com.auth0.android.result.Credentials;
 import com.bumptech.glide.Glide;
 import com.example.ashleighwilson.booksearch.dagger.Injector;
 import com.example.ashleighwilson.booksearch.models.AuthUser;
+import com.example.ashleighwilson.booksearch.models.Review;
+import com.example.ashleighwilson.booksearch.models.UserBook;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -57,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements
     PreferenceUser preferenceUser;
     @Inject
     AuthUser currentUser;
+    UserBook userBook;
+    Review userReview;
 
 
     @Override
@@ -91,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements
         circleImageView = navHeaderView.findViewById(R.id.nav_header_imageView);
         headerTV = navHeaderView.findViewById(R.id.nav_header_tv);
         if (currentUser != null) {
-            Log.i(TAG, "current user: " + currentUser);
+            //Log.i(TAG, "current user: " + currentUser);
             authenticat_BT.setVisibility(View.GONE);
             if (currentUser.getImage_url() != null) {
                 Glide.with(this)
@@ -109,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements
         if (savedInstanceState == null) {
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
-
             UserFragment userFragment = new UserFragment();
             transaction
                     .add(R.id.main_frag_container, userFragment, TAG)
