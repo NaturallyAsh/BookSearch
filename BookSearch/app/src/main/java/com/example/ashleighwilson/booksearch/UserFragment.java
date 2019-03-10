@@ -1,11 +1,13 @@
 package com.example.ashleighwilson.booksearch;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.ashleighwilson.booksearch.adapters.CurrentBookAdapter;
@@ -13,6 +15,7 @@ import com.example.ashleighwilson.booksearch.adapters.ReadBookAdapter;
 import com.example.ashleighwilson.booksearch.adapters.WantBookAdapter;
 import com.example.ashleighwilson.booksearch.dagger.Injector;
 import com.example.ashleighwilson.booksearch.models.AuthUser;
+import com.example.ashleighwilson.booksearch.models.Item;
 import com.example.ashleighwilson.booksearch.models.Review;
 import com.example.ashleighwilson.booksearch.models.Reviews;
 import com.example.ashleighwilson.booksearch.service.response.GoodreadsApi;
@@ -29,7 +32,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnReviewsFetchedListener,
-    WantToReadLoader.OnWantedFetchedListener, ReadBookLoader.OnReadFetchedListener {
+    WantToReadLoader.OnWantedFetchedListener, ReadBookLoader.OnReadFetchedListener,
+    BookImageLoader.GoogleImageListener{
 
     private static final String TAG = UserFragment.class.getSimpleName();
 
@@ -41,6 +45,12 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
     TextView readTV;
     @BindView(R.id.must_login_TV)
     TextView mustBeLoggedInTV;
+    @BindView(R.id.current_PB)
+    ProgressBar currentPB;
+    @BindView(R.id.want_PB)
+    ProgressBar wantPB;
+    @BindView(R.id.read_PB)
+    ProgressBar readPB;
     @BindView(R.id.current_RV)
     RecyclerView currentRV;
     @BindView(R.id.to_read_RV)
@@ -61,6 +71,7 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
     private CurrentBookAdapter currentBookAdapter;
     private WantBookAdapter wantBookAdapter;
     private ReadBookAdapter readBookAdapter;
+    private List<Review> reviewList;
 
     public UserFragment() {
 
@@ -114,46 +125,76 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
     }
 
     private void fetchCurrentBooks() {
-        Log.i(TAG, "reviews being fetched");
+        currentPB.setVisibility(View.VISIBLE);
         new CurrentlyReadingLoader(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, user.getId());
     }
 
     private void fetchWantBooks() {
+        wantPB.setVisibility(View.VISIBLE);
         new WantToReadLoader(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, user.getId());
     }
 
     private void fetchReadBooks() {
+        readPB.setVisibility(View.VISIBLE);
         new ReadBookLoader(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, user.getId());
     }
 
     @Override
     public void ReviewsFetched(Reviews reviews) {
+        String noPhoto = "noPhoto";
+        currentPB.setVisibility(View.GONE);
         currentlyReadingTV.setVisibility(View.VISIBLE);
         List<Review> reviewList = reviews.getReview();
 
         for (int i = 0; i < reviewList.size(); i++) {
+
             currentBookAdapter.add(reviewList);
         }
-
     }
 
     @Override
     public void WantedFetched(Reviews reviews) {
+        wantPB.setVisibility(View.GONE);
         want_to_read_TV.setVisibility(View.VISIBLE);
-        List<Review> reviewList = reviews.getReview();
+        reviewList = reviews.getReview();
 
         for (int i = 0; i < reviewList.size(); i++) {
             wantBookAdapter.add(reviewList);
+            Review review = reviewList.get(i);
+            String noPhoto = "noPhoto";
+            if (review.getBook().getImageUrl().toLowerCase().indexOf(noPhoto.toLowerCase()) >= 0) {
+                String name = review.getBook().getTitle();
+                new BookImageLoader(name, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
         }
     }
 
     @Override
     public void ReadFetched(Reviews reviews) {
+        readPB.setVisibility(View.GONE);
         readTV.setVisibility(View.VISIBLE);
         List<Review> reviewList = reviews.getReview();
 
         for (int i = 0; i < reviewList.size(); i++) {
             readBookAdapter.add(reviewList);
+        }
+    }
+
+    @Override
+    public void OnGoogleImageLoaded(List<Item> googleImages) {
+        if (googleImages != null) {
+            for (int i = 0; i < reviewList.size(); i++) {
+                Review review = reviewList.get(i);
+                for (int j = 0; j < googleImages.size(); j++) {
+                    Item item = googleImages.get(j);
+                    String name = item.getVolumeInfo().getTitle();
+                    if (review.getBook().getTitle().toLowerCase().contains(name.toLowerCase()) &&
+                        item.getVolumeInfo().getImageLinks() != null) {
+                        //Log.i(TAG, "adding image: " + name);
+                        wantBookAdapter.newImage(item);
+                    }
+                }
+            }
         }
     }
 }

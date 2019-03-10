@@ -16,6 +16,8 @@ android {
         buildConfigField("String", "Goodreads_Secret", GoodreadsSecret)
         buildConfigField("String", "Goodreads_Callback_URL", GoodreadsCallbackUrl)
         buildConfigField "String", "Goodreads_Base_Url", '"https://www.goodreads.com"'
+        buildConfigField "String", "Googlebooks_Base_Url", '"https://www.googleapis.com"'
+        buildConfigField("String", "Googlebooks_Api_Key", GooglebooksApiKey)
 
     }
     buildTypes {

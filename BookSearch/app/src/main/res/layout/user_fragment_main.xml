@@ -35,10 +35,9 @@
             android:orientation="vertical"
             android:layout_marginStart="6dp">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_height="300dp"
                 android:layout_marginTop="6dp">
 
                 <TextView
@@ -55,13 +54,22 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/current_RV"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/currently_reading_TV"/>
 
-            </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/current_PB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    style="@style/Widget.AppCompat.ProgressBar"
+                    android:visibility="gone"/>
 
-            <LinearLayout
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="300dp"
                 android:layout_marginTop="15dp"
                 android:orientation="vertical"
                 android:layout_marginStart="6dp">
@@ -80,13 +88,22 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/to_read_RV"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/want_to_read_TV"/>
 
-            </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/want_PB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    style="@style/Widget.AppCompat.ProgressBar"
+                    android:visibility="gone"/>
 
-            <LinearLayout
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="300dp"
                 android:layout_marginTop="15dp"
                 android:orientation="vertical"
                 android:layout_marginStart="6dp">
@@ -105,9 +122,18 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/read_RV"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/read_TV"/>
 
-            </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/read_PB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    style="@style/Widget.AppCompat.ProgressBar"
+                    android:visibility="gone"/>
+
+            </RelativeLayout>
 
         </LinearLayout>
 

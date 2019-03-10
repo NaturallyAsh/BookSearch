@@ -2,6 +2,7 @@ package com.example.ashleighwilson.booksearch.dagger;
 
 import android.app.Application;
 
+import com.example.ashleighwilson.booksearch.BookImageLoader;
 import com.example.ashleighwilson.booksearch.LoginActivity;
 import com.example.ashleighwilson.booksearch.MainActivity;
 import com.example.ashleighwilson.booksearch.PreferenceUser;
@@ -84,5 +85,10 @@ public class Injector implements ApplicationComponent {
     @Override
     public void inject(ReadBookLoader readBookLoader) {
         component.inject(readBookLoader);
+    }
+
+    @Override
+    public void inject(BookImageLoader bookImageLoader) {
+        component.inject(bookImageLoader);
     }
 }

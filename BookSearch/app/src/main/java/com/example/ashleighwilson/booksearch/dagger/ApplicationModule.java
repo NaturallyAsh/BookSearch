@@ -14,6 +14,7 @@ import com.example.ashleighwilson.booksearch.service.Oauth.OkHttpOAuthProvider;
 import com.example.ashleighwilson.booksearch.service.Oauth.RetrofitHttpOAuthConsumer;
 import com.example.ashleighwilson.booksearch.service.Oauth.RetrofitSigningOkClient;
 import com.example.ashleighwilson.booksearch.service.response.GoodreadsApi;
+import com.example.ashleighwilson.booksearch.service.response.GoogleBooksApi;
 
 import javax.inject.Singleton;
 
@@ -22,6 +23,8 @@ import dagger.Provides;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import retrofit.RestAdapter;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class ApplicationModule {
@@ -87,6 +90,18 @@ public class ApplicationModule {
                .build();
 
         return restAdapter.create(GoodreadsApi.class);
+    }
+
+    @Provides
+    @Singleton
+    public GoogleBooksApi provideGoogleBooksApi() {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BuildConfig.Googlebooks_Base_Url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        return retrofit.create(GoogleBooksApi.class);
     }
 
     @Provides

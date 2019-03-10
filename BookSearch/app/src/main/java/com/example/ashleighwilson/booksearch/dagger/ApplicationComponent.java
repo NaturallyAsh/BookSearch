@@ -2,6 +2,7 @@ package com.example.ashleighwilson.booksearch.dagger;
 
 import android.app.Application;
 
+import com.example.ashleighwilson.booksearch.BookImageLoader;
 import com.example.ashleighwilson.booksearch.CurrentlyReadingLoader;
 import com.example.ashleighwilson.booksearch.LoginActivity;
 import com.example.ashleighwilson.booksearch.MainActivity;
@@ -31,4 +32,5 @@ public interface ApplicationComponent {
     void inject(CurrentlyReadingLoader currentlyReadingLoader);
     void inject(WantToReadLoader wantToReadLoader);
     void inject(ReadBookLoader readBookLoader);
+    void inject(BookImageLoader bookImageLoader);
 }

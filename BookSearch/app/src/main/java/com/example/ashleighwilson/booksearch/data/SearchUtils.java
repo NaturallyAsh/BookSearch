@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.example.ashleighwilson.booksearch.models.Book;
+import com.example.ashleighwilson.booksearch.models.GoogleImage;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,6 +56,22 @@ public class SearchUtils
         List<Book> books = extractBookInfoFromJson(jsonResponse);
 
         return books;
+    }
+
+    public static List<GoogleImage> fetchImageData(String requestUrl)
+    {
+        URL url = createURL(requestUrl);
+
+        String jsonResponse = null;
+        try {
+            jsonResponse = makeHttpRequest(url);
+        } catch (IOException e) {
+            Log.e(TAG, "Error closing input stream", e);
+        }
+
+        List<GoogleImage> googleImages = extractImageFromJson(jsonResponse);
+
+        return googleImages;
     }
 
     private static String makeHttpRequest(URL url) throws IOException
@@ -140,6 +157,34 @@ public class SearchUtils
         }
 
         return output.toString();
+    }
+
+    private static List<GoogleImage> extractImageFromJson(String imageJSON) {
+        List<GoogleImage> googleImages = new ArrayList<>();
+        try {
+            JSONObject imageJsonResponse = new JSONObject(imageJSON);
+            JSONArray imageArray = imageJsonResponse.getJSONArray("items");
+            for (int i = 0; i < imageArray.length(); i++) {
+                JSONObject currentBook = imageArray.getJSONObject(i);
+                JSONObject volumeInfo = currentBook.getJSONObject("volumeInfo");
+
+                JSONObject imagelinks = volumeInfo.getJSONObject("imageLinks");
+                String mthumbnail = imagelinks.optString("smallThumbnail");
+                String imageUrl = "";
+                Bitmap thumbnail = null;
+
+
+                if (imagelinks != null)
+                    imageUrl = imagelinks.optString("smallThumbnail");
+                if (!imageUrl.isEmpty())
+                    thumbnail = getThumbnail(imageUrl);
+
+                googleImages.add(new GoogleImage(thumbnail));
+            }
+        } catch (JSONException e) {
+            Log.e("SearchUtils", "Problem parsing the book JSON results", e);
+        }
+        return googleImages;
     }
 
     private static List<Book> extractBookInfoFromJson(String booksJSON)

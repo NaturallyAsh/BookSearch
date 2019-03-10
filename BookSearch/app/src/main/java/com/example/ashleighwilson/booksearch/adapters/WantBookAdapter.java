@@ -1,6 +1,9 @@
 package com.example.ashleighwilson.booksearch.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.ashleighwilson.booksearch.R;
+import com.example.ashleighwilson.booksearch.models.Item;
 import com.example.ashleighwilson.booksearch.models.Review;
 
 import java.util.ArrayList;
@@ -25,7 +29,8 @@ public class WantBookAdapter extends RecyclerView.Adapter<WantBookAdapter.ViewHo
 
     Context mContext;
     private ArrayList<Review> reviewList;
-    private int limit = 10;
+    private int limit = 40;
+    private List<Item> newItem = new ArrayList<>();
 
     public WantBookAdapter(Context context, ArrayList<Review> reviewArrayList) {
         this.mContext = context;
@@ -49,6 +54,19 @@ public class WantBookAdapter extends RecyclerView.Adapter<WantBookAdapter.ViewHo
                     .load(currentReviews.getBook().getImageUrl())
                     .into(holder.wantIV);
         }
+        if (newItem != null) {
+            Item item;
+            for (int i = 0; i < newItem.size(); i++) {
+                item = newItem.get(i);
+                String name = item.getVolumeInfo().getTitle();
+                if (currentReviews.getBook().getTitle().toLowerCase().contains(name.toLowerCase())) {
+                    currentReviews.getBook().setImageUrl(item.getVolumeInfo().getImageLinks().getSmallThumbnail());
+                    Glide.with(mContext)
+                            .load(currentReviews.getBook().getImageUrl())
+                            .into(holder.wantIV);
+                }
+            }
+        }
         holder.titleTV.setText(currentReviews.getBook().getTitle());
         holder.authorTV.setText(currentReviews.getBook().getAuthor().getAuthor().getName());
     }
@@ -60,6 +78,7 @@ public class WantBookAdapter extends RecyclerView.Adapter<WantBookAdapter.ViewHo
         } else {
             return reviewList.size();
         }
+        //return reviewList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -81,5 +100,9 @@ public class WantBookAdapter extends RecyclerView.Adapter<WantBookAdapter.ViewHo
         reviewList.clear();
         reviewList.addAll(reviews);
         notifyDataSetChanged();
+    }
+
+    public void newImage(Item item) {
+        newItem.add(item);
     }
 }
