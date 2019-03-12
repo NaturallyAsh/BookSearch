@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.ashleighwilson.booksearch.R;
+import com.example.ashleighwilson.booksearch.models.Item;
 import com.example.ashleighwilson.booksearch.models.Review;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class ReadBookAdapter extends RecyclerView.Adapter<ReadBookAdapter.ViewHo
     Context mContext;
     private ArrayList<Review> reviewList;
     private int limit = 10;
+    private List<Item> newItem = new ArrayList<>();
 
     public ReadBookAdapter(Context context, ArrayList<Review> reviewArrayList) {
         this.mContext = context;
@@ -48,6 +50,19 @@ public class ReadBookAdapter extends RecyclerView.Adapter<ReadBookAdapter.ViewHo
             Glide.with(mContext)
                     .load(currentReviews.getBook().getImageUrl())
                     .into(holder.readImage);
+        }
+        if (newItem != null) {
+            Item item;
+            for (int i = 0; i < newItem.size(); i++) {
+                item = newItem.get(i);
+                String name = item.getVolumeInfo().getTitle();
+                if (currentReviews.getBook().getTitle().toLowerCase().contains(name.toLowerCase())) {
+                    currentReviews.getBook().setImageUrl(item.getVolumeInfo().getImageLinks().getSmallThumbnail());
+                    Glide.with(mContext)
+                            .load(currentReviews.getBook().getImageUrl())
+                            .into(holder.readImage);
+                }
+            }
         }
         holder.titleTV.setText(currentReviews.getBook().getTitle());
         holder.authorTV.setText(currentReviews.getBook().getAuthor().getAuthor().getName());
@@ -81,5 +96,9 @@ public class ReadBookAdapter extends RecyclerView.Adapter<ReadBookAdapter.ViewHo
         reviewList.clear();
         reviewList.addAll(reviews);
         notifyDataSetChanged();
+    }
+
+    public void newImage(Item item) {
+        newItem.add(item);
     }
 }

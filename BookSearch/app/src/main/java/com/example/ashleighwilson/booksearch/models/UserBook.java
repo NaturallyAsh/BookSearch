@@ -65,6 +65,15 @@ public class UserBook {
     @Element(name="authors", required=false)
     Authors author;
 
+    @Element(name="text_reviews_count", required=false)
+    TextReviewsCount textReviewsCount;
+
+    @Element(name="isbn", required=false)
+    String isbn;
+
+    @Element(name = "work", required = false)
+    Work work;
+
     public String toJson() {
         Gson gson = new Gson();
         return gson.toJson(this);
@@ -75,8 +84,24 @@ public class UserBook {
         return gson.fromJson(json, UserBook.class);
     }
 
+    public Work getWork() {
+        return work;
+    }
+
+    public void setWork(Work work) {
+        this.work = work;
+    }
+
     public String getImageUrl() {return this.imageUrl;}
     public void setImageUrl(String value) {this.imageUrl = value;}
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
 
     public String getNumPages() {return this.numPages;}
     public void setNumPages(String value) {this.numPages = value;}
@@ -134,6 +159,9 @@ public class UserBook {
 
     public Authors getAuthor() {return this.author;}
     public void setAuthor(Authors value) {this.author = value;}
+
+    public TextReviewsCount getTextReviewsCount() {return this.textReviewsCount;}
+    public void setTextReviewsCount(TextReviewsCount value) {this.textReviewsCount = value;}
 
 
     /*@Element(required = false)

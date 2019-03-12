@@ -26,13 +26,19 @@ public class CurrentBookAdapter extends RecyclerView.Adapter<CurrentBookAdapter.
 
     private ArrayList<Review> reviewList;
     Context mContext;
+    private CurrentBookClickListener listener;
 
 
-    public CurrentBookAdapter(Context context, ArrayList<Review> reviewsArrayList) {
+    public CurrentBookAdapter(Context context, ArrayList<Review> reviewsArrayList,
+                              CurrentBookClickListener listener) {
         this.mContext = context;
         this.reviewList = reviewsArrayList;
+        this.listener = listener;
     }
 
+    public interface CurrentBookClickListener {
+        void OnCurrentBookClicked(Review review, int position);
+    }
 
     @NonNull
     @Override
@@ -52,6 +58,12 @@ public class CurrentBookAdapter extends RecyclerView.Adapter<CurrentBookAdapter.
         }
         holder.titleTV.setText(currentReviews.getBook().getTitle());
         holder.authorTV.setText(currentReviews.getBook().getAuthor().getAuthor().getName());
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.OnCurrentBookClicked(currentReviews, holder.getAdapterPosition());
+            }
+        });
     }
 
     @Override
@@ -61,6 +73,7 @@ public class CurrentBookAdapter extends RecyclerView.Adapter<CurrentBookAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        View view;
         @BindView(R.id.current_book_image)
         ImageView bookIV;
         @BindView(R.id.current_book_title)
@@ -70,6 +83,7 @@ public class CurrentBookAdapter extends RecyclerView.Adapter<CurrentBookAdapter.
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            view = itemView;
             ButterKnife.bind(this, itemView);
         }
     }

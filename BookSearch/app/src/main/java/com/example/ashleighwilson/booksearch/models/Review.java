@@ -1,9 +1,13 @@
 package com.example.ashleighwilson.booksearch.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.Gson;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +17,79 @@ import retrofit2.http.Url;
 /**
  * Created by alek on 30/12/14.
  */
-public class Review {
+@Root(name = "review", strict = false)
+public class Review implements Parcelable {
+
+    public Review(@Element(name="recommended_for", required=false)
+                          String recommendedFor,
+
+                          @Element(name="date_updated", required=false)
+                                  String dateUpdated,
+
+                          @Element(name="spoiler_flag", required=false)
+                                  String spoilerFlag,
+
+                          @Element(name="book", required=false)
+                                  UserBook book,
+
+                          @Element(name="rating", required=false)
+                                  String rating,
+
+                          @Element(name="body", required=false)
+                                  String body,
+
+                          @Element(name="shelves", required=false)
+                                  Shelves shelves,
+
+                          @Element(name="date_added", required=false)
+                                  String dateAdded,
+
+                          @Element(name="comments_count", required=false)
+                                  String commentsCount,
+
+                          @Element(name="owned", required=false)
+                                  String owned,
+
+                          @Element(name="started_at", required=false)
+                                  String startedAt,
+
+                          @Element(name="read_at", required=false)
+                                  String readAt,
+
+                          @Element(name="votes", required=false)
+                                  String votes,
+
+                          @Element(name="recommended_by", required=false)
+                                  String recommendedBy,
+
+                          @Element(name="id", required=false)
+                                  String id,
+
+                          @Element(name="spoilers_state", required=false)
+                                  String spoilersState,
+
+                          @Element(name="read_count", required=false)
+                                  String readCount
+
+                          ) {
+        this.recommendedFor = recommendedFor;
+        this.dateUpdated = dateUpdated;
+        this.spoilerFlag = spoilerFlag;
+        this.book = book;
+        this.rating = rating;
+        this.body = body;
+        this.shelves = shelves;
+        this.dateAdded = dateAdded;
+        this.commentsCount = commentsCount;
+        this.owned = owned;
+        this.startedAt = startedAt;
+        this.readAt = readAt;
+        this.votes = votes;
+        this.recommendedBy = recommendedBy;
+        this.id = id;
+        this.spoilersState = spoilersState;
+        this.readCount = readCount;
+    }
 
     @Element(name="recommended_for", required=false)
     String recommendedFor;
@@ -72,12 +148,42 @@ public class Review {
     @Element(name="read_count", required=false)
     String readCount;
 
-    @Element(required = false)
-    AuthUser user;
+    //@Element(required = false)
+    //AuthUser user;
 
-    public AuthUser getUser() {
-        return user;
+    protected Review(Parcel in) {
+        recommendedFor = in.readString();
+        dateUpdated = in.readString();
+        spoilerFlag = in.readString();
+        rating = in.readString();
+        body = in.readString();
+        dateAdded = in.readString();
+        commentsCount = in.readString();
+        owned = in.readString();
+        startedAt = in.readString();
+        readAt = in.readString();
+        votes = in.readString();
+        recommendedBy = in.readString();
+        id = in.readString();
+        spoilersState = in.readString();
+        readCount = in.readString();
     }
+
+    public static final Creator<Review> CREATOR = new Creator<Review>() {
+        @Override
+        public Review createFromParcel(Parcel in) {
+            return new Review(in);
+        }
+
+        @Override
+        public Review[] newArray(int size) {
+            return new Review[size];
+        }
+    };
+
+    //public AuthUser getUser() {
+      //  return user;
+    //}
 
     public String toJson() {
         Gson gson = new Gson();
@@ -146,6 +252,30 @@ public class Review {
 
     public String getReadCount() {return this.readCount;}
     public void setReadCount(String value) {this.readCount = value;}
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(recommendedFor);
+        dest.writeString(dateUpdated);
+        dest.writeString(spoilerFlag);
+        dest.writeString(rating);
+        dest.writeString(body);
+        dest.writeString(dateAdded);
+        dest.writeString(commentsCount);
+        dest.writeString(owned);
+        dest.writeString(startedAt);
+        dest.writeString(readAt);
+        dest.writeString(votes);
+        dest.writeString(recommendedBy);
+        dest.writeString(id);
+        dest.writeString(spoilersState);
+        dest.writeString(readCount);
+    }
 
     /*@Element(name = "book-id", required = false)
     long bookId;

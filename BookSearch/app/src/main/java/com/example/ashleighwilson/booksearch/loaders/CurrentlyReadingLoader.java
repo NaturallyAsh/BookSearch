@@ -1,16 +1,18 @@
-package com.example.ashleighwilson.booksearch;
+package com.example.ashleighwilson.booksearch.loaders;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.ashleighwilson.booksearch.BuildConfig;
+import com.example.ashleighwilson.booksearch.PreferenceUser;
 import com.example.ashleighwilson.booksearch.dagger.Injector;
 import com.example.ashleighwilson.booksearch.data.SimpleXmlConverterFactory;
 import com.example.ashleighwilson.booksearch.models.AuthUser;
-import com.example.ashleighwilson.booksearch.models.Review;
 import com.example.ashleighwilson.booksearch.models.Reviews;
 import com.example.ashleighwilson.booksearch.service.Oauth.Retrofit2.OkHttpOAuthConsumer2;
 import com.example.ashleighwilson.booksearch.service.Oauth.Retrofit2.SigningInterceptor;
 import com.example.ashleighwilson.booksearch.service.response.GoodreadsApi;
+import com.example.ashleighwilson.booksearch.service.response.GoodreadsApiRetro2;
 import com.example.ashleighwilson.booksearch.service.response.ReviewsAndShelfResponse;
 
 import java.io.IOException;
@@ -23,22 +25,22 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class ReadBookLoader extends AsyncTask<Long, Void, Reviews> {
+public class CurrentlyReadingLoader extends AsyncTask<Long, Void, Reviews> {
 
     private static final String TAG = CurrentlyReadingLoader.class.getSimpleName();
     @Inject
-    GoodreadsApi goodreadsApi;
+    GoodreadsApiRetro2 goodreadsApi;
     @Inject
     PreferenceUser preferenceUser;
     @Inject
     AuthUser user;
-    private OnReadFetchedListener listener;
+    private OnReviewsFetchedListener listener;
 
-    public interface OnReadFetchedListener {
-        void ReadFetched(Reviews reviews);
+    public interface OnReviewsFetchedListener {
+        void ReviewsFetched(Reviews shelf);
     }
 
-    public ReadBookLoader(OnReadFetchedListener listener) {
+    public CurrentlyReadingLoader(OnReviewsFetchedListener listener) {
         this.listener = listener;
         Injector.getInstance().inject(this);
     }
@@ -74,9 +76,9 @@ public class ReadBookLoader extends AsyncTask<Long, Void, Reviews> {
                 .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build();
 
-        GoodreadsApi data = retrofit.create(GoodreadsApi.class);
-        Call<ReviewsAndShelfResponse> reviewsCall = data.review_list(userId, 2,
-                "read");
+        //GoodreadsApi data = retrofit.create(GoodreadsApi.class);
+        Call<ReviewsAndShelfResponse> reviewsCall = goodreadsApi.review_list(userId, 2,
+                            "currently-reading");
         try {
             Response<ReviewsAndShelfResponse> response = reviewsCall.execute();
             ReviewsAndShelfResponse reviewsResponse = response.body();
@@ -92,9 +94,9 @@ public class ReadBookLoader extends AsyncTask<Long, Void, Reviews> {
     @Override
     protected void onPostExecute(Reviews reviews) {
         if (reviews != null) {
-            listener.ReadFetched(reviews);
+            listener.ReviewsFetched(reviews);
         } else {
-            listener.ReadFetched(null);
+            listener.ReviewsFetched(null);
         }
     }
 }

@@ -1,8 +1,10 @@
-package com.example.ashleighwilson.booksearch;
+package com.example.ashleighwilson.booksearch.loaders;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.ashleighwilson.booksearch.BuildConfig;
+import com.example.ashleighwilson.booksearch.PreferenceUser;
 import com.example.ashleighwilson.booksearch.dagger.Injector;
 import com.example.ashleighwilson.booksearch.data.SimpleXmlConverterFactory;
 import com.example.ashleighwilson.booksearch.models.AuthUser;
@@ -10,6 +12,7 @@ import com.example.ashleighwilson.booksearch.models.Reviews;
 import com.example.ashleighwilson.booksearch.service.Oauth.Retrofit2.OkHttpOAuthConsumer2;
 import com.example.ashleighwilson.booksearch.service.Oauth.Retrofit2.SigningInterceptor;
 import com.example.ashleighwilson.booksearch.service.response.GoodreadsApi;
+import com.example.ashleighwilson.booksearch.service.response.GoodreadsApiRetro2;
 import com.example.ashleighwilson.booksearch.service.response.ReviewsAndShelfResponse;
 
 import java.io.IOException;
@@ -22,22 +25,22 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class WantToReadLoader extends AsyncTask<Long, Void, Reviews> {
+public class ToReadBookLoader extends AsyncTask<Long, Void, Reviews> {
 
     private static final String TAG = CurrentlyReadingLoader.class.getSimpleName();
     @Inject
-    GoodreadsApi goodreadsApi;
+    GoodreadsApiRetro2 goodreadsApi;
     @Inject
     PreferenceUser preferenceUser;
     @Inject
     AuthUser user;
-    private OnWantedFetchedListener listener;
+    private OnReadFetchedListener listener;
 
-    public interface OnWantedFetchedListener {
-        void WantedFetched(Reviews reviews);
+    public interface OnReadFetchedListener {
+        void ReadFetched(Reviews reviews);
     }
 
-    public WantToReadLoader(OnWantedFetchedListener listener) {
+    public ToReadBookLoader(OnReadFetchedListener listener) {
         this.listener = listener;
         Injector.getInstance().inject(this);
     }
@@ -73,9 +76,9 @@ public class WantToReadLoader extends AsyncTask<Long, Void, Reviews> {
                 .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build();
 
-        GoodreadsApi data = retrofit.create(GoodreadsApi.class);
-        Call<ReviewsAndShelfResponse> reviewsCall = data.review_list(userId, 2,
-                "to-read");
+        //GoodreadsApi data = retrofit.create(GoodreadsApi.class);
+        Call<ReviewsAndShelfResponse> reviewsCall = goodreadsApi.review_list(userId, 2,
+                "read");
         try {
             Response<ReviewsAndShelfResponse> response = reviewsCall.execute();
             ReviewsAndShelfResponse reviewsResponse = response.body();
@@ -91,9 +94,9 @@ public class WantToReadLoader extends AsyncTask<Long, Void, Reviews> {
     @Override
     protected void onPostExecute(Reviews reviews) {
         if (reviews != null) {
-            listener.WantedFetched(reviews);
+            listener.ReadFetched(reviews);
         } else {
-            listener.WantedFetched(null);
+            listener.ReadFetched(null);
         }
     }
 }

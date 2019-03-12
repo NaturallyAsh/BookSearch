@@ -39,4 +39,12 @@
     <string name="currently_reading_string">Currently Reading</string>
     <string name="want_to_read_string">Want To Read</string>
     <string name="read_string">Read</string>
+    <string name="books_in_series_string">Books in Series</string>
+    <string name="similar_books_string">Similar Books</string>
+    <string name="fontawesome_star">{fa-star}</string>
+    <string name="author_string">Author</string>
+    <string name="published_string">Published</string>
+    <string name="ratings">ratings</string>
+    <string name="reviews">reviews</string>
+    <string name="synopsis_string">Synopsis</string>
 </resources>

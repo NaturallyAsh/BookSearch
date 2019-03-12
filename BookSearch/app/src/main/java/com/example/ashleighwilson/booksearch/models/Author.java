@@ -1,159 +1,75 @@
 package com.example.ashleighwilson.booksearch.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 
+import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
 /**
  * Created by alek on 30/12/14.
  */
-public class Author {
-    @Element(required = false)
-    String about;
+@Root(name = "author", strict = false)
+public class Author implements Parcelable{
 
-    @Element(required = false)
-    String author_program_at;
+    public Author(
 
-    @Element(required = false)
-    long best_book_id;
+    @Element(name = "id", required = false)
+    long id,
 
-    @Element(required = false)
-    String role;
+    @Element(name = "name", required = false)
+    String name,
 
-    @Element(required = false)
-    long books_count;
+    @Element(name = "link", required = false)
+    String link) {
+        this.id = id;
+        this.name = name;
+        this.link = link;
+    }
 
-    @Element(required = false)
-    String born_at;
-
-    @Element(required = false)
-    String country_code;
-
-    @Element(required = false)
-    String created_at;
-
-    @Element(required = false)
-    String died_at;
-
-    @Element(required = false)
-    long fanships_count;
-
-    @Element(required = false)
-    String gender;
-
-    @Element(required = false)
-    String genre1;
-
-    @Element(required = false)
-    String genre2;
-
-    @Element(required = false)
-    String genre3;
-
-    @Element(required = false)
-    String hometown;
-
-    @Element(required = false)
+    @Element(name = "id", required = false)
     long id;
 
-    @Element(required = false)
-    String image_copyright;
-
-    @Element(required = false)
-    String image_uploaded_at;
-
-    @Element(required = false)
-    String influences;
-
-    @Element(required = false)
+    @Element(name = "name", required = false)
     String name;
 
-    @Element(required = false)
-    String name_language_code;
-
-    @Element(required = false)
-    String postal_code;
-
-    @Element(required = false)
-    String rating_dist;
-
-    @Element(required = false)
-    long ratings_count;
-
-    @Element(required = false)
-    long ratings_sum;
-
-    @Element(required = false)
-    long reviews_count;
-
-    @Element(required = false)
-    String s3_image_at;
-
-    @Element(required = false)
-    String searched_for_at;
-
-    @Element(required = false)
-    String sort_by_name;
-
-    @Element(required = false)
-    long text_reviews_count;
-
-    @Element(required = false)
-    String updated_at;
-
-    @Element(required = false)
-    long uploader_user_id;
-
-    @Element(required = false)
-    String url;
-
-    @Element(required = false)
-    long user_id;
-
-    @Element(required = false)
-    long works_count;
-
-    @Element(required = false)
-    String image_url;
-
-    @Element(required = false)
-    String shelf_display_name;
-
-    @Element(required = false)
-    String gender_custom;
-
-    @Element(required = false)
-    String gender_pronoun;
-
-    @Element(required = false)
-    String small_image_url;
-
-    @Element(required = false)
+    @Element(name = "link", required = false)
     String link;
 
-    @Element(required = false)
-    float average_rating;
+
+    protected Author(Parcel in) {
+        id = in.readLong();
+        name = in.readString();
+        link = in.readString();
+    }
+
+    public static final Creator<Author> CREATOR = new Creator<Author>() {
+        @Override
+        public Author createFromParcel(Parcel in) {
+            return new Author(in);
+        }
+
+        @Override
+        public Author[] newArray(int size) {
+            return new Author[size];
+        }
+    };
 
     public String getName() {
         return name;
     }
 
-    public String getImageUrl() {
-        if (!TextUtils.isEmpty(image_url)) {
-            image_url = image_url.trim();
-        }
-        return image_url;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     @Override
-    public String toString() {
-        return "Author{" +
-                "hometown='" + hometown + '\'' +
-                ", id=" + id +
-                ", name='" + name + '\'' +
-                ", small_image_url='" + small_image_url + '\'' +
-                ", link='" + link + '\'' +
-                ", average_rating=" + average_rating +
-                '}';
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(name);
+        dest.writeString(link);
     }
 }

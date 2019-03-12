@@ -11,10 +11,4 @@ public interface GoodreadsApi {
 
     @GET("/user/show/{id}.xml")
     UserShowResponse user_show(@Path("id") long id);
-
-    @retrofit2.http.GET("/review/list/{id}.xml")
-    Call<ReviewsAndShelfResponse> review_list(@retrofit2.http.Path("id") long id,
-                                          @Query("v") int v,
-                                          @Query("shelf") String shelf);
-
 }

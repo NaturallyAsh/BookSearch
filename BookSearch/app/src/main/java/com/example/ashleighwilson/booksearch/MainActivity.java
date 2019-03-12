@@ -25,6 +25,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -48,9 +49,15 @@ public class MainActivity extends AppCompatActivity implements
 {
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    private FragmentManager mFragmentManager;
+    public static final String FRAGMENT_USERFRAG_TAG = "fragment_user";
+    public static final String FRAGMENT_BOOKDETAILS_TAG = "fragment_book_details";
+    public final int TRANSITION_VERTICAL = 0;
+    public final int TRANSITION_HORIZONTAL = 1;
     public NavigationView mNavigationView;
     private String QUERY_KEY;
     private Button authenticat_BT;
+    public Toolbar toolbar;
     View navHeaderView;
     CircleImageView circleImageView;
     TextView headerTV;
@@ -69,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_nav);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Injector.getInstance().inject(this);
@@ -111,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        if (savedInstanceState == null) {
+        /*if (savedInstanceState == null) {
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             UserFragment userFragment = new UserFragment();
@@ -120,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements
                     .commit();
         } else {
             getSupportFragmentManager().findFragmentByTag(TAG);
-        }
+        }*/
 
         Intent searchIntent = getIntent();
         if (Intent.ACTION_SEARCH.equals(searchIntent.getAction())) {
@@ -131,7 +138,67 @@ public class MainActivity extends AppCompatActivity implements
             startActivity(intent);
         }
 
+        init();
+
     }
+
+    private FragmentManager getFragmentManagerInstance() {
+        if (mFragmentManager == null) {
+            mFragmentManager = getSupportFragmentManager();
+        }
+        return mFragmentManager;
+    }
+
+    private void init() {
+        getFragmentManagerInstance();
+        if (getFragmentManagerInstance().findFragmentByTag(FRAGMENT_USERFRAG_TAG) == null) {
+            FragmentTransaction transaction = getFragmentManagerInstance().beginTransaction();
+            transaction.add(R.id.main_frag_container, new UserFragment(), FRAGMENT_USERFRAG_TAG).commit();
+        }
+    }
+
+    private Fragment checkFragmentInstance(int id, Object instanceClass)
+    {
+        Fragment result = null;
+        Fragment fragment = getFragmentManagerInstance().findFragmentById(id);
+        if (fragment != null && instanceClass.equals(fragment.getClass()))
+        {
+            result = fragment;
+        }
+        return result;
+    }
+
+    public void OnBackPressed() {
+        Fragment f = checkFragmentInstance(R.id.main_frag_container, BookDetailFragment.class);
+        if (f != null) {
+            //((ReaderFragment) f).goHome();
+        }
+        super.onBackPressed();
+    }
+
+    public void switchToDetail(Review review) {
+        FragmentTransaction transaction = getFragmentManagerInstance().beginTransaction();
+        animateTransition(transaction, TRANSITION_HORIZONTAL);
+        BookDetailFragment detailFragment = new BookDetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(UserFragment.REVIEW_ITEM, review);
+        detailFragment.setArguments(bundle);
+        if (getFragmentManagerInstance().findFragmentByTag(FRAGMENT_BOOKDETAILS_TAG) == null) {
+            transaction.replace(R.id.main_frag_container, detailFragment, FRAGMENT_BOOKDETAILS_TAG)
+                    .addToBackStack(FRAGMENT_USERFRAG_TAG)
+                    .commit();
+        } else {
+            getFragmentManagerInstance().popBackStackImmediate();
+            transaction.replace(R.id.main_frag_container, detailFragment, FRAGMENT_BOOKDETAILS_TAG)
+                    .addToBackStack(FRAGMENT_BOOKDETAILS_TAG)
+                    .commit();
+        }
+    }
+
+    public Toolbar getToolbar() {
+        return this.toolbar;
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -219,6 +286,20 @@ public class MainActivity extends AppCompatActivity implements
         {
             Toast.makeText(getApplicationContext(),"No book scan data" +
                     "received", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void animateTransition(FragmentTransaction transaction, int direction)
+    {
+        if (direction == TRANSITION_HORIZONTAL)
+        {
+            transaction.setCustomAnimations(R.anim.fade_in_support, R.anim.fade_out_support,
+                    R.anim.fade_in_support, R.anim.fade_out_support);
+        }
+        if (direction == TRANSITION_VERTICAL)
+        {
+            transaction.setCustomAnimations(R.anim.anim_in, R.anim.anim_out, R.anim.anim_in_pop,
+                    R.anim.anim_out_pop);
         }
     }
 }

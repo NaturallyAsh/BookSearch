@@ -8,13 +8,19 @@ import android.content.SharedPreferences;
 import com.example.ashleighwilson.booksearch.BuildConfig;
 import com.example.ashleighwilson.booksearch.PreferenceUser;
 import com.example.ashleighwilson.booksearch.data.MySimpleXMLConverter;
+import com.example.ashleighwilson.booksearch.data.SimpleXmlConverterFactory;
 import com.example.ashleighwilson.booksearch.models.AuthUser;
 import com.example.ashleighwilson.booksearch.service.Oauth.OkHttpOAuthConsumer;
 import com.example.ashleighwilson.booksearch.service.Oauth.OkHttpOAuthProvider;
+import com.example.ashleighwilson.booksearch.service.Oauth.Retrofit2.OkHttpOAuthConsumer2;
+import com.example.ashleighwilson.booksearch.service.Oauth.Retrofit2.SigningInterceptor;
 import com.example.ashleighwilson.booksearch.service.Oauth.RetrofitHttpOAuthConsumer;
 import com.example.ashleighwilson.booksearch.service.Oauth.RetrofitSigningOkClient;
 import com.example.ashleighwilson.booksearch.service.response.GoodreadsApi;
+import com.example.ashleighwilson.booksearch.service.response.GoodreadsApiRetro2;
 import com.example.ashleighwilson.booksearch.service.response.GoogleBooksApi;
+
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
 
@@ -22,6 +28,7 @@ import dagger.Module;
 import dagger.Provides;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
+import okhttp3.OkHttpClient;
 import retrofit.RestAdapter;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -90,6 +97,35 @@ public class ApplicationModule {
                .build();
 
         return restAdapter.create(GoodreadsApi.class);
+    }
+
+    @Provides
+    @Singleton
+    public GoodreadsApiRetro2 provideRetro2GoodreadsApi(PreferenceUser preferenceUser) {
+        OkHttpOAuthConsumer2 oAuthConsumer = new OkHttpOAuthConsumer2(
+                BuildConfig.Goodreads_Api_Key,
+                BuildConfig.Goodreads_Secret
+        );
+
+        oAuthConsumer.setTokenWithSecret(
+                preferenceUser.getToken(),
+                preferenceUser.getSecret()
+        );
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new SigningInterceptor(oAuthConsumer))
+                .writeTimeout(2, TimeUnit.MINUTES)
+                .readTimeout(2, TimeUnit.MINUTES)
+                .build();
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .client(client)
+                .baseUrl(BuildConfig.Goodreads_Base_Url)
+                .addConverterFactory(SimpleXmlConverterFactory.create())
+                .build();
+
+        return retrofit.create(GoodreadsApiRetro2.class);
     }
 
     @Provides

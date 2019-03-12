@@ -7,6 +7,7 @@ import org.simpleframework.xml.Root;
 
 import java.util.List;
 
+@Root(name = "reviews", strict = false)
 public class Reviews {
     @Attribute(name="total", required=false)
     Integer total;
