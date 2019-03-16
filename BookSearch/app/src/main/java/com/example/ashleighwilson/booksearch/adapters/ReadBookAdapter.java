@@ -27,7 +27,7 @@ public class ReadBookAdapter extends RecyclerView.Adapter<ReadBookAdapter.ViewHo
 
     Context mContext;
     private ArrayList<Review> reviewList;
-    private int limit = 10;
+    private int limit = 30;
     private List<Item> newItem = new ArrayList<>();
     private OnReadClickedListener listener;
 
@@ -52,7 +52,8 @@ public class ReadBookAdapter extends RecyclerView.Adapter<ReadBookAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Review currentReviews = reviewList.get(position);
 
-        if (currentReviews.getBook().getImageUrl() != null) {
+        String noPhoto = "noPhoto";
+        if (currentReviews.getBook().getImageUrl() != null ) {
             Glide.with(mContext)
                     .load(currentReviews.getBook().getImageUrl())
                     .into(holder.readImage);
@@ -63,18 +64,18 @@ public class ReadBookAdapter extends RecyclerView.Adapter<ReadBookAdapter.ViewHo
             for (int i = 0; i < newItem.size(); i++) {
                 item = newItem.get(i);
                 String name = item.getVolumeInfo().getTitle();
-                Log.i(TAG, "name: " + name);
-                String identifier = "";
-                for (int j = 0; j < item.getVolumeInfo().getIndustryIdentifiers().size(); j++) {
-                    identifier = item.getVolumeInfo().getIndustryIdentifiers().get(j).getIdentifier();
-                    if (currentReviews.getBook().getTitle().toLowerCase().contains(name.toLowerCase())) {
-                        //currentReviews.getBook().setImageUrl(item.getVolumeInfo().getImageLinks().getSmallThumbnail());
-                        currentReviews.getBook().setImageUrl(currentReviews.getBook().getAltBookCover(identifier));
-                        Glide.with(mContext)
-                                .load(currentReviews.getBook().getImageUrl())
-                                //.load(currentReviews.getBook().getAltBookCover(identifier))
-                                .into(holder.readImage);
+                Log.i(TAG, "contains: " + currentReviews.getBook().getTitle().toLowerCase().contains(name.toLowerCase()));
+                if (currentReviews.getBook().getTitle().toLowerCase().contains(name.toLowerCase()) &&
+                        currentReviews.getBook().getImageUrl().toLowerCase().indexOf(noPhoto.toLowerCase()) >= 0) {
+                    String identifier = "";
+
+                    for (int j = 0; j < item.getVolumeInfo().getIndustryIdentifiers().size(); j++) {
+                        identifier = item.getVolumeInfo().getIndustryIdentifiers().get(j).getIdentifier();
                     }
+                    currentReviews.getBook().setImageUrl(currentReviews.getBook().getAltBookCover(identifier));
+                    Glide.with(mContext)
+                            .load(currentReviews.getBook().getImageUrl())
+                            .into(holder.readImage);
                 }
             }
         }

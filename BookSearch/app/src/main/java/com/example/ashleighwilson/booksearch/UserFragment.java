@@ -258,7 +258,8 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
                     String noPhoto = "noPhoto";
                     if (review.getBook().getImageUrl().toLowerCase().indexOf(noPhoto.toLowerCase()) >= 0) {
                         String name = review.getBook().getTitle();
-                        //Log.i(TAG, "read name: " + name);
+                        String test = "Soulsmith (Cradle, #2)";
+                        Log.i(TAG, "read name: " + name);
                         new ReadImageLoader(name, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 }
@@ -269,16 +270,12 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
     @Override
     public void OnWantedImageLoaded(List<Item> googleImages) {
         if (googleImages != null) {
-            for (int i = 0; i < wantedBookList.size(); i++) {
-                Review review = wantedBookList.get(i);
-                for (int j = 0; j < googleImages.size(); j++) {
-                    Item item = googleImages.get(j);
-                    String name = item.getVolumeInfo().getTitle();
-                    if (review.getBook().getTitle().toLowerCase().contains(name.toLowerCase()) &&
-                        item.getVolumeInfo().getImageLinks() != null) {
-                        //Log.i(TAG, "adding image: " + name);
-                        wantBookAdapter.newImage(item);
-                    }
+            for (int j = 0; j < googleImages.size(); j++) {
+                Item item = googleImages.get(j);
+                //String name = item.getVolumeInfo().getTitle();
+                if (item.getVolumeInfo().getImageLinks() != null) {
+                    //Log.i(TAG, "adding image: " + name);
+                    wantBookAdapter.newImage(item);
                 }
             }
         }
@@ -287,26 +284,10 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
     @Override
     public void OnReadImageFetched(List<Item> itemList) {
         if (itemList != null) {
-            Item item;
             for (int i = 0; i < itemList.size(); i++) {
-                Log.i(TAG, "item: " + itemList.get(i).getVolumeInfo().getTitle());
+                //Log.i(TAG, "item: " + itemList.get(i).getVolumeInfo().getTitle());
+                readBookAdapter.newImage(itemList.get(i));
             }
-            /*Item item;
-            for (int i = 0; i < toReadBookList.size(); i++) {
-                Review review = toReadBookList.get(i);
-
-                for (int j = 0; j < itemList.size(); j++) {
-                    item = itemList.get(j);
-                    String name = item.getVolumeInfo().getTitle();
-                    Log.i(TAG, "adding image: " + name);
-                    readBookAdapter.newImage(item);
-                    if (review.getBook().getTitle().toLowerCase().contains(name.toLowerCase()) &&
-                        item.getVolumeInfo().getImageLinks() != null) {
-                        Log.i(TAG, "adding image: " + name);
-                        readBookAdapter.newImage(item);
-                    }
-                }
-            }*/
         }
     }
 

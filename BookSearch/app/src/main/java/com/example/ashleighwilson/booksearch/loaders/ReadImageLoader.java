@@ -38,12 +38,15 @@ public class ReadImageLoader extends AsyncTask<Void, Void, List<Item>> {
     @Override
     protected List<Item> doInBackground(Void... voids) {
         if (mTitle == null) {
+            Log.i(TAG, "title is null");
             return null;
         }
-        Call<GoogleImageResponse> data = googleBooksApi.get_images(1, mTitle);
+        //Log.i(TAG, "title: " + mTitle);
+        Call<GoogleImageResponse> data = googleBooksApi.get_images( mTitle);
         try {
             Response<GoogleImageResponse> response = data.execute();
             GoogleImageResponse images = response.body();
+            //Log.i(TAG, "images: " + images);
             return images != null ? images.getItems() : null;
         } catch (IOException e) {
             Log.i(TAG, "error on response");

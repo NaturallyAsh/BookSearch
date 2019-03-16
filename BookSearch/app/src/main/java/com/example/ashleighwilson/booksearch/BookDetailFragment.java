@@ -177,7 +177,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
 
             }
         });
-        expandTV.setText(Html.fromHtml(mReview.getBook().getDescription()));
+        //expandTV.setText(Html.fromHtml(mReview.getBook().getDescription()));
     }
 
     private void fetchBookDetails() {

@@ -8,7 +8,7 @@ import retrofit2.http.Query;
 
 public interface GoogleBooksApi {
     @GET("/books/v1/volumes")
-    Call<GoogleImageResponse> get_images(@Query("maxResults") int maxResults,
+    Call<GoogleImageResponse> get_images(
                                          @Query("q") String title);
 
 }

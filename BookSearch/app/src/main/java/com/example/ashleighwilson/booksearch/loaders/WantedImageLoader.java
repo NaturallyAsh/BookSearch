@@ -42,7 +42,7 @@ public class WantedImageLoader extends AsyncTask<Void, Void, List<Item>> {
             return null;
         }
         //List<GoogleImage> googleImages = SearchUtils.fetchImageData(mUrl);
-        Call<GoogleImageResponse> data = googleBooksApi.get_images(2, mTitle);
+        Call<GoogleImageResponse> data = googleBooksApi.get_images( mTitle);
         try {
             Response<GoogleImageResponse> response = data.execute();
             GoogleImageResponse images = response.body();
