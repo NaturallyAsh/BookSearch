@@ -86,6 +86,7 @@ dependencies {
     implementation 'com.squareup.okio:okio:1.17.2'
     implementation 'com.joanzapata.android:android-iconify:1.0.9'
     implementation 'com.ms-square:expandableTextView:0.1.4'
-
+    implementation 'org.apache.commons:commons-lang3:3.8.1'
+    implementation 'com.github.Inconnu08:android-ratingreviews:1.2.0'
 
 }

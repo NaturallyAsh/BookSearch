@@ -71,4 +71,7 @@ public class Work {
     public String getRatingsCountFormatted() {
         return NumberFormat.getInstance().format(ratings_count);
     }
+
+    public String getRatingDist() {return this.rating_dist;}
+    public void setRatingDist(String value) {this.rating_dist = value;}
 }

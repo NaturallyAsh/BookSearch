@@ -57,6 +57,14 @@
                     android:layout_height="match_parent"
                     android:layout_below="@id/currently_reading_TV"/>
 
+                <TextView
+                    android:id="@+id/empty_current_TV"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/no_books_in_shelf_string"
+                    android:gravity="center"
+                    android:visibility="gone"/>
+
                 <ProgressBar
                     android:id="@+id/current_PB"
                     android:layout_width="wrap_content"
@@ -91,6 +99,14 @@
                     android:layout_height="match_parent"
                     android:layout_below="@id/want_to_read_TV"/>
 
+                <TextView
+                    android:id="@+id/empty_to_read_TV"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/no_books_in_shelf_string"
+                    android:gravity="center"
+                    android:visibility="gone"/>
+
                 <ProgressBar
                     android:id="@+id/want_PB"
                     android:layout_width="wrap_content"
@@ -124,6 +140,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@id/read_TV"/>
+
+                <TextView
+                    android:id="@+id/empty_read_TV"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/no_books_in_shelf_string"
+                    android:gravity="center"
+                    android:visibility="gone"/>
 
                 <ProgressBar
                     android:id="@+id/read_PB"

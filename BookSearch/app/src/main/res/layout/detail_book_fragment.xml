@@ -22,7 +22,7 @@
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleTextAppearance="@style/AppTheme.AppBarSize"
-            >
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -39,14 +39,7 @@
 
             </RelativeLayout>
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/detail_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-            </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -56,6 +49,7 @@
         android:id="@+id/details_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginEnd="10dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:fillViewport="true">
 
@@ -71,7 +65,8 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="210dp"
+                    android:id="@+id/synopsis_container"
+                    android:layout_width="190dp"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
@@ -188,6 +183,20 @@
                             android:layout_marginTop="6dp"/>
 
                     </LinearLayout>
+
+                    <com.taufiqrahman.reviewratings.RatingReviews xmlns:bar="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/rating_reviews"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="40dp"
+                        bar:show_raters="true"
+                        bar:animation="true"
+                        bar:show_label="true"
+                        bar:spaces="0dp"
+                        bar:text_size="10sp"
+                        bar:width="15dp"
+                        bar:text_color="@color/Black"/>
 
                 </RelativeLayout>
 

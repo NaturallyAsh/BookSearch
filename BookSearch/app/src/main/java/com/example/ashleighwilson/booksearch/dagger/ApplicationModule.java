@@ -132,7 +132,13 @@ public class ApplicationModule {
     @Singleton
     public GoogleBooksApi provideGoogleBooksApi() {
 
+        OkHttpClient client = new OkHttpClient.Builder()
+                .writeTimeout(2, TimeUnit.MINUTES)
+                .readTimeout(2, TimeUnit.MINUTES)
+                .build();
+
         Retrofit retrofit = new Retrofit.Builder()
+                .client(client)
                 .baseUrl(BuildConfig.Googlebooks_Base_Url)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

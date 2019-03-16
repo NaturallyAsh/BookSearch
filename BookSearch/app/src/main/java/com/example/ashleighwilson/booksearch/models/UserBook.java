@@ -74,6 +74,9 @@ public class UserBook {
     @Element(name = "work", required = false)
     Work work;
 
+    @Element(name="asin", required=false)
+    String asin;
+
     public String toJson() {
         Gson gson = new Gson();
         return gson.toJson(this);
@@ -84,6 +87,10 @@ public class UserBook {
         return gson.fromJson(json, UserBook.class);
     }
 
+    public String getAltBookCover(String identifier) {
+        return "https://images.randomhouse.com/cover/" + identifier;
+    }
+
     public Work getWork() {
         return work;
     }
@@ -91,6 +98,9 @@ public class UserBook {
     public void setWork(Work work) {
         this.work = work;
     }
+
+    public String getAsin() {return this.asin;}
+    public void setAsin(String value) {this.asin = value;}
 
     public String getImageUrl() {return this.imageUrl;}
     public void setImageUrl(String value) {this.imageUrl = value;}

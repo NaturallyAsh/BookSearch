@@ -31,12 +31,17 @@ public class WantBookAdapter extends RecyclerView.Adapter<WantBookAdapter.ViewHo
     private ArrayList<Review> reviewList;
     private int limit = 40;
     private List<Item> newItem = new ArrayList<>();
+    private OnWantedClickedListener listener;
 
-    public WantBookAdapter(Context context, ArrayList<Review> reviewArrayList) {
+    public WantBookAdapter(Context context, ArrayList<Review> reviewArrayList, OnWantedClickedListener listener) {
         this.mContext = context;
         this.reviewList = reviewArrayList;
+        this.listener = listener;
     }
 
+    public interface OnWantedClickedListener {
+        void OnWantedClicke(Review review, int position);
+    }
 
     @NonNull
     @Override
@@ -69,6 +74,12 @@ public class WantBookAdapter extends RecyclerView.Adapter<WantBookAdapter.ViewHo
         }
         holder.titleTV.setText(currentReviews.getBook().getTitle());
         holder.authorTV.setText(currentReviews.getBook().getAuthor().getAuthor().getName());
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.OnWantedClicke(currentReviews, holder.getAdapterPosition());
+            }
+        });
     }
 
     @Override
@@ -83,6 +94,7 @@ public class WantBookAdapter extends RecyclerView.Adapter<WantBookAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        View mView;
         @BindView(R.id.want_book_image)
         ImageView wantIV;
         @BindView(R.id.want_book_title)
@@ -92,6 +104,7 @@ public class WantBookAdapter extends RecyclerView.Adapter<WantBookAdapter.ViewHo
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            mView = itemView;
             ButterKnife.bind(this, itemView);
         }
     }

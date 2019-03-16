@@ -15,6 +15,9 @@ public class VolumeInfo {
     @SerializedName("imageLinks")
     @Expose
     private ImageLinks imageLinks;
+    @SerializedName("industryIdentifiers")
+    @Expose
+    private List<IndustryIdentifier> industryIdentifiers;
 
     /**
      * 
@@ -50,6 +53,10 @@ public class VolumeInfo {
      */
     public void setImageLinks(ImageLinks imageLinks) {
         this.imageLinks = imageLinks;
+    }
+
+    public List<IndustryIdentifier> getIndustryIdentifiers() {
+        return industryIdentifiers;
     }
 
 }

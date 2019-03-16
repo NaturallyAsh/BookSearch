@@ -1,6 +1,7 @@
 package com.example.ashleighwilson.booksearch.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,12 +29,17 @@ public class ReadBookAdapter extends RecyclerView.Adapter<ReadBookAdapter.ViewHo
     private ArrayList<Review> reviewList;
     private int limit = 10;
     private List<Item> newItem = new ArrayList<>();
+    private OnReadClickedListener listener;
 
-    public ReadBookAdapter(Context context, ArrayList<Review> reviewArrayList) {
+    public ReadBookAdapter(Context context, ArrayList<Review> reviewArrayList, OnReadClickedListener listener) {
         this.mContext = context;
         this.reviewList = reviewArrayList;
+        this.listener = listener;
     }
 
+    public interface OnReadClickedListener {
+        void OnReadBookClicked(Review review, int position);
+    }
 
     @NonNull
     @Override
@@ -53,19 +59,33 @@ public class ReadBookAdapter extends RecyclerView.Adapter<ReadBookAdapter.ViewHo
         }
         if (newItem != null) {
             Item item;
+
             for (int i = 0; i < newItem.size(); i++) {
                 item = newItem.get(i);
                 String name = item.getVolumeInfo().getTitle();
-                if (currentReviews.getBook().getTitle().toLowerCase().contains(name.toLowerCase())) {
-                    currentReviews.getBook().setImageUrl(item.getVolumeInfo().getImageLinks().getSmallThumbnail());
-                    Glide.with(mContext)
-                            .load(currentReviews.getBook().getImageUrl())
-                            .into(holder.readImage);
+                Log.i(TAG, "name: " + name);
+                String identifier = "";
+                for (int j = 0; j < item.getVolumeInfo().getIndustryIdentifiers().size(); j++) {
+                    identifier = item.getVolumeInfo().getIndustryIdentifiers().get(j).getIdentifier();
+                    if (currentReviews.getBook().getTitle().toLowerCase().contains(name.toLowerCase())) {
+                        //currentReviews.getBook().setImageUrl(item.getVolumeInfo().getImageLinks().getSmallThumbnail());
+                        currentReviews.getBook().setImageUrl(currentReviews.getBook().getAltBookCover(identifier));
+                        Glide.with(mContext)
+                                .load(currentReviews.getBook().getImageUrl())
+                                //.load(currentReviews.getBook().getAltBookCover(identifier))
+                                .into(holder.readImage);
+                    }
                 }
             }
         }
         holder.titleTV.setText(currentReviews.getBook().getTitle());
         holder.authorTV.setText(currentReviews.getBook().getAuthor().getAuthor().getName());
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.OnReadBookClicked(currentReviews, holder.getAdapterPosition());
+            }
+        });
     }
 
     @Override
@@ -79,6 +99,7 @@ public class ReadBookAdapter extends RecyclerView.Adapter<ReadBookAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        View mView;
         @BindView(R.id.read_book_image)
         ImageView readImage;
         @BindView(R.id.read_book_title)
@@ -88,6 +109,7 @@ public class ReadBookAdapter extends RecyclerView.Adapter<ReadBookAdapter.ViewHo
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            mView = itemView;
             ButterKnife.bind(this, itemView);
         }
     }

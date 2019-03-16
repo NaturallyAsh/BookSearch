@@ -16,20 +16,20 @@ import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class ToReadImageLoader extends AsyncTask<Void, Void, List<Item>> {
+public class ReadImageLoader extends AsyncTask<Void, Void, List<Item>> {
 
-    private static final String TAG = ToReadImageLoader.class.getSimpleName();
+    private static final String TAG = ReadImageLoader.class.getSimpleName();
 
-    private OnToReadImageListener listener;
+    private OnReadImageListener listener;
     private String mTitle;
     @Inject
     GoogleBooksApi googleBooksApi;
 
-    public interface OnToReadImageListener {
-        void OnToReadImageFetched(List<Item> itemList);
+    public interface OnReadImageListener {
+        void OnReadImageFetched(List<Item> itemList);
     }
 
-    public ToReadImageLoader(String title, OnToReadImageListener listener) {
+    public ReadImageLoader(String title, OnReadImageListener listener) {
         this.listener = listener;
         this.mTitle = title;
         Injector.getInstance().inject(this);
@@ -40,7 +40,7 @@ public class ToReadImageLoader extends AsyncTask<Void, Void, List<Item>> {
         if (mTitle == null) {
             return null;
         }
-        Call<GoogleImageResponse> data = googleBooksApi.get_images(2, mTitle);
+        Call<GoogleImageResponse> data = googleBooksApi.get_images(1, mTitle);
         try {
             Response<GoogleImageResponse> response = data.execute();
             GoogleImageResponse images = response.body();
@@ -55,9 +55,9 @@ public class ToReadImageLoader extends AsyncTask<Void, Void, List<Item>> {
     @Override
     protected void onPostExecute(List<Item> googleImages) {
         if (googleImages != null) {
-            listener.OnToReadImageFetched(googleImages);
+            listener.OnReadImageFetched(googleImages);
         } else {
-            listener.OnToReadImageFetched(null);
+            listener.OnReadImageFetched(null);
         }
     }
 }
