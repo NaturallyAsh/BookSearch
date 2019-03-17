@@ -77,6 +77,9 @@ public class UserBook {
     @Element(name="asin", required=false)
     String asin;
 
+    @Element(name="reviews_widget", required=false)
+    String reviewsWidget;
+
     public String toJson() {
         Gson gson = new Gson();
         return gson.toJson(this);
@@ -86,6 +89,9 @@ public class UserBook {
         Gson gson = new Gson();
         return gson.fromJson(json, UserBook.class);
     }
+
+    public String getReviewsWidget() {return this.reviewsWidget;}
+    public void setReviewsWidget(String value) {this.reviewsWidget = value;}
 
     public String getAltBookCover(String identifier) {
         return "https://images.randomhouse.com/cover/" + identifier;

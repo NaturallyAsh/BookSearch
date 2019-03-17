@@ -76,16 +76,128 @@ public class GoodreadsResponse {
 
     }
 
+    public static class Review {
+
+        @Element(name="recommended_for", required=false)
+        String recommendedFor;
+
+        @Element(name="date_updated", required=false)
+        String dateUpdated;
+
+        @Element(name="spoiler_flag", required=false)
+        String spoilerFlag;
+
+        @Element(name="rating", required=false)
+        String rating;
+
+        @Element(name="link", required=false)
+        Link link;
+
+        @Element(name="body", required=false)
+        String body;
+
+        @Element(name="shelves", required=false)
+        Shelves shelves;
+
+        @Element(name="url", required=false)
+        Url url;
+
+        @Element(name="date_added", required=false)
+        String dateAdded;
+
+        @Element(name="comments_count", required=false)
+        String commentsCount;
+
+        @Element(name="started_at", required=false)
+        String startedAt;
+
+        @Element(name="read_at", required=false)
+        String readAt;
+
+        @Element(name="votes", required=false)
+        String votes;
+
+        @Element(name="recommended_by", required=false)
+        String recommendedBy;
+
+        @Element(name="id", required=false)
+        String id;
+
+        @Element(name="user", required=false)
+        User user;
+
+        @Element(name="spoilers_state", required=false)
+        String spoilersState;
+
+        @Element(name="read_count", required=false)
+        String readCount;
+
+        public String getRecommendedFor() {return this.recommendedFor;}
+        public void setRecommendedFor(String value) {this.recommendedFor = value;}
+
+        public String getDateUpdated() {return this.dateUpdated;}
+        public void setDateUpdated(String value) {this.dateUpdated = value;}
+
+        public String getSpoilerFlag() {return this.spoilerFlag;}
+        public void setSpoilerFlag(String value) {this.spoilerFlag = value;}
+
+        public String getRating() {return this.rating;}
+        public void setRating(String value) {this.rating = value;}
+
+        public Link getLink() {return this.link;}
+        public void setLink(Link value) {this.link = value;}
+
+        public String getBody() {return this.body;}
+        public void setBody(String value) {this.body = value;}
+
+        public Shelves getShelves() {return this.shelves;}
+        public void setShelves(Shelves value) {this.shelves = value;}
+
+        public Url getUrl() {return this.url;}
+        public void setUrl(Url value) {this.url = value;}
+
+        public String getDateAdded() {return this.dateAdded;}
+        public void setDateAdded(String value) {this.dateAdded = value;}
+
+        public String getCommentsCount() {return this.commentsCount;}
+        public void setCommentsCount(String value) {this.commentsCount = value;}
+
+        public String getStartedAt() {return this.startedAt;}
+        public void setStartedAt(String value) {this.startedAt = value;}
+
+        public String getReadAt() {return this.readAt;}
+        public void setReadAt(String value) {this.readAt = value;}
+
+        public String getVotes() {return this.votes;}
+        public void setVotes(String value) {this.votes = value;}
+
+        public String getRecommendedBy() {return this.recommendedBy;}
+        public void setRecommendedBy(String value) {this.recommendedBy = value;}
+
+        public String getId() {return this.id;}
+        public void setId(String value) {this.id = value;}
+
+        public User getUser() {return this.user;}
+        public void setUser(User value) {this.user = value;}
+
+        public String getSpoilersState() {return this.spoilersState;}
+        public void setSpoilersState(String value) {this.spoilersState = value;}
+
+        public String getReadCount() {return this.readCount;}
+        public void setReadCount(String value) {this.readCount = value;}
+
+    }
+
     public static class OriginalPublicationDay {
 
-        @Attribute(name="nil", required=false)
-        Boolean nil;
+        @Text(required=false)
+        String textValue;
 
         @Attribute(name="type", required=false)
         String type;
 
-        public Boolean getNil() {return this.nil;}
-        public void setNil(Boolean value) {this.nil = value;}
+        public String getTextValue() {return this.textValue;}
+        public void setTextValue(String value) {this.textValue = value;}
 
         public String getType() {return this.type;}
         public void setType(String value) {this.type = value;}
@@ -448,20 +560,10 @@ public class GoodreadsResponse {
 
     }
 
-    public static class Format {
-
-        @Element(name="#cdata-section", required=false)
-        String cdataSection;
-
-        public String getCdataSection() {return this.cdataSection;}
-        public void setCdataSection(String value) {this.cdataSection = value;}
-
-    }
-
     public static class Shelf {
 
         @Attribute(name="review_shelf_id", required=false)
-        Long reviewShelfId;
+        String reviewShelfId;
 
         @Attribute(name="name", required=false)
         String name;
@@ -475,11 +577,8 @@ public class GoodreadsResponse {
         @Attribute(name="id", required=false)
         Integer id;
 
-        @Attribute(name="sortable", required=false)
-        Boolean sortable;
-
-        public Long getReviewShelfId() {return this.reviewShelfId;}
-        public void setReviewShelfId(Long value) {this.reviewShelfId = value;}
+        public String getReviewShelfId() {return this.reviewShelfId;}
+        public void setReviewShelfId(String value) {this.reviewShelfId = value;}
 
         public String getName() {return this.name;}
         public void setName(String value) {this.name = value;}
@@ -493,22 +592,9 @@ public class GoodreadsResponse {
         public Integer getId() {return this.id;}
         public void setId(Integer value) {this.id = value;}
 
-        public Boolean getSortable() {return this.sortable;}
-        public void setSortable(Boolean value) {this.sortable = value;}
-
     }
 
     public static class CountryCode {
-
-        @Element(name="#cdata-section", required=false)
-        String cdataSection;
-
-        public String getCdataSection() {return this.cdataSection;}
-        public void setCdataSection(String value) {this.cdataSection = value;}
-
-    }
-
-    public static class Isbn13 {
 
         @Element(name="#cdata-section", required=false)
         String cdataSection;
@@ -608,22 +694,32 @@ public class GoodreadsResponse {
 
     }
 
+    public static class FriendReviews {
+
+        @Element(name="review", required=false)
+        Review review;
+
+        public Review getReview() {return this.review;}
+        public void setReview(Review value) {this.review = value;}
+
+    }
+
     public static class Book {
 
         @Element(name="marketplace_id", required=false)
         MarketplaceId marketplaceId;
 
         @Element(name="friend_reviews", required=false)
-        String friendReviews;
+        FriendReviews friendReviews;
 
         @Element(name="book_links", required=false)
         BookLinks bookLinks;
 
         @Element(name="isbn", required=false)
-        Isbn isbn;
+        String isbn;
 
         @Element(name="num_pages", required=false)
-        NumPages numPages;
+        String numPages;
 
         @Element(name="link", required=false)
         Link link;
@@ -632,7 +728,7 @@ public class GoodreadsResponse {
         Description description;
 
         @Element(name="title", required=false)
-        String title;
+        Title title;
 
         @Element(name="language_code", required=false)
         String languageCode;
@@ -674,7 +770,7 @@ public class GoodreadsResponse {
         Work work;
 
         @Element(name="format", required=false)
-        Format format;
+        String format;
 
         @ElementList(name="popular_shelves", required=false)
         List<Shelf> popularShelves;
@@ -701,13 +797,13 @@ public class GoodreadsResponse {
         List<Book> similarBooks;
 
         @Element(name="isbn13", required=false)
-        Isbn13 isbn13;
+        String isbn13;
 
         @Element(name="publisher", required=false)
         String publisher;
 
         @Element(name="asin", required=false)
-        String asin;
+        Asin asin;
 
         @Element(name="publication_day", required=false)
         String publicationDay;
@@ -721,17 +817,17 @@ public class GoodreadsResponse {
         public MarketplaceId getMarketplaceId() {return this.marketplaceId;}
         public void setMarketplaceId(MarketplaceId value) {this.marketplaceId = value;}
 
-        public String getFriendReviews() {return this.friendReviews;}
-        public void setFriendReviews(String value) {this.friendReviews = value;}
+        public FriendReviews getFriendReviews() {return this.friendReviews;}
+        public void setFriendReviews(FriendReviews value) {this.friendReviews = value;}
 
         public BookLinks getBookLinks() {return this.bookLinks;}
         public void setBookLinks(BookLinks value) {this.bookLinks = value;}
 
-        public Isbn getIsbn() {return this.isbn;}
-        public void setIsbn(Isbn value) {this.isbn = value;}
+        public String getIsbn() {return this.isbn;}
+        public void setIsbn(String value) {this.isbn = value;}
 
-        public NumPages getNumPages() {return this.numPages;}
-        public void setNumPages(NumPages value) {this.numPages = value;}
+        public String getNumPages() {return this.numPages;}
+        public void setNumPages(String value) {this.numPages = value;}
 
         public Link getLink() {return this.link;}
         public void setLink(Link value) {this.link = value;}
@@ -739,8 +835,8 @@ public class GoodreadsResponse {
         public Description getDescription() {return this.description;}
         public void setDescription(Description value) {this.description = value;}
 
-        public String getTitle() {return this.title;}
-        public void setTitle(String value) {this.title = value;}
+        public Title getTitle() {return this.title;}
+        public void setTitle(Title value) {this.title = value;}
 
         public String getLanguageCode() {return this.languageCode;}
         public void setLanguageCode(String value) {this.languageCode = value;}
@@ -781,8 +877,8 @@ public class GoodreadsResponse {
         public Work getWork() {return this.work;}
         public void setWork(Work value) {this.work = value;}
 
-        public Format getFormat() {return this.format;}
-        public void setFormat(Format value) {this.format = value;}
+        public String getFormat() {return this.format;}
+        public void setFormat(String value) {this.format = value;}
 
         public List<Shelf> getPopularShelves() {return this.popularShelves;}
         public void setPopularShelves(List<Shelf> value) {this.popularShelves = value;}
@@ -808,14 +904,14 @@ public class GoodreadsResponse {
         public List<Book> getSimilarBooks() {return this.similarBooks;}
         public void setSimilarBooks(List<Book> value) {this.similarBooks = value;}
 
-        public Isbn13 getIsbn13() {return this.isbn13;}
-        public void setIsbn13(Isbn13 value) {this.isbn13 = value;}
+        public String getIsbn13() {return this.isbn13;}
+        public void setIsbn13(String value) {this.isbn13 = value;}
 
         public String getPublisher() {return this.publisher;}
         public void setPublisher(String value) {this.publisher = value;}
 
-        public String getAsin() {return this.asin;}
-        public void setAsin(String value) {this.asin = value;}
+        public Asin getAsin() {return this.asin;}
+        public void setAsin(Asin value) {this.asin = value;}
 
         public String getPublicationDay() {return this.publicationDay;}
         public void setPublicationDay(String value) {this.publicationDay = value;}
@@ -825,16 +921,6 @@ public class GoodreadsResponse {
 
         public Authors getAuthors() {return this.authors;}
         public void setAuthors(Authors value) {this.authors = value;}
-
-    }
-
-    public static class Isbn {
-
-        @Element(name="#cdata-section", required=false)
-        String cdataSection;
-
-        public String getCdataSection() {return this.cdataSection;}
-        public void setCdataSection(String value) {this.cdataSection = value;}
 
     }
 
@@ -1145,6 +1231,84 @@ public class GoodreadsResponse {
 
         public String getType() {return this.type;}
         public void setType(String value) {this.type = value;}
+
+    }
+
+    public static class Asin {
+
+        @Element(name="#cdata-section", required=false)
+        String cdataSection;
+
+        public String getCdataSection() {return this.cdataSection;}
+        public void setCdataSection(String value) {this.cdataSection = value;}
+
+    }
+
+    public static class Location {
+
+        @Element(name="#cdata-section", required=false)
+        String cdataSection;
+
+        public String getCdataSection() {return this.cdataSection;}
+        public void setCdataSection(String value) {this.cdataSection = value;}
+
+    }
+
+    public static class User {
+
+        @Element(name="small_image_url", required=false)
+        SmallImageUrl smallImageUrl;
+
+        @Element(name="has_image", required=false)
+        String hasImage;
+
+        @Element(name="image_url", required=false)
+        ImageUrl imageUrl;
+
+        @Element(name="name", required=false)
+        String name;
+
+        @Element(name="link", required=false)
+        Link link;
+
+        @Element(name="location", required=false)
+        Location location;
+
+        @Element(name="id", required=false)
+        String id;
+
+        @Element(name="display_name", required=false)
+        String displayName;
+
+        @Element(name="uri", required=false)
+        String uri;
+
+        public SmallImageUrl getSmallImageUrl() {return this.smallImageUrl;}
+        public void setSmallImageUrl(SmallImageUrl value) {this.smallImageUrl = value;}
+
+        public String getHasImage() {return this.hasImage;}
+        public void setHasImage(String value) {this.hasImage = value;}
+
+        public ImageUrl getImageUrl() {return this.imageUrl;}
+        public void setImageUrl(ImageUrl value) {this.imageUrl = value;}
+
+        public String getName() {return this.name;}
+        public void setName(String value) {this.name = value;}
+
+        public Link getLink() {return this.link;}
+        public void setLink(Link value) {this.link = value;}
+
+        public Location getLocation() {return this.location;}
+        public void setLocation(Location value) {this.location = value;}
+
+        public String getId() {return this.id;}
+        public void setId(String value) {this.id = value;}
+
+        public String getDisplayName() {return this.displayName;}
+        public void setDisplayName(String value) {this.displayName = value;}
+
+        public String getUri() {return this.uri;}
+        public void setUri(String value) {this.uri = value;}
 
     }
 

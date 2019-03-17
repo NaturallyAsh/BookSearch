@@ -73,11 +73,13 @@ public class WantBookAdapter extends RecyclerView.Adapter<WantBookAdapter.ViewHo
                     for (int j = 0; j < item.getVolumeInfo().getIndustryIdentifiers().size(); j++) {
                         identifier = item.getVolumeInfo().getIndustryIdentifiers().get(j).getIdentifier();
                     }
+                    //Log.i(TAG, "item image url: " + currentReviews.getBook().getAltBookCover(identifier));
                     currentReviews.getBook().setImageUrl(currentReviews.getBook().getAltBookCover(identifier));
                     Glide.with(mContext)
                             .load(currentReviews.getBook().getImageUrl())
                             .into(holder.wantIV);
                     if (item.getVolumeInfo().getImageLinks() != null) {
+                        //Log.i(TAG, "image links not null: " + item.getVolumeInfo().getImageLinks().getSmallThumbnail());
                         currentReviews.getBook().setImageUrl(item.getVolumeInfo().getImageLinks().getSmallThumbnail());
                         Glide.with(mContext)
                                 .load(currentReviews.getBook().getImageUrl())

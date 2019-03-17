@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -87,7 +88,8 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
     TextView descriptionTV;
     @BindView(R.id.detail_more_description_BT)
     Button more_description_BT;
-
+    @BindView(R.id.detail_more_reviews_BT)
+    Button more_reviews_BT;
 
 
     public BookDetailFragment(){}
@@ -154,12 +156,20 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
             String publication = pubMonth + "/" + pubDay + "/" + pubYear;
             if (publication.contains("null")) {
                 publishedTV.setText("No publication available");
-            } else if (item.getVolumeInfo().getPublishedDate() != null &&
-                publication.contains("null")){
-                publishedTV.setText(item.getVolumeInfo().getPublishedDate());
+            } else if (item != null) {
+                if (item.getVolumeInfo().getPublishedDate() != null &&
+                    publication.contains("null")) {
+                    publishedTV.setText(item.getVolumeInfo().getPublishedDate());
+                }
             } else {
                 publishedTV.setText(publication);
             }
+            more_reviews_BT.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getMoreReviews(book.getReviewsWidget());
+                }
+            });
             loadCover();
             getRatings();
             getDescription();
@@ -171,11 +181,11 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
         if (item != null && mReview.getBook().getImageUrl().toLowerCase().indexOf(noPhoto.toLowerCase()) >= 0) {
             String identifier = "";
             for (int i = 0; i < item.getVolumeInfo().getIndustryIdentifiers().size(); i++) {
-                Log.i(TAG, "indus: " + item.getVolumeInfo().getIndustryIdentifiers().get(i).getIdentifier());
+                //Log.i(TAG, "indus: " + item.getVolumeInfo().getIndustryIdentifiers().get(i).getIdentifier());
                 identifier = item.getVolumeInfo().getIndustryIdentifiers().get(i).getIdentifier();
             }
             if (item.getVolumeInfo().getImageLinks() != null) {
-                Log.i(TAG, "image links not null");
+                //Log.i(TAG, "image links not null");
                 Glide.with(getContext())
                         .load(item.getVolumeInfo().getImageLinks().getSmallThumbnail())
                         .into(bookCoverIV);
@@ -196,10 +206,10 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
 
     private void getDescription() {
         if (mReview.getBook().getDescription() != null) {
-            Log.i(TAG, "review descript called");
+            //Log.i(TAG, "review descript called");
             descriptionTV.setText(Html.fromHtml(mReview.getBook().getDescription()));
         } else if (book.getDescription() != null) {
-            Log.i(TAG, "book descript called");
+            //Log.i(TAG, "book descript called");
             descriptionTV.setText(Html.fromHtml(book.getDescription()));
         } else if (item.getVolumeInfo().getDescription() != null){
             descriptionTV.setText(Html.fromHtml(item.getVolumeInfo().getDescription()));
@@ -220,6 +230,34 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
                 showDescriptionDialog();
             }
         });
+    }
+
+    private void getMoreReviews(String reviewsWidget) {
+        //Log.i(TAG, "reviews widget: " + reviewsWidget);
+        String widget = reviewsWidget;
+        String[] remove = StringUtils.substringsBetween(widget, "src=", " width");
+        String widgetUrl = remove[0];
+        String iFrameUrl = StringUtils.replace(widgetUrl, "\"", "");
+
+        //WebView webView = new WebView(getContext());
+        //webView.loadUrl(iFrameUrl);
+        LayoutInflater inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View reviewsView = inflater.inflate(R.layout.reviews_webview, null, false);
+        WebView webView = reviewsView.findViewById(R.id.reviews_webView);
+        if (webView.getParent() != null) {
+            ((ViewGroup) webView.getParent()).removeView(webView);
+        }
+        webView.loadUrl(iFrameUrl);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+        builder.setView(webView);
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void showDescriptionDialog() {
@@ -323,11 +361,10 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
     @Override
     public void OnReadImageFetched(List<Item> itemList) {
         if (itemList != null) {
-            //item = itemList.get(1);
             for (int i = 0; i < itemList.size(); i++) {
                 if (mReview.getBook().getTitle().toLowerCase().contains(itemList.get(i).getVolumeInfo().getTitle().toLowerCase())) {
                     item = itemList.get(i);
-                    Log.i(TAG, "items: " + item.getVolumeInfo().getTitle());
+                    //Log.i(TAG, "items: " + item.getVolumeInfo().getTitle());
                 }
             }
         }
