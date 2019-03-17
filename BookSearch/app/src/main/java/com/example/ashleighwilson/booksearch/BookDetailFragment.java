@@ -1,6 +1,8 @@
 package com.example.ashleighwilson.booksearch;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -32,6 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
@@ -79,6 +83,10 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
     NestedScrollView detailsContainer;
     @BindView(R.id.rating_reviews)
     RatingReviews ratingReviewsBar;
+    @BindView(R.id.detail_description_TV)
+    TextView descriptionTV;
+    @BindView(R.id.detail_more_description_BT)
+    Button more_description_BT;
 
 
 
@@ -114,13 +122,12 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
         });
 
 
-        expandTV = rootView.findViewById(R.id.expand_detail_view).findViewById(R.id.expand_text_view);
+        //expandTV = rootView.findViewById(R.id.expand_detail_view).findViewById(R.id.expand_text_view);
 
         mReview = getArguments().getParcelable(UserFragment.REVIEW_ITEM);
         if (mReview != null) {
             progressContainer.setVisibility(View.VISIBLE);
             detailsContainer.setVisibility(View.INVISIBLE);
-            //Log.i(TAG, "review isbn: " + mReview.getBook().getId().getTextValue());
             fetchBookDetails();
             fetchVolumeDetails();
             //init();
@@ -133,7 +140,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
 
     @SuppressLint("SetTextI18n")
     private void init() {
-        if (book != null) {
+        if (book != null && mReview != null) {
             float stars = Float.parseFloat(mReview.getBook().getAverageRating());
             mainActivity.getSupportActionBar().setTitle(mReview.getBook().getTitle());
             ratingBar.setRating(stars);
@@ -145,7 +152,14 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
             String pubMonth = mReview.getBook().getPublicationMonth();
             String pubYear = mReview.getBook().getPublicationYear();
             String publication = pubMonth + "/" + pubDay + "/" + pubYear;
-            publishedTV.setText(publication);
+            if (publication.contains("null")) {
+                publishedTV.setText("No publication available");
+            } else if (item.getVolumeInfo().getPublishedDate() != null &&
+                publication.contains("null")){
+                publishedTV.setText(item.getVolumeInfo().getPublishedDate());
+            } else {
+                publishedTV.setText(publication);
+            }
             loadCover();
             getRatings();
             getDescription();
@@ -160,24 +174,70 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
                 Log.i(TAG, "indus: " + item.getVolumeInfo().getIndustryIdentifiers().get(i).getIdentifier());
                 identifier = item.getVolumeInfo().getIndustryIdentifiers().get(i).getIdentifier();
             }
-            Glide.with(getContext())
-                    .load(mReview.getBook().getAltBookCover(identifier))
-                    .into(bookCoverIV);
+            if (item.getVolumeInfo().getImageLinks() != null) {
+                Log.i(TAG, "image links not null");
+                Glide.with(getContext())
+                        .load(item.getVolumeInfo().getImageLinks().getSmallThumbnail())
+                        .into(bookCoverIV);
+            } else {
+                Glide.with(getContext())
+                        .load(mReview.getBook().getAltBookCover(identifier))
+                        .into(bookCoverIV);
+            }
+
         } else {
-            Glide.with(getContext())
-                .load(mReview.getBook().getImageUrl())
-                .into(bookCoverIV);
+            {
+                Glide.with(getContext())
+                        .load(mReview.getBook().getImageUrl())
+                        .into(bookCoverIV);
+            }
         }
     }
 
     private void getDescription() {
-        expandTV.setOnExpandStateChangeListener(new ExpandableTextView.OnExpandStateChangeListener() {
-            @Override
-            public void onExpandStateChanged(TextView textView, boolean isExpanded) {
+        if (mReview.getBook().getDescription() != null) {
+            Log.i(TAG, "review descript called");
+            descriptionTV.setText(Html.fromHtml(mReview.getBook().getDescription()));
+        } else if (book.getDescription() != null) {
+            Log.i(TAG, "book descript called");
+            descriptionTV.setText(Html.fromHtml(book.getDescription()));
+        } else if (item.getVolumeInfo().getDescription() != null){
+            descriptionTV.setText(Html.fromHtml(item.getVolumeInfo().getDescription()));
+        } else {
+            descriptionTV.setText("No description available");
+        }
+        int linesCount = descriptionTV.getLayout().getLineCount();
+        if (linesCount > 14) {
+            more_description_BT.setVisibility(View.VISIBLE);
+            descriptionTV.setEllipsize(TextUtils.TruncateAt.END);
+        } else {
+            more_description_BT.setVisibility(View.GONE);
+        }
 
+        more_description_BT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDescriptionDialog();
             }
         });
-        //expandTV.setText(Html.fromHtml(mReview.getBook().getDescription()));
+    }
+
+    private void showDescriptionDialog() {
+        LayoutInflater inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View descriptView = inflater.inflate(R.layout.description_view, null, false);
+        TextView descript = descriptView.findViewById(R.id.description_view_text);
+        descript.setText(descriptionTV.getText());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+        builder.setView(descriptView);
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void fetchBookDetails() {
@@ -185,6 +245,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
     }
 
     private void fetchVolumeDetails() {
+        //Log.i(TAG, "title: " + mReview.getBook().getTitle());
         new ReadImageLoader(mReview.getBook().getTitle(), this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -262,7 +323,13 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
     @Override
     public void OnReadImageFetched(List<Item> itemList) {
         if (itemList != null) {
-            item = itemList.get(0);
+            //item = itemList.get(1);
+            for (int i = 0; i < itemList.size(); i++) {
+                if (mReview.getBook().getTitle().toLowerCase().contains(itemList.get(i).getVolumeInfo().getTitle().toLowerCase())) {
+                    item = itemList.get(i);
+                    Log.i(TAG, "items: " + item.getVolumeInfo().getTitle());
+                }
+            }
         }
     }
 }

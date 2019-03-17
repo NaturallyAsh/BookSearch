@@ -18,6 +18,28 @@ public class VolumeInfo {
     @SerializedName("industryIdentifiers")
     @Expose
     private List<IndustryIdentifier> industryIdentifiers;
+    @SerializedName("description")
+    @Expose
+    private String description;
+    @SerializedName("publishedDate")
+    @Expose
+    private String publishedDate;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getPublishedDate() {
+        return publishedDate;
+    }
+
+    public void setPublishedDate(String publishedDate) {
+        this.publishedDate = publishedDate;
+    }
 
     /**
      * 

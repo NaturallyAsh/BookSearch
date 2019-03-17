@@ -66,7 +66,6 @@ public class WantBookAdapter extends RecyclerView.Adapter<WantBookAdapter.ViewHo
             for (int i = 0; i < newItem.size(); i++) {
                 item = newItem.get(i);
                 String name = item.getVolumeInfo().getTitle();
-                Log.i(TAG, "contains: " + currentReviews.getBook().getTitle().toLowerCase().contains(name.toLowerCase()));
                 if (currentReviews.getBook().getTitle().toLowerCase().contains(name.toLowerCase()) &&
                         currentReviews.getBook().getImageUrl().toLowerCase().indexOf(noPhoto.toLowerCase()) >= 0) {
                     String identifier = "";
@@ -74,13 +73,12 @@ public class WantBookAdapter extends RecyclerView.Adapter<WantBookAdapter.ViewHo
                     for (int j = 0; j < item.getVolumeInfo().getIndustryIdentifiers().size(); j++) {
                         identifier = item.getVolumeInfo().getIndustryIdentifiers().get(j).getIdentifier();
                     }
-                    if (item.getVolumeInfo().getImageLinks().getSmallThumbnail() != null) {
-                        currentReviews.getBook().setImageUrl(item.getVolumeInfo().getImageLinks().getSmallThumbnail());
-                        Glide.with(mContext)
+                    currentReviews.getBook().setImageUrl(currentReviews.getBook().getAltBookCover(identifier));
+                    Glide.with(mContext)
                             .load(currentReviews.getBook().getImageUrl())
                             .into(holder.wantIV);
-                    } else {
-                        currentReviews.getBook().setImageUrl(currentReviews.getBook().getAltBookCover(identifier));
+                    if (item.getVolumeInfo().getImageLinks() != null) {
+                        currentReviews.getBook().setImageUrl(item.getVolumeInfo().getImageLinks().getSmallThumbnail());
                         Glide.with(mContext)
                                 .load(currentReviews.getBook().getImageUrl())
                                 .into(holder.wantIV);

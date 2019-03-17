@@ -258,8 +258,8 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
                     String noPhoto = "noPhoto";
                     if (review.getBook().getImageUrl().toLowerCase().indexOf(noPhoto.toLowerCase()) >= 0) {
                         String name = review.getBook().getTitle();
-                        String test = "Soulsmith (Cradle, #2)";
-                        Log.i(TAG, "read name: " + name);
+                        //String test = "Soulsmith (Cradle, #2)";
+                        //Log.i(TAG, "read name: " + name);
                         new ReadImageLoader(name, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 }
@@ -271,12 +271,7 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
     public void OnWantedImageLoaded(List<Item> googleImages) {
         if (googleImages != null) {
             for (int j = 0; j < googleImages.size(); j++) {
-                Item item = googleImages.get(j);
-                //String name = item.getVolumeInfo().getTitle();
-                if (item.getVolumeInfo().getImageLinks() != null) {
-                    //Log.i(TAG, "adding image: " + name);
-                    wantBookAdapter.newImage(item);
-                }
+                wantBookAdapter.newImage(googleImages.get(j));
             }
         }
     }
@@ -285,7 +280,6 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
     public void OnReadImageFetched(List<Item> itemList) {
         if (itemList != null) {
             for (int i = 0; i < itemList.size(); i++) {
-                //Log.i(TAG, "item: " + itemList.get(i).getVolumeInfo().getTitle());
                 readBookAdapter.newImage(itemList.get(i));
             }
         }

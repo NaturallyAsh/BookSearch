@@ -48,4 +48,5 @@
     <string name="reviews">reviews</string>
     <string name="synopsis_string">Synopsis</string>
     <string name="no_books_in_shelf_string">No Books In Shelf</string>
+    <string name="read_more_string">Read More</string>
 </resources>

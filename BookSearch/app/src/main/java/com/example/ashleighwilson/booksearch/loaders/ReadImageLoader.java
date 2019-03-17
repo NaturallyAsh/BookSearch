@@ -3,6 +3,7 @@ package com.example.ashleighwilson.booksearch.loaders;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.ashleighwilson.booksearch.BuildConfig;
 import com.example.ashleighwilson.booksearch.dagger.Injector;
 import com.example.ashleighwilson.booksearch.models.GoogleImageResponse;
 import com.example.ashleighwilson.booksearch.models.Item;
@@ -42,7 +43,7 @@ public class ReadImageLoader extends AsyncTask<Void, Void, List<Item>> {
             return null;
         }
         //Log.i(TAG, "title: " + mTitle);
-        Call<GoogleImageResponse> data = googleBooksApi.get_images( mTitle);
+        Call<GoogleImageResponse> data = googleBooksApi.get_images(mTitle, BuildConfig.Googlebooks_Api_Key);
         try {
             Response<GoogleImageResponse> response = data.execute();
             GoogleImageResponse images = response.body();
