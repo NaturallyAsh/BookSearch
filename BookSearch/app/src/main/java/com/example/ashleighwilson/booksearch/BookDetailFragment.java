@@ -20,10 +20,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.ashleighwilson.booksearch.adapters.SeriesBookAdapter;
 import com.example.ashleighwilson.booksearch.loaders.BookDetailsLoader;
 import com.example.ashleighwilson.booksearch.loaders.ReadImageLoader;
+import com.example.ashleighwilson.booksearch.loaders.SeriesBookLoader;
+import com.example.ashleighwilson.booksearch.loaders.SeriesImageLoader;
 import com.example.ashleighwilson.booksearch.models.Item;
 import com.example.ashleighwilson.booksearch.models.Review;
+import com.example.ashleighwilson.booksearch.models.Series;
+import com.example.ashleighwilson.booksearch.models.SeriesWork;
 import com.example.ashleighwilson.booksearch.models.UserBook;
 import com.example.ashleighwilson.booksearch.views.RatingBar;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -33,6 +38,7 @@ import com.taufiqrahman.reviewratings.RatingReviews;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,12 +48,14 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class BookDetailFragment extends Fragment implements BookDetailsLoader.OnBookDetailsListener,
-        ReadImageLoader.OnReadImageListener {
+        ReadImageLoader.OnReadImageListener, SeriesBookAdapter.OnSeriesClickedListener,
+        SeriesBookLoader.OnSeriesLoadedListener, SeriesImageLoader.OnSeriesImageListener {
 
     private static final String TAG = BookDetailFragment.class.getSimpleName();
 
@@ -55,6 +63,8 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
     private UserBook book;
     private MainActivity mainActivity;
     private Item item;
+    private SeriesBookAdapter seriesBookAdapter;
+    private ArrayList<SeriesWork> seriesArrayList = new ArrayList<>();
     @BindView(R.id.detail_CT)
     CollapsingToolbarLayout collapsingToolbar;
     @BindView(R.id.detail_author)
@@ -123,15 +133,21 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
             }
         });
 
+        LinearLayoutManager seriesManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,
+                false);
+        LinearLayoutManager similarManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,
+                false);
 
-        //expandTV = rootView.findViewById(R.id.expand_detail_view).findViewById(R.id.expand_text_view);
+        seriesRV.setLayoutManager(seriesManager);
+        seriesBookAdapter = new SeriesBookAdapter(getContext(), seriesArrayList, this);
+        seriesRV.setAdapter(seriesBookAdapter);
 
         mReview = getArguments().getParcelable(UserFragment.REVIEW_ITEM);
         if (mReview != null) {
             progressContainer.setVisibility(View.VISIBLE);
             detailsContainer.setVisibility(View.INVISIBLE);
             fetchBookDetails();
-            fetchVolumeDetails();
+            fetchVolumeDetails(mReview.getBook().getTitle());
             //init();
         } else {
             Log.i(TAG, "review intent is null");
@@ -282,9 +298,17 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
         new BookDetailsLoader(mReview.getBook().getId().getTextValue(), this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void fetchVolumeDetails() {
+    private void fetchVolumeDetails(String title) {
         //Log.i(TAG, "title: " + mReview.getBook().getTitle());
-        new ReadImageLoader(mReview.getBook().getTitle(), this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new ReadImageLoader(title, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void fetchSeriesDetails() {
+        if (book != null) {
+            //Log.i(TAG, "series id: " + book.getSeriesWorks().getSeriesWork().getSeries().getId());
+            new SeriesBookLoader(book.getSeriesWorks().getSeriesWork().getSeries().getId(), this)
+                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
     @Override
@@ -294,6 +318,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
             //Log.i(TAG, "book asin: " + book.getAsin());
             progressContainer.setVisibility(View.GONE);
             detailsContainer.setVisibility(View.VISIBLE);
+            fetchSeriesDetails();
 
             init();
         }
@@ -366,6 +391,35 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
                     item = itemList.get(i);
                     //Log.i(TAG, "items: " + item.getVolumeInfo().getTitle());
                 }
+            }
+        }
+    }
+
+    @Override
+    public void OnSeriesClicked(SeriesWork series, int position) {
+
+    }
+
+    @Override
+    public void OnSeriesFetched(Series series) {
+        if (series != null) {
+            List<SeriesWork> seriesList = new ArrayList<>();
+            seriesList = series.getSeriesWorks();
+            for (int i = 0; i < seriesList.size(); i++) {
+                seriesBookAdapter.add(seriesList);
+                new SeriesImageLoader(series.getSeriesWorks().get(i).getWork().getBestBook()
+                        .getId(), this)
+                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        }
+    }
+
+    @Override
+    public void OnSeriesImageFetched(List<Item> itemList) {
+        if (itemList != null) {
+            for (int i = 0; i < itemList.size(); i++) {
+                //Log.i(TAG, "series: " + itemList.get(i).getVolumeInfo().getTitle());
+                seriesBookAdapter.newImage(itemList.get(i));
             }
         }
     }

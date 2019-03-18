@@ -11,4 +11,8 @@ public interface GoogleBooksApi {
     Call<GoogleImageResponse> get_images(@Query("q") String title,
                                          @Query("key") String key);
 
+    @GET("/books/v1/volumes?")
+    Call<GoogleImageResponse> get_series_images(@Query("q") String id,
+                                                @Query("key") String key);
+
 }

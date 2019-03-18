@@ -14,4 +14,8 @@ public interface GoodreadsApiRetro2 {
 
     @GET("/book/show/{id}?format=xml")
     Call<BookShowResponse> book_show(@Path("id") String id);
+
+    @GET("/series/show/{id}.xml")
+    Call<SeriesResponse> series_show(@Path("id") String series_id,
+                                     @Query("key") String api_key);
 }

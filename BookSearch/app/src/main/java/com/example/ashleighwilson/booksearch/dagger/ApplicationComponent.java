@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.example.ashleighwilson.booksearch.loaders.BookDetailsLoader;
 import com.example.ashleighwilson.booksearch.loaders.ReadImageLoader;
+import com.example.ashleighwilson.booksearch.loaders.SeriesBookLoader;
+import com.example.ashleighwilson.booksearch.loaders.SeriesImageLoader;
 import com.example.ashleighwilson.booksearch.loaders.WantedImageLoader;
 import com.example.ashleighwilson.booksearch.loaders.CurrentlyReadingLoader;
 import com.example.ashleighwilson.booksearch.LoginActivity;
@@ -37,4 +39,6 @@ public interface ApplicationComponent {
     void inject(WantedImageLoader wantedImageLoader);
     void inject(ReadImageLoader readImageLoader);
     void inject(BookDetailsLoader bookDetailsLoader);
+    void inject(SeriesBookLoader seriesBookLoader);
+    void inject(SeriesImageLoader seriesImageLoader);
 }

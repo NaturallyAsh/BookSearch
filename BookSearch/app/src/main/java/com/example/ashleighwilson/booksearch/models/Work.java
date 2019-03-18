@@ -56,6 +56,12 @@ public class Work {
     @Element(required = false)
     long text_reviews_count;
 
+    @Element(name="best_book", required=false)
+    BestBook bestBook;
+
+    public BestBook getBestBook() {return this.bestBook;}
+    public void setBestBook(BestBook value) {this.bestBook = value;}
+
     public long getText_reviews_count() {
         return text_reviews_count;
     }

@@ -3,6 +3,9 @@ package com.example.ashleighwilson.booksearch.models;
 import com.google.gson.Gson;
 
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
+
+import java.util.List;
 
 public class UserBook {
     @Element(name="image_url", required=false)
@@ -80,6 +83,12 @@ public class UserBook {
     @Element(name="reviews_widget", required=false)
     String reviewsWidget;
 
+    @Element(name="series_works", required=false)
+    SeriesWorks seriesWorks;
+
+    @ElementList(name="similar_books", required=false)
+    List<UserBook> similarBooks;
+
     public String toJson() {
         Gson gson = new Gson();
         return gson.toJson(this);
@@ -89,6 +98,12 @@ public class UserBook {
         Gson gson = new Gson();
         return gson.fromJson(json, UserBook.class);
     }
+
+    public List<UserBook> getSimilarBooks() {return this.similarBooks;}
+    public void setSimilarBooks(List<UserBook> value) {this.similarBooks = value;}
+
+    public SeriesWorks getSeriesWorks() {return this.seriesWorks;}
+    public void setSeriesWorks(SeriesWorks value) {this.seriesWorks = value;}
 
     public String getReviewsWidget() {return this.reviewsWidget;}
     public void setReviewsWidget(String value) {this.reviewsWidget = value;}
