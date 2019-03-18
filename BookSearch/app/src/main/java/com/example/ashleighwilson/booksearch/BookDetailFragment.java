@@ -21,10 +21,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.ashleighwilson.booksearch.adapters.SeriesBookAdapter;
+import com.example.ashleighwilson.booksearch.adapters.SimilarBookAdapter;
 import com.example.ashleighwilson.booksearch.loaders.BookDetailsLoader;
 import com.example.ashleighwilson.booksearch.loaders.ReadImageLoader;
 import com.example.ashleighwilson.booksearch.loaders.SeriesBookLoader;
 import com.example.ashleighwilson.booksearch.loaders.SeriesImageLoader;
+import com.example.ashleighwilson.booksearch.loaders.SimilarImageLoader;
 import com.example.ashleighwilson.booksearch.models.Item;
 import com.example.ashleighwilson.booksearch.models.Review;
 import com.example.ashleighwilson.booksearch.models.Series;
@@ -55,7 +57,8 @@ import butterknife.ButterKnife;
 
 public class BookDetailFragment extends Fragment implements BookDetailsLoader.OnBookDetailsListener,
         ReadImageLoader.OnReadImageListener, SeriesBookAdapter.OnSeriesClickedListener,
-        SeriesBookLoader.OnSeriesLoadedListener, SeriesImageLoader.OnSeriesImageListener {
+        SeriesBookLoader.OnSeriesLoadedListener, SeriesImageLoader.OnSeriesImageListener,
+        SimilarImageLoader.OnSimilarImageListener, SimilarBookAdapter.OnSimilarBookClickedListener {
 
     private static final String TAG = BookDetailFragment.class.getSimpleName();
 
@@ -64,7 +67,9 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
     private MainActivity mainActivity;
     private Item item;
     private SeriesBookAdapter seriesBookAdapter;
+    private SimilarBookAdapter similarBookAdapter;
     private ArrayList<SeriesWork> seriesArrayList = new ArrayList<>();
+    private ArrayList<UserBook> similarArrayList = new ArrayList<>();
     @BindView(R.id.detail_CT)
     CollapsingToolbarLayout collapsingToolbar;
     @BindView(R.id.detail_author)
@@ -141,6 +146,10 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
         seriesRV.setLayoutManager(seriesManager);
         seriesBookAdapter = new SeriesBookAdapter(getContext(), seriesArrayList, this);
         seriesRV.setAdapter(seriesBookAdapter);
+
+        similarRV.setLayoutManager(similarManager);
+        similarBookAdapter = new SimilarBookAdapter(getContext(), similarArrayList, this);
+        similarRV.setAdapter(similarBookAdapter);
 
         mReview = getArguments().getParcelable(UserFragment.REVIEW_ITEM);
         if (mReview != null) {
@@ -311,6 +320,12 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
         }
     }
 
+    private void fetchSimilarImages(String id) {
+        if (id != null) {
+            new SimilarImageLoader(id, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
     @Override
     public void OnBookDetailsFetched(UserBook bookDetails) {
         if (bookDetails != null) {
@@ -319,7 +334,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
             progressContainer.setVisibility(View.GONE);
             detailsContainer.setVisibility(View.VISIBLE);
             fetchSeriesDetails();
-
+            fetchSimilarImages(book.getId().getTextValue());
             init();
         }
     }
@@ -422,5 +437,25 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
                 seriesBookAdapter.newImage(itemList.get(i));
             }
         }
+    }
+
+    @Override
+    public void OnSimilarImageFetched(List<Item> itemList) {
+        if (book != null) {
+            List<UserBook> bookList = book.getSimilarBooks();
+            for (int j = 0; j < bookList.size(); j++) {
+                similarBookAdapter.add(bookList);
+            }
+        }
+        if (itemList != null) {
+            for (int i = 0; i < itemList.size(); i++) {
+                similarBookAdapter.newImage(itemList.get(i));
+            }
+        }
+    }
+
+    @Override
+    public void OnSimilarBookClicked(UserBook book, int position) {
+
     }
 }

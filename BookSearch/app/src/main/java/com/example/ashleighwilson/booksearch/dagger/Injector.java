@@ -5,6 +5,7 @@ import android.app.Application;
 import com.example.ashleighwilson.booksearch.loaders.BookDetailsLoader;
 import com.example.ashleighwilson.booksearch.loaders.SeriesBookLoader;
 import com.example.ashleighwilson.booksearch.loaders.SeriesImageLoader;
+import com.example.ashleighwilson.booksearch.loaders.SimilarImageLoader;
 import com.example.ashleighwilson.booksearch.loaders.ToReadBookLoader;
 import com.example.ashleighwilson.booksearch.loaders.ReadImageLoader;
 import com.example.ashleighwilson.booksearch.loaders.WantedImageLoader;
@@ -114,5 +115,10 @@ public class Injector implements ApplicationComponent {
     @Override
     public void inject(SeriesImageLoader seriesImageLoader) {
         component.inject(seriesImageLoader);
+    }
+
+    @Override
+    public void inject(SimilarImageLoader similarImageLoader) {
+        component.inject(similarImageLoader);
     }
 }

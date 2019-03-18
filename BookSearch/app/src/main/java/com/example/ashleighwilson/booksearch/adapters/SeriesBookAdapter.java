@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.ashleighwilson.booksearch.R;
 import com.example.ashleighwilson.booksearch.models.Item;
-import com.example.ashleighwilson.booksearch.models.Series;
 import com.example.ashleighwilson.booksearch.models.SeriesWork;
 
 import java.util.ArrayList;
