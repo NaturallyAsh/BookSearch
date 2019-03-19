@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.example.ashleighwilson.booksearch.dagger.Injector;
 import com.example.ashleighwilson.booksearch.models.AuthUser;
 import com.example.ashleighwilson.booksearch.models.Review;
+import com.example.ashleighwilson.booksearch.models.SeriesWork;
 import com.example.ashleighwilson.booksearch.models.UserBook;
 import com.google.android.material.navigation.NavigationView;
 
@@ -131,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements
     private FragmentManager getFragmentManagerInstance() {
         if (mFragmentManager == null) {
             mFragmentManager = getSupportFragmentManager();
+            Log.i(TAG, "getFragInstance null");
         }
         return mFragmentManager;
     }
@@ -187,11 +189,62 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    public void switchBackToDetail(UserBook book) {
+        FragmentTransaction transaction = getFragmentManagerInstance().beginTransaction();
+        animateTransition(transaction, TRANSITION_HORIZONTAL);
+        BookDetailFragment detailFragment = new BookDetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(BookDetailFragment.BOOK_ARG_ITEM, book);
+        detailFragment.setArguments(bundle);
+        if (getFragmentManagerInstance().findFragmentByTag(FRAGMENT_BOOKDETAILS_TAG) == null) {
+            transaction.replace(R.id.main_frag_container, detailFragment, FRAGMENT_BOOKDETAILS_TAG)
+                    .addToBackStack(FRAGMENT_USERFRAG_TAG)
+                    .commit();
+            if (toggle != null) {
+                toggle.setDrawerIndicatorEnabled(false);
+            }
+        } else {
+            getFragmentManagerInstance().popBackStackImmediate();
+            transaction.replace(R.id.main_frag_container, detailFragment, FRAGMENT_BOOKDETAILS_TAG)
+                    .addToBackStack(FRAGMENT_BOOKDETAILS_TAG)
+                    .commit();
+            if (toggle != null) {
+                toggle.setDrawerIndicatorEnabled(false);
+            }
+        }
+    }
+
+    public void seriesSwitchBackToDetail(SeriesWork seriesWork) {
+        FragmentTransaction transaction = getFragmentManagerInstance().beginTransaction();
+        animateTransition(transaction, TRANSITION_HORIZONTAL);
+        BookDetailFragment detailFragment = new BookDetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(BookDetailFragment.SERIES_ARG_ITEM, seriesWork);
+        detailFragment.setArguments(bundle);
+        if (getFragmentManagerInstance().findFragmentByTag(FRAGMENT_BOOKDETAILS_TAG) == null) {
+            transaction.replace(R.id.main_frag_container, detailFragment, FRAGMENT_BOOKDETAILS_TAG)
+                    .addToBackStack(FRAGMENT_USERFRAG_TAG)
+                    .commit();
+            if (toggle != null) {
+                toggle.setDrawerIndicatorEnabled(false);
+            }
+        } else {
+            getFragmentManagerInstance().popBackStackImmediate();
+            transaction.replace(R.id.main_frag_container, detailFragment, FRAGMENT_BOOKDETAILS_TAG)
+                    .addToBackStack(FRAGMENT_BOOKDETAILS_TAG)
+                    .commit();
+            if (toggle != null) {
+                toggle.setDrawerIndicatorEnabled(false);
+            }
+        }
+    }
+
     public void switchToList() {
         FragmentTransaction transaction = getFragmentManagerInstance().beginTransaction();
         animateTransition(transaction, TRANSITION_HORIZONTAL);
         UserFragment mUserFragment = new UserFragment();
-        transaction.replace(R.id.main_frag_container, mUserFragment, FRAGMENT_USERFRAG_TAG).addToBackStack
+        transaction.replace(R.id.main_frag_container, mUserFragment, FRAGMENT_USERFRAG_TAG)
+                .addToBackStack
                 (FRAGMENT_BOOKDETAILS_TAG).commitAllowingStateLoss();
         if (toggle != null) {
             toggle.setDrawerIndicatorEnabled(false);

@@ -1,13 +1,131 @@
 package com.example.ashleighwilson.booksearch.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.Gson;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
 
 import java.util.List;
 
-public class UserBook {
+@Root(name = "book", strict = false)
+public class UserBook implements Parcelable {
+
+
+    public UserBook(@Element(name="image_url", required=false)
+                            String imageUrl,
+
+                            @Element(name="num_pages", required=false)
+                                    String numPages,
+
+                            @Element(name="link", required=false)
+                                    String link,
+
+                            @Element(name="format", required=false)
+                                    String format,
+
+                            @Element(name="description", required=false)
+                                    String description,
+
+                            @Element(name="average_rating", required=false)
+                                    String averageRating,
+
+                            @Element(name="published", required=false)
+                                    String published,
+
+                            @Element(name="title", required=false)
+                                    String title,
+
+                            @Element(name="uri", required=false)
+                                    String uri,
+
+                            @Element(name="id", required=false)
+                                    Id id,
+
+                            @Element(name="publication_month", required=false)
+                                    String publicationMonth,
+
+                            @Element(name="large_image_url", required=false)
+                                    String largeImageUrl,
+
+                            @Element(name="publication_year", required=false)
+                                    String publicationYear,
+
+                            @Element(name="small_image_url", required=false)
+                                    String smallImageUrl,
+
+                            @Element(name="edition_information", required=false)
+                                    String editionInformation,
+
+                            @Element(name="publisher", required=false)
+                                    String publisher,
+
+                            @Element(name="publication_day", required=false)
+                                    String publicationDay,
+
+                            @Element(name="ratings_count", required=false)
+                                    String ratingsCount,
+
+                            @Element(name="title_without_series", required=false)
+                                    String titleWithoutSeries,
+
+                            @Element(name="authors", required=false)
+                                    Authors author,
+
+                            @Element(name="text_reviews_count", required=false)
+                                    TextReviewsCount textReviewsCount,
+
+                            @Element(name="isbn", required=false)
+                                    String isbn,
+
+                            @Element(name = "work", required = false)
+                                    Work work,
+
+                            @Element(name="asin", required=false)
+                                    String asin,
+
+                            @Element(name="reviews_widget", required=false)
+                                    String reviewsWidget,
+
+                            @Element(name="series_works", required=false)
+                                    SeriesWorks seriesWorks,
+
+                            @ElementList(name="similar_books", required=false)
+                                    List<UserBook> similarBooks) {
+
+        this.imageUrl = imageUrl;
+        this.numPages = numPages;
+        this.link = link;
+        this.format = format;
+        this.description = description;
+        this.averageRating = averageRating;
+        this.published = published;
+        this.title = title;
+        this.uri = uri;
+        this.id = id;
+        this.publicationMonth = publicationMonth;
+        this.largeImageUrl = largeImageUrl;
+        this.publicationYear = publicationYear;
+        this.smallImageUrl = smallImageUrl;
+        this.editionInformation = editionInformation;
+        this.publisher = publisher;
+        this.publicationDay = publicationDay;
+        this.ratingsCount = ratingsCount;
+        this.titleWithoutSeries = titleWithoutSeries;
+        this.author = author;
+        this.textReviewsCount = textReviewsCount;
+        this.isbn = isbn;
+        this.work = work;
+        this.asin = asin;
+        this.reviewsWidget = reviewsWidget;
+        this.seriesWorks = seriesWorks;
+        this.similarBooks = similarBooks;
+    }
+
+
     @Element(name="image_url", required=false)
     String imageUrl;
 
@@ -88,6 +206,43 @@ public class UserBook {
 
     @ElementList(name="similar_books", required=false)
     List<UserBook> similarBooks;
+
+    protected UserBook(Parcel in) {
+        imageUrl = in.readString();
+        numPages = in.readString();
+        link = in.readString();
+        format = in.readString();
+        description = in.readString();
+        averageRating = in.readString();
+        published = in.readString();
+        title = in.readString();
+        uri = in.readString();
+        publicationMonth = in.readString();
+        largeImageUrl = in.readString();
+        publicationYear = in.readString();
+        smallImageUrl = in.readString();
+        editionInformation = in.readString();
+        publisher = in.readString();
+        publicationDay = in.readString();
+        ratingsCount = in.readString();
+        titleWithoutSeries = in.readString();
+        isbn = in.readString();
+        asin = in.readString();
+        reviewsWidget = in.readString();
+        similarBooks = in.createTypedArrayList(UserBook.CREATOR);
+    }
+
+    public static final Creator<UserBook> CREATOR = new Creator<UserBook>() {
+        @Override
+        public UserBook createFromParcel(Parcel in) {
+            return new UserBook(in);
+        }
+
+        @Override
+        public UserBook[] newArray(int size) {
+            return new UserBook[size];
+        }
+    };
 
     public String toJson() {
         Gson gson = new Gson();
@@ -194,307 +349,34 @@ public class UserBook {
     public TextReviewsCount getTextReviewsCount() {return this.textReviewsCount;}
     public void setTextReviewsCount(TextReviewsCount value) {this.textReviewsCount = value;}
 
-
-    /*@Element(required = false)
-    String asin;
-
-    @Element(required = false)
-    long asin_updater_user_id;
-
-    @Element(required = false)
-    long author_id;
-
-    @Element(required = false)
-    long author_id_updater_user_id;
-
-    @Element
-    long id;
-
-    @Element(required = false)
-    String isbn;
-
-    @Element(required = false)
-    String isbn13;
-
-    @Element(required = false)
-    long image_updater_user_id;
-
-    @Element(required = false)
-    long isbn13_updater_user_id;
-
-    @Element(required = false)
-    long isbn_updater_user_id;
-
-    @Element(required = false)
-    String image_url;
-
-    @Element(required = false)
-    String small_image_url;
-
-    @Element(required = false)
-    String language_code;
-
-    @Element(required = false)
-    long language_updater_user_id;
-
-    @Element(required = false)
-    long num_pages;
-
-    @Element(required = false)
-    long num_pages_updater_user_id;
-
-    @Element(required = false)
-    String author_role;
-
-    @Element(required = false)
-    long author_role_updater_user_id;
-
-    @Element(required = false)
-    long book_authors_count;
-
-    @Element(required = false)
-    boolean is_ebook;
-
-    @Element(required = false)
-    String created_at;
-
-    @Element(required = false)
-    Work work;
-
-    @Element(required = false)
-    String description;
-
-    @Element(required = false)
-    String description_language_code;
-
-    @Element(required = false)
-    long description_updater_user_id;
-
-    @Element(required = false)
-    String edition_information;
-
-    @Element(required = false)
-    long edition_information_updater_user_id;
-
-    @Element(required = false)
-    String format;
-
-    @Element(required = false)
-    long format_updater_user_id;
-
-    @Element(required = false)
-    String image_uploaded_at;
-
-    @Element(required = false)
-    long publication_date_updater_user_id;
-
-    @Element(required = false)
-    long publication_day;
-
-    @Element(required = false)
-    String link;
-
-    @ElementList(required = false)
-    List<Author> author = new ArrayList<>();
-
-    @Element(required = false)
-    long publication_month;
-
-    @Element(required = false)
-    long publication_year;
-
-    @Element(required = false)
-    String publisher;
-
-    @Element(required = false)
-    String publisher_language_code;
-
-    @Element(required = false)
-    long publisher_updater_user_id;
-
-    @Element(required = false)
-    long ratings_count;
-
-    @Element(required = false)
-    long ratings_sum;
-
-    @Element(required = false)
-    float average_rating;
-
-    @Element(required = false)
-    long reviews_count;
-
-    @Element(required = false)
-    String s3_image_at;
-
-    @ElementList(required = false)
-    List<Review> friend_reviews = new ArrayList<>();
-
-    @Element(required = false)
-    String reviews_widget;
-
-    @ElementList(required = false)
-    List<Shelves> popular_shelves = new ArrayList<>();
-
-    @ElementList(required = false)
-    List<BookLink> book_links = new ArrayList<>();
-
-    @ElementList(required = false)
-    List<SeriesWork> series_works = new ArrayList<>();
-
-    @ElementList(required = false)
-    List<UserBook> similar_books = new ArrayList<>();
-
-    @Element(required = false)
-    String sort_by_title;
-
-    @Element(required = false)
-    String source_url;
-
-    @Element(required = false)
-    long text_reviews_count;
-
-    @Element
-    String title;
-
-    @Element(required = false)
-    String title_language_code;
-
-    @Element(required = false)
-    long title_updater_user_id;
-
-    @Element(required = false)
-    String updated_at;
-
-    @Element(required = false)
-    String url;
-
-    @Element(required = false)
-    long url_updater_user_id;
-
-    @Element(required = false)
-    long work_id;
-
-    @Element(required = false)
-    Author author;
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public String getIsbn13() {
-        return isbn13;
-    }
-
-    public String getImageUrl() {
-        return image_url;
-    }
-
-    public String getSmallImageUrl() {
-        return small_image_url;
-    }
-
-    public String getOpenLibraryCoverImageUrl() {
-        return String.format(
-                "http://covers.openlibrary.org/b/isbn/%s-L.jpg",
-                isbn);
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     @Override
-    public String toString() {
-        return "Book{" +
-                "asin='" + asin + '\'' +
-                ", author=" + author +
-                ", id=" + id +
-                ", isbn='" + isbn + '\'' +
-                ", isbn13='" + isbn13 + '\'' +
-                ", image_url='" + image_url + '\'' +
-                ", small_image_url='" + small_image_url + '\'' +
-                ", num_pages=" + num_pages +
-                ", ratings_count=" + ratings_count +
-                ", ratings_sum=" + ratings_sum +
-                ", average_rating=" + average_rating +
-                ", reviews_count=" + reviews_count +
-                ", s3_image_at='" + s3_image_at + '\'' +
-                ", title='" + title + '\'' +
-                ", url='" + url + '\'' +
-                '}';
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(imageUrl);
+        dest.writeString(numPages);
+        dest.writeString(link);
+        dest.writeString(format);
+        dest.writeString(description);
+        dest.writeString(averageRating);
+        dest.writeString(published);
+        dest.writeString(title);
+        dest.writeString(uri);
+        dest.writeString(publicationMonth);
+        dest.writeString(largeImageUrl);
+        dest.writeString(publicationYear);
+        dest.writeString(smallImageUrl);
+        dest.writeString(editionInformation);
+        dest.writeString(publisher);
+        dest.writeString(publicationDay);
+        dest.writeString(ratingsCount);
+        dest.writeString(titleWithoutSeries);
+        dest.writeString(isbn);
+        dest.writeString(asin);
+        dest.writeString(reviewsWidget);
+        dest.writeTypedList(similarBooks);
     }
-
-    public Author getAuthor() {
-        if (author != null) {
-            return author;
-        }
-
-        if (author.size() == 0) {
-            return null;
-        }
-        return author.get(0);
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public List<Review> getFriendReviews() {
-        return friend_reviews;
-    }
-
-    public long getReviewsCount() {
-        return reviews_count;
-    }
-
-    public float getAverageRating() {
-        return average_rating;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public long getNumPages() {
-        return num_pages;
-    }
-
-    public Shelves getPopularShelve() {
-        for (Shelves shelve: popular_shelves) {
-            if (shelve.name.equals("to-read")) {
-                continue;
-            } else if (shelve.name.equals("currently-reading")) {
-                continue;
-            }
-
-            return shelve;
-        }
-
-        return null;
-    }
-
-    public List<UserBook> getSimilarBooks() {
-        return similar_books;
-    }
-
-    public String getPublisher() {
-        return publisher;
-    }
-
-    public long getPublicationYear() {
-        return publication_year;
-    }
-
-    public String getLink() {
-        return link;
-    }*/
 }

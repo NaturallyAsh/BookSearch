@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/detail_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:id="@+id/detail_coordinator"
     android:visibility="visible">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -32,13 +31,12 @@
                     android:id="@+id/detail_imageView"
                     android:layout_width="200dp"
                     android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
                     android:fitsSystemWindows="true"
                     android:scaleType="fitCenter"
-                    app:layout_collapseMode="parallax"
-                    android:layout_centerInParent="true"/>
+                    app:layout_collapseMode="parallax" />
 
             </RelativeLayout>
-
 
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -50,13 +48,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginEnd="10dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -73,10 +71,10 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
                         android:text="@string/synopsis_string"
                         android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:layout_marginStart="10dp"/>
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:id="@+id/detail_description_container"
@@ -93,16 +91,16 @@
 
                         <Button
                             android:id="@+id/detail_more_description_BT"
+                            style="@style/Widget.AppCompat.Button.Colored"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/read_more_string"
-                            android:visibility="gone"
-                            android:background="@drawable/button_shape"
-                            style="@style/Widget.AppCompat.Button.Colored"
+                            android:layout_gravity="center"
                             android:layout_marginTop="10dp"
+                            android:background="@drawable/button_shape"
                             android:minHeight="3dp"
+                            android:text="@string/read_more_string"
                             android:textSize="12sp"
-                            android:layout_gravity="center"/>
+                            android:visibility="gone" />
 
                     </LinearLayout>
 
@@ -124,7 +122,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/author_string"
                             android:textSize="20sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/detail_author"
@@ -136,15 +134,15 @@
                         android:id="@+id/published_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_below="@id/author_container">
+                        android:layout_below="@id/author_container"
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/published_string"
                             android:textSize="20sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/detail_published"
@@ -154,6 +152,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/reviews_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/published_container"
@@ -164,10 +163,16 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <include
-                                layout="@layout/rating_bar"
+                            <RatingBar
+                                android:id="@+id/detail_rating_bar"
+                                style="@style/Widget.AppCompat.RatingBar.Small"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
+                                android:layout_height="wrap_content"
+                                android:numStars="5"
+                                android:progressBackgroundTint="@color/black"
+                                android:progressTint="@color/Gold"
+                                android:secondaryProgressTint="@color/Gold"
+                                android:stepSize=".1" />
 
                             <TextView
                                 android:id="@+id/rating_float"
@@ -175,7 +180,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_marginStart="6dp"
                                 android:gravity="center"
-                                android:textSize="12sp"/>
+                                android:textSize="12sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -187,27 +192,27 @@
                                 android:id="@+id/ratings_total"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="12sp"
-                                android:layout_marginTop="6dp"/>
+                                android:layout_marginTop="6dp"
+                                android:textSize="12sp" />
 
                             <TextView
                                 android:id="@+id/reviews_total"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="12sp"
-                                android:layout_marginTop="3dp"/>
+                                android:layout_marginTop="3dp"
+                                android:textSize="12sp" />
 
                             <Button
                                 android:id="@+id/detail_more_reviews_BT"
+                                style="@style/Widget.AppCompat.Button.Colored"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/view_more_string"
-                                android:background="@drawable/button_shape"
-                                style="@style/Widget.AppCompat.Button.Colored"
+                                android:layout_gravity="center"
                                 android:layout_marginTop="10dp"
+                                android:background="@drawable/button_shape"
                                 android:minHeight="3dp"
-                                android:textSize="12sp"
-                                android:layout_gravity="center"/>
+                                android:text="@string/view_more_string"
+                                android:textSize="12sp" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -218,13 +223,12 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:layout_marginBottom="40dp"
-                        bar:show_raters="true"
                         bar:animation="true"
                         bar:show_label="true"
                         bar:spaces="0dp"
+                        bar:text_color="@color/Black"
                         bar:text_size="10sp"
-                        bar:width="15dp"
-                        bar:text_color="@color/Black"/>
+                        bar:width="15dp" />
 
                 </RelativeLayout>
 
@@ -238,14 +242,15 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/books_in_series_string"
+                    android:layout_marginBottom="13dp"
                     android:gravity="center"
-                    android:textSize="20sp"/>
+                    android:text="@string/books_in_series_string"
+                    android:textSize="20sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/detail_series_recyclerview"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp">
+                    android:layout_height="275dp">
 
                 </androidx.recyclerview.widget.RecyclerView>
 
@@ -259,14 +264,15 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/similar_books_string"
+                    android:layout_marginBottom="13dp"
                     android:gravity="center"
-                    android:textSize="20sp"/>
+                    android:text="@string/similar_books_string"
+                    android:textSize="20sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/detail_similar_recyclerview"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp">
+                    android:layout_height="275dp">
 
                 </androidx.recyclerview.widget.RecyclerView>
 
@@ -286,8 +292,8 @@
             android:id="@+id/detail_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true"
+            android:layout_gravity="center" />
     </RelativeLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

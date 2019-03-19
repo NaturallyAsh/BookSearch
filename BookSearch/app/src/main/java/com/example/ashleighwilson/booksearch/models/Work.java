@@ -1,10 +1,16 @@
 package com.example.ashleighwilson.booksearch.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
 import java.text.NumberFormat;
 
 public class Work {
+
+
     @Element(required = false)
     long best_book_id;
 
@@ -56,8 +62,10 @@ public class Work {
     @Element(required = false)
     long text_reviews_count;
 
-    @Element(name="best_book", required=false)
+    @Element(name = "best_book", required=false)
     BestBook bestBook;
+
+
 
     public BestBook getBestBook() {return this.bestBook;}
     public void setBestBook(BestBook value) {this.bestBook = value;}
@@ -80,4 +88,6 @@ public class Work {
 
     public String getRatingDist() {return this.rating_dist;}
     public void setRatingDist(String value) {this.rating_dist = value;}
+
+
 }

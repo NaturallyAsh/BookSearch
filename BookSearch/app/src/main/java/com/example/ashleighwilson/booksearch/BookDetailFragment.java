@@ -3,7 +3,7 @@ package com.example.ashleighwilson.booksearch;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
@@ -16,8 +16,10 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.ashleighwilson.booksearch.adapters.SeriesBookAdapter;
@@ -32,21 +34,18 @@ import com.example.ashleighwilson.booksearch.models.Review;
 import com.example.ashleighwilson.booksearch.models.Series;
 import com.example.ashleighwilson.booksearch.models.SeriesWork;
 import com.example.ashleighwilson.booksearch.models.UserBook;
-import com.example.ashleighwilson.booksearch.views.RatingBar;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
+import com.taufiqrahman.reviewratings.Bar;
 import com.taufiqrahman.reviewratings.BarLabels;
 import com.taufiqrahman.reviewratings.RatingReviews;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
@@ -62,7 +61,12 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
 
     private static final String TAG = BookDetailFragment.class.getSimpleName();
 
-    private Review mReview;
+    public static final String BOOK_ARG_ITEM = "book_arg_item";
+    public static final String SERIES_ARG_ITEM = "series_arg_item";
+
+    private Review mReviewIntent;
+    private UserBook mUserBookIntent;
+    private SeriesWork mSeriesBookIntent;
     private UserBook book;
     private MainActivity mainActivity;
     private Item item;
@@ -83,7 +87,9 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
     RecyclerView seriesRV;
     @BindView(R.id.detail_similar_recyclerview)
     RecyclerView similarRV;
-    @BindView(R.id.rating_bar)
+    //@BindView(R.id.rating_bar)
+    //RatingBar ratingBar;
+    @BindView(R.id.detail_rating_bar)
     RatingBar ratingBar;
     @BindView(R.id.rating_float)
     TextView ratingFloatTV;
@@ -109,12 +115,35 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
 
     public BookDetailFragment(){}
 
+    public static BookDetailFragment bookNewInstance(UserBook book) {
+        BookDetailFragment fragment = new BookDetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(BOOK_ARG_ITEM, book);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    public BookDetailFragment reviewNewInstance(Review review) {
+
+
+        return null;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mainActivity = (MainActivity)getActivity();
         setHasOptionsMenu(true);
+
+        Bundle bundle = getArguments();
+        if(bundle.containsKey(BookDetailFragment.BOOK_ARG_ITEM)) {
+            mUserBookIntent = bundle.getParcelable(BookDetailFragment.BOOK_ARG_ITEM);
+        } else if (bundle.containsKey(UserFragment.REVIEW_ITEM)) {
+            mReviewIntent = bundle.getParcelable(UserFragment.REVIEW_ITEM);
+        } else if (bundle.containsKey(BookDetailFragment.SERIES_ARG_ITEM)) {
+            mSeriesBookIntent = bundle.getParcelable(BookDetailFragment.SERIES_ARG_ITEM);
+        }
     }
 
     @Override
@@ -151,15 +180,33 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
         similarBookAdapter = new SimilarBookAdapter(getContext(), similarArrayList, this);
         similarRV.setAdapter(similarBookAdapter);
 
-        mReview = getArguments().getParcelable(UserFragment.REVIEW_ITEM);
-        if (mReview != null) {
+        //mReviewIntent = getArguments().getParcelable(UserFragment.REVIEW_ITEM);
+        if (mReviewIntent != null) {
             progressContainer.setVisibility(View.VISIBLE);
             detailsContainer.setVisibility(View.INVISIBLE);
-            fetchBookDetails();
-            fetchVolumeDetails(mReview.getBook().getTitle());
+            fetchBookDetails(mReviewIntent.getBook().getId().getTextValue());
+            fetchVolumeDetails(mReviewIntent.getBook().getTitle());
             //init();
         } else {
             Log.i(TAG, "review intent is null");
+        }
+        //mUserBookIntent = getArguments().getParcelable(BOOK_ARG_ITEM);
+        if (mUserBookIntent != null) {
+            progressContainer.setVisibility(View.VISIBLE);
+            detailsContainer.setVisibility(View.INVISIBLE);
+            fetchBookDetails(mUserBookIntent.getId().getTextValue());
+            fetchVolumeDetails(mUserBookIntent.getTitle());
+        } else {
+            Log.i(TAG, "book intent is null");
+        }
+
+        if (mSeriesBookIntent != null) {
+            progressContainer.setVisibility(View.VISIBLE);
+            detailsContainer.setVisibility(View.INVISIBLE);
+            fetchBookDetails(mSeriesBookIntent.getWork().getBestBook().getId());
+            fetchVolumeDetails(mSeriesBookIntent.getWork().getBestBook().getTitle());
+        } else {
+            Log.i(TAG, "series intent is null");
         }
 
         return rootView;
@@ -167,23 +214,24 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
 
     @SuppressLint("SetTextI18n")
     private void init() {
-        if (book != null && mReview != null) {
-            float stars = Float.parseFloat(mReview.getBook().getAverageRating());
-            mainActivity.getSupportActionBar().setTitle(mReview.getBook().getTitle());
+        if (book != null && mReviewIntent != null || book != null && mUserBookIntent != null
+            || book != null && mSeriesBookIntent != null) {
+            //float stars = Float.parseFloat(mReviewIntent.getBook().getAverageRating());
+            float stars = Float.parseFloat(book.getAverageRating());
+            mainActivity.getSupportActionBar().setTitle(book.getTitle());
             ratingBar.setRating(stars);
-            ratingFloatTV.setText(mReview.getBook().getAverageRating());
-            totalRatingsTV.setText(mReview.getBook().getRatingsCount() + " " + getString(R.string.ratings));
+            ratingFloatTV.setText(book.getAverageRating());
+            totalRatingsTV.setText(book.getRatingsCount() + " " + getString(R.string.ratings));
             reviewsTotal.setText(book.getWork().getText_reviews_count() + " " + getString(R.string.reviews));
-            authorTV.setText(mReview.getBook().getAuthor().getAuthor().getName());
-            String pubDay = mReview.getBook().getPublicationDay();
-            String pubMonth = mReview.getBook().getPublicationMonth();
-            String pubYear = mReview.getBook().getPublicationYear();
+            authorTV.setText(book.getAuthor().getAuthor().getName());
+            String pubDay = book.getPublicationDay();
+            String pubMonth = book.getPublicationMonth();
+            String pubYear = book.getPublicationYear();
             String publication = pubMonth + "/" + pubDay + "/" + pubYear;
             if (publication.contains("null")) {
                 publishedTV.setText("No publication available");
             } else if (item != null) {
-                if (item.getVolumeInfo().getPublishedDate() != null &&
-                    publication.contains("null")) {
+                if (item.getVolumeInfo().getPublishedDate() != null ) {
                     publishedTV.setText(item.getVolumeInfo().getPublishedDate());
                 }
             } else {
@@ -203,7 +251,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
 
     private void loadCover() {
         String noPhoto = "noPhoto";
-        if (item != null && mReview.getBook().getImageUrl().toLowerCase().indexOf(noPhoto.toLowerCase()) >= 0) {
+        if (item != null && book.getImageUrl().toLowerCase().indexOf(noPhoto.toLowerCase()) >= 0) {
             String identifier = "";
             for (int i = 0; i < item.getVolumeInfo().getIndustryIdentifiers().size(); i++) {
                 //Log.i(TAG, "indus: " + item.getVolumeInfo().getIndustryIdentifiers().get(i).getIdentifier());
@@ -216,24 +264,24 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
                         .into(bookCoverIV);
             } else {
                 Glide.with(getContext())
-                        .load(mReview.getBook().getAltBookCover(identifier))
+                        .load(book.getAltBookCover(identifier))
                         .into(bookCoverIV);
             }
 
         } else {
             {
                 Glide.with(getContext())
-                        .load(mReview.getBook().getImageUrl())
+                        .load(book.getImageUrl())
                         .into(bookCoverIV);
             }
         }
     }
 
     private void getDescription() {
-        if (mReview.getBook().getDescription() != null) {
-            //Log.i(TAG, "review descript called");
-            descriptionTV.setText(Html.fromHtml(mReview.getBook().getDescription()));
-        } else if (book.getDescription() != null) {
+        /*if (mReviewIntent.getBook().getDescription() != null) {
+            descriptionTV.setText(Html.fromHtml(mReviewIntent.getBook().getDescription()));
+        } */
+        if (book.getDescription() != null) {
             //Log.i(TAG, "book descript called");
             descriptionTV.setText(Html.fromHtml(book.getDescription()));
         } else if (item.getVolumeInfo().getDescription() != null){
@@ -303,8 +351,8 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
         dialog.show();
     }
 
-    private void fetchBookDetails() {
-        new BookDetailsLoader(mReview.getBook().getId().getTextValue(), this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    private void fetchBookDetails(String id) {
+        new BookDetailsLoader(id, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void fetchVolumeDetails(String title) {
@@ -375,6 +423,13 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
         };
 
         ratingReviewsBar.createRatingBars(maxRater, BarLabels.STYPE1, colors, raters);
+        ratingReviewsBar.setOnBarClickListener(new RatingReviews.OnBarClickListener() {
+            @Override
+            public void onBarClick(Bar bar) {
+                Toast.makeText(getContext(),bar.getStarLabel() + ": "
+                        + bar.getRaters() + " ratings", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private double findMax(double... values) {
@@ -401,18 +456,16 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
     @Override
     public void OnReadImageFetched(List<Item> itemList) {
         if (itemList != null) {
-            for (int i = 0; i < itemList.size(); i++) {
-                if (mReview.getBook().getTitle().toLowerCase().contains(itemList.get(i).getVolumeInfo().getTitle().toLowerCase())) {
-                    item = itemList.get(i);
-                    //Log.i(TAG, "items: " + item.getVolumeInfo().getTitle());
+            if (book != null) {
+                for (int i = 0; i < itemList.size(); i++) {
+                    if (book.getTitle().toLowerCase().contains(itemList.get(i).getVolumeInfo().getTitle().toLowerCase())) {
+                        item = itemList.get(i);
+                        //Log.i(TAG, "items: " + item.getVolumeInfo().getTitle());
+                    }
                 }
             }
+
         }
-    }
-
-    @Override
-    public void OnSeriesClicked(SeriesWork series, int position) {
-
     }
 
     @Override
@@ -455,7 +508,12 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
     }
 
     @Override
-    public void OnSimilarBookClicked(UserBook book, int position) {
+    public void OnSeriesClicked(SeriesWork series, int position) {
+        mainActivity.seriesSwitchBackToDetail(series);
+    }
 
+    @Override
+    public void OnSimilarBookClicked(UserBook book, int position) {
+        mainActivity.switchBackToDetail(book);
     }
 }
