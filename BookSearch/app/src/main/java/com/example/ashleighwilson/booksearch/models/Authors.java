@@ -1,6 +1,9 @@
 package com.example.ashleighwilson.booksearch.models;
 
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Path;
+import org.simpleframework.xml.Root;
+import org.simpleframework.xml.Text;
 
 public class Authors {
 

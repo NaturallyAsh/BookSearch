@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -42,6 +43,7 @@ import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -79,6 +81,8 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
     RecyclerView want_to_read_RV;
     @BindView(R.id.read_RV)
     RecyclerView readRV;
+    @BindView(R.id.user_swipe_to_refresh)
+    SwipeRefreshLayout refreshLayout;
 
     @Inject
     PreferenceUser preferenceUser;
@@ -162,6 +166,12 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
         readBookAdapter = new ReadBookAdapter(getContext(), readArrayList, this);
         readRV.setAdapter(readBookAdapter);
 
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                init();
+            }
+        });
 
         init();
 
@@ -183,17 +193,23 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
     }
 
     private void fetchCurrentBooks() {
-        currentPB.setVisibility(View.VISIBLE);
+        if (!refreshLayout.isRefreshing()) {
+            currentPB.setVisibility(View.VISIBLE);
+        }
         new CurrentlyReadingLoader(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, user.getId());
     }
 
     private void fetchWantBooks() {
-        wantPB.setVisibility(View.VISIBLE);
+        if (!refreshLayout.isRefreshing()) {
+            wantPB.setVisibility(View.VISIBLE);
+        }
         new WantToReadLoader(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, user.getId());
     }
 
     private void fetchReadBooks() {
-        readPB.setVisibility(View.VISIBLE);
+        if (!refreshLayout.isRefreshing()) {
+            readPB.setVisibility(View.VISIBLE);
+        }
         new ToReadBookLoader(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, user.getId());
     }
 
@@ -202,6 +218,7 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
         if (reviews != null) {
             String noPhoto = "noPhoto";
             currentPB.setVisibility(View.GONE);
+            refreshLayout.setRefreshing(false);
             currentlyReadingTV.setVisibility(View.VISIBLE);
             currentBookList = reviews.getReview();
 

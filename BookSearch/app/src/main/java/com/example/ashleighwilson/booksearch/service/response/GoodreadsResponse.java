@@ -3,7 +3,9 @@ package com.example.ashleighwilson.booksearch.service.response;
 import com.example.ashleighwilson.booksearch.models.Reviews;
 
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
+@Root(name = "GoodreadsResponse")
 public class GoodreadsResponse {
 
     @Element(name = "Request")

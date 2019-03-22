@@ -11,10 +11,9 @@ import org.simpleframework.xml.Root;
 /**
  * Created by alek on 30/12/14.
  */
-@Root(name = "author", strict = false)
-public class Author implements Parcelable{
+public class Author {
 
-    public Author(
+    /*public Author(
 
     @Element(name = "id", required = false)
     long id,
@@ -27,7 +26,7 @@ public class Author implements Parcelable{
         this.id = id;
         this.name = name;
         this.link = link;
-    }
+    }*/
 
     @Element(name = "id", required = false)
     long id;
@@ -38,38 +37,7 @@ public class Author implements Parcelable{
     @Element(name = "link", required = false)
     String link;
 
-
-    protected Author(Parcel in) {
-        id = in.readLong();
-        name = in.readString();
-        link = in.readString();
-    }
-
-    public static final Creator<Author> CREATOR = new Creator<Author>() {
-        @Override
-        public Author createFromParcel(Parcel in) {
-            return new Author(in);
-        }
-
-        @Override
-        public Author[] newArray(int size) {
-            return new Author[size];
-        }
-    };
-
     public String getName() {
         return name;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(id);
-        dest.writeString(name);
-        dest.writeString(link);
     }
 }

@@ -3,10 +3,11 @@ package com.example.ashleighwilson.booksearch.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.Gson;
+
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
-@Root(name = "series_work", strict = false)
 public class SeriesWork implements Parcelable {
 
     public SeriesWork(@Element(name="work", required=false)
@@ -61,6 +62,16 @@ public class SeriesWork implements Parcelable {
             return new SeriesWork[size];
         }
     };
+
+    public String toJson() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
+
+    public static SeriesWork fromJson(String json) {
+        Gson gson = new Gson();
+        return gson.fromJson(json, SeriesWork.class);
+    }
 
     public BestBook getBestBook() {
         return bestBook;

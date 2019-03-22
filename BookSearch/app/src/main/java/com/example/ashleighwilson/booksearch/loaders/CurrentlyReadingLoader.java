@@ -53,29 +53,6 @@ public class CurrentlyReadingLoader extends AsyncTask<Long, Void, Reviews> {
         }
         long userId = params[0];
 
-        OkHttpOAuthConsumer2 oAuthConsumer = new OkHttpOAuthConsumer2(
-                BuildConfig.Goodreads_Api_Key,
-                BuildConfig.Goodreads_Secret
-        );
-
-        oAuthConsumer.setTokenWithSecret(
-                preferenceUser.getToken(),
-                preferenceUser.getSecret()
-        );
-
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(new SigningInterceptor(oAuthConsumer))
-                .writeTimeout(2, TimeUnit.MINUTES)
-                .readTimeout(2, TimeUnit.MINUTES)
-                .build();
-
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .client(client)
-                .baseUrl(BuildConfig.Goodreads_Base_Url)
-                .addConverterFactory(SimpleXmlConverterFactory.create())
-                .build();
-
         //GoodreadsApi data = retrofit.create(GoodreadsApi.class);
         Call<ReviewsAndShelfResponse> reviewsCall = goodreadsApi.review_list(userId, 2,
                             "currently-reading");

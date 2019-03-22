@@ -8,7 +8,8 @@
         android:id="@+id/reader_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp"/>
+        android:padding="10dp"
+        android:layout_marginTop="10dp"/>
 
     <TextView
         android:id="@+id/empty_reader_view"
@@ -26,7 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"/>
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add_white_24dp"/>
 
 
 </RelativeLayout>

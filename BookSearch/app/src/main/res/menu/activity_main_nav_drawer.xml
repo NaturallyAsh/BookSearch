@@ -14,12 +14,12 @@
             android:title="@string/ereader_string"/>
     </group>
 
-    <item android:title="@string/nav_communicate">
+    <item android:title="@string/logout_string">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/share_menu" />
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
+                android:title="@string/exit_string" />
 
         </menu>
     </item>

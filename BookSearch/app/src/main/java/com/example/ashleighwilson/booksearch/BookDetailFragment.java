@@ -24,6 +24,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.ashleighwilson.booksearch.adapters.SeriesBookAdapter;
 import com.example.ashleighwilson.booksearch.adapters.SimilarBookAdapter;
+import com.example.ashleighwilson.booksearch.dagger.Injector;
+import com.example.ashleighwilson.booksearch.loaders.AddToShelfLoader;
 import com.example.ashleighwilson.booksearch.loaders.BookDetailsLoader;
 import com.example.ashleighwilson.booksearch.loaders.ReadImageLoader;
 import com.example.ashleighwilson.booksearch.loaders.SeriesBookLoader;
@@ -34,6 +36,7 @@ import com.example.ashleighwilson.booksearch.models.Review;
 import com.example.ashleighwilson.booksearch.models.Series;
 import com.example.ashleighwilson.booksearch.models.SeriesWork;
 import com.example.ashleighwilson.booksearch.models.UserBook;
+import com.example.ashleighwilson.booksearch.service.response.GoodreadsApiRetro2;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.taufiqrahman.reviewratings.Bar;
@@ -45,6 +48,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
@@ -53,6 +58,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class BookDetailFragment extends Fragment implements BookDetailsLoader.OnBookDetailsListener,
         ReadImageLoader.OnReadImageListener, SeriesBookAdapter.OnSeriesClickedListener,
@@ -64,6 +72,8 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
     public static final String BOOK_ARG_ITEM = "book_arg_item";
     public static final String SERIES_ARG_ITEM = "series_arg_item";
 
+    @Inject
+    GoodreadsApiRetro2 goodreadsApi;
     private Review mReviewIntent;
     private UserBook mUserBookIntent;
     private SeriesWork mSeriesBookIntent;
@@ -111,23 +121,10 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
     Button more_description_BT;
     @BindView(R.id.detail_more_reviews_BT)
     Button more_reviews_BT;
-
+    @BindView(R.id.detail_shelf_BT)
+    Button shelf_BT;
 
     public BookDetailFragment(){}
-
-    public static BookDetailFragment bookNewInstance(UserBook book) {
-        BookDetailFragment fragment = new BookDetailFragment();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(BOOK_ARG_ITEM, book);
-        fragment.setArguments(bundle);
-        return fragment;
-    }
-
-    public BookDetailFragment reviewNewInstance(Review review) {
-
-
-        return null;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -138,11 +135,17 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
 
         Bundle bundle = getArguments();
         if(bundle.containsKey(BookDetailFragment.BOOK_ARG_ITEM)) {
-            mUserBookIntent = bundle.getParcelable(BookDetailFragment.BOOK_ARG_ITEM);
+            //mUserBookIntent = bundle.getParcelable(BookDetailFragment.BOOK_ARG_ITEM);
+            String userBookJson = bundle.getString(BOOK_ARG_ITEM);
+            mUserBookIntent = UserBook.fromJson(userBookJson);
         } else if (bundle.containsKey(UserFragment.REVIEW_ITEM)) {
-            mReviewIntent = bundle.getParcelable(UserFragment.REVIEW_ITEM);
+            //mReviewIntent = bundle.getParcelable(UserFragment.REVIEW_ITEM);
+            String reviewJson = bundle.getString(UserFragment.REVIEW_ITEM);
+            mReviewIntent = Review.fromJson(reviewJson);
         } else if (bundle.containsKey(BookDetailFragment.SERIES_ARG_ITEM)) {
-            mSeriesBookIntent = bundle.getParcelable(BookDetailFragment.SERIES_ARG_ITEM);
+            //mSeriesBookIntent = bundle.getParcelable(BookDetailFragment.SERIES_ARG_ITEM);
+            String seriesJson = bundle.getString(SERIES_ARG_ITEM);
+            mSeriesBookIntent = SeriesWork.fromJson(seriesJson);
         }
     }
 
@@ -158,6 +161,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
         View rootView = inflater.inflate(R.layout.detail_book_fragment, container,
                 false);
         ButterKnife.bind(this, rootView);
+        Injector.getInstance().inject(this);
         mainActivity.getSupportActionBar();
         //mainActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
         mainActivity.getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
@@ -208,6 +212,16 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
         } else {
             Log.i(TAG, "series intent is null");
         }
+
+        shelf_BT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (book != null) {
+                    new AddToShelfLoader("read", book.getId().getTextValue()).executeOnExecutor(
+                            AsyncTask.THREAD_POOL_EXECUTOR);
+                }
+            }
+        });
 
         return rootView;
     }

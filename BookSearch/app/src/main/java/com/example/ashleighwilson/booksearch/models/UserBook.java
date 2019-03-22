@@ -11,10 +11,9 @@ import org.simpleframework.xml.Root;
 
 import java.util.List;
 
-@Root(name = "book", strict = false)
-public class UserBook implements Parcelable {
+public class UserBook implements Parcelable{
 
-
+    @Root(name = "book", strict = false)
     public UserBook(@Element(name="image_url", required=false)
                             String imageUrl,
 
@@ -73,7 +72,7 @@ public class UserBook implements Parcelable {
                                     String titleWithoutSeries,
 
                             @Element(name="authors", required=false)
-                                    Authors author,
+                                    Authors authors,
 
                             @Element(name="text_reviews_count", required=false)
                                     TextReviewsCount textReviewsCount,
@@ -115,7 +114,7 @@ public class UserBook implements Parcelable {
         this.publicationDay = publicationDay;
         this.ratingsCount = ratingsCount;
         this.titleWithoutSeries = titleWithoutSeries;
-        this.author = author;
+        this.authors = authors;
         this.textReviewsCount = textReviewsCount;
         this.isbn = isbn;
         this.work = work;
@@ -184,7 +183,7 @@ public class UserBook implements Parcelable {
     String titleWithoutSeries;
 
     @Element(name="authors", required=false)
-    Authors author;
+    Authors authors;
 
     @Element(name="text_reviews_count", required=false)
     TextReviewsCount textReviewsCount;
@@ -343,11 +342,12 @@ public class UserBook implements Parcelable {
     public String getTitleWithoutSeries() {return this.titleWithoutSeries;}
     public void setTitleWithoutSeries(String value) {this.titleWithoutSeries = value;}
 
-    public Authors getAuthor() {return this.author;}
-    public void setAuthor(Authors value) {this.author = value;}
+    public Authors getAuthor() {return this.authors;}
+    public void setAuthor(Authors value) {this.authors = value;}
 
     public TextReviewsCount getTextReviewsCount() {return this.textReviewsCount;}
     public void setTextReviewsCount(TextReviewsCount value) {this.textReviewsCount = value;}
+
 
     @Override
     public int describeContents() {

@@ -169,7 +169,8 @@ public class MainActivity extends AppCompatActivity implements
         animateTransition(transaction, TRANSITION_HORIZONTAL);
         BookDetailFragment detailFragment = new BookDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(UserFragment.REVIEW_ITEM, review);
+        //bundle.putParcelable(UserFragment.REVIEW_ITEM, review);
+        bundle.putString(UserFragment.REVIEW_ITEM, review.toJson());
         detailFragment.setArguments(bundle);
         if (getFragmentManagerInstance().findFragmentByTag(FRAGMENT_BOOKDETAILS_TAG) == null) {
             transaction.replace(R.id.main_frag_container, detailFragment, FRAGMENT_BOOKDETAILS_TAG)
@@ -194,7 +195,8 @@ public class MainActivity extends AppCompatActivity implements
         animateTransition(transaction, TRANSITION_HORIZONTAL);
         BookDetailFragment detailFragment = new BookDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(BookDetailFragment.BOOK_ARG_ITEM, book);
+        //bundle.putParcelable(BookDetailFragment.BOOK_ARG_ITEM, book);
+        bundle.putString(BookDetailFragment.BOOK_ARG_ITEM, book.toJson());
         detailFragment.setArguments(bundle);
         if (getFragmentManagerInstance().findFragmentByTag(FRAGMENT_BOOKDETAILS_TAG) == null) {
             transaction.replace(R.id.main_frag_container, detailFragment, FRAGMENT_BOOKDETAILS_TAG)
@@ -219,7 +221,8 @@ public class MainActivity extends AppCompatActivity implements
         animateTransition(transaction, TRANSITION_HORIZONTAL);
         BookDetailFragment detailFragment = new BookDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(BookDetailFragment.SERIES_ARG_ITEM, seriesWork);
+        //bundle.putParcelable(BookDetailFragment.SERIES_ARG_ITEM, seriesWork);
+        bundle.putString(BookDetailFragment.SERIES_ARG_ITEM, seriesWork.toJson());
         detailFragment.setArguments(bundle);
         if (getFragmentManagerInstance().findFragmentByTag(FRAGMENT_BOOKDETAILS_TAG) == null) {
             transaction.replace(R.id.main_frag_container, detailFragment, FRAGMENT_BOOKDETAILS_TAG)
@@ -286,6 +289,12 @@ public class MainActivity extends AppCompatActivity implements
                 Intent readerIntent = new Intent(this, ReaderActivity.class);
                 startActivity(readerIntent);
                 break;
+            case R.id.nav_logout:
+                if (preferenceUser.getCurrentUser() != null) {
+                    preferenceUser.setCurrentUser(null);
+                    Intent logoutIntent = new Intent(this, MainActivity.class);
+                    startActivity(logoutIntent);
+                }
         }
         item.setChecked(true);
         drawer.closeDrawer(GravityCompat.START);

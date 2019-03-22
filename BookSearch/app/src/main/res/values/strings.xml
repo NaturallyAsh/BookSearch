@@ -50,4 +50,6 @@
     <string name="no_books_in_shelf_string">No Books In Shelf</string>
     <string name="read_more_string">Read More</string>
     <string name="view_more_string">View More</string>
+    <string name="logout_string">Logout</string>
+    <string name="exit_string">Exit</string>
 </resources>

@@ -2,6 +2,8 @@ package com.example.ashleighwilson.booksearch.dagger;
 
 import android.app.Application;
 
+import com.example.ashleighwilson.booksearch.BookDetailFragment;
+import com.example.ashleighwilson.booksearch.loaders.AddToShelfLoader;
 import com.example.ashleighwilson.booksearch.loaders.BookDetailsLoader;
 import com.example.ashleighwilson.booksearch.loaders.SeriesBookLoader;
 import com.example.ashleighwilson.booksearch.loaders.SeriesImageLoader;
@@ -120,5 +122,15 @@ public class Injector implements ApplicationComponent {
     @Override
     public void inject(SimilarImageLoader similarImageLoader) {
         component.inject(similarImageLoader);
+    }
+
+    @Override
+    public void inject(AddToShelfLoader addToShelfLoader) {
+        component.inject(addToShelfLoader);
+    }
+
+    @Override
+    public void inject(BookDetailFragment bookDetailFragment) {
+        component.inject(bookDetailFragment);
     }
 }

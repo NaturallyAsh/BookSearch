@@ -23,144 +23,223 @@
 
     </RelativeLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:fillViewport="true">
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/user_swipe_to_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginStart="6dp">
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:fillViewport="true">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_marginTop="6dp">
-
-                <TextView
-                    android:id="@+id/currently_reading_TV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/currently_reading_string"
-                    android:textStyle="bold"
-                    android:textSize="25sp"
-                    android:layout_marginBottom="6dp"
-                    android:layout_marginStart="10dp"
-                    android:visibility="invisible"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/current_RV"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/currently_reading_TV"/>
-
-                <TextView
-                    android:id="@+id/empty_current_TV"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@string/no_books_in_shelf_string"
-                    android:gravity="center"
-                    android:visibility="gone"/>
-
-                <ProgressBar
-                    android:id="@+id/current_PB"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    style="@style/Widget.AppCompat.ProgressBar"
-                    android:visibility="gone"/>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_marginTop="15dp"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_marginStart="6dp">
 
-                <TextView
-                    android:id="@+id/want_to_read_TV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/want_to_read_string"
-                    android:textStyle="bold"
-                    android:textSize="25sp"
-                    android:layout_marginBottom="6dp"
-                    android:layout_marginStart="10dp"
-                    android:visibility="invisible"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/to_read_RV"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/want_to_read_TV"/>
+                    android:layout_height="300dp"
+                    android:layout_marginTop="6dp">
 
-                <TextView
-                    android:id="@+id/empty_to_read_TV"
+                    <LinearLayout
+                        android:id="@+id/currently_reading_TV_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/currently_reading_TV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/currently_reading_string"
+                            android:textStyle="bold"
+                            android:textSize="25sp"
+                            android:layout_marginBottom="6dp"
+                            android:layout_marginStart="10dp"
+                            android:visibility="invisible"/>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:id="@+id/current_edit_IV"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerInParent="true"
+                                android:layout_marginEnd="60dp"
+                                android:layout_marginStart="40dp"
+                                android:src="@drawable/ic_more_horiz_black_24dp"/>
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/current_RV"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/currently_reading_TV_container"/>
+
+                    <TextView
+                        android:id="@+id/empty_current_TV"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/no_books_in_shelf_string"
+                        android:gravity="center"
+                        android:visibility="gone"/>
+
+                    <ProgressBar
+                        android:id="@+id/current_PB"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        style="@style/Widget.AppCompat.ProgressBar"
+                        android:visibility="gone"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@string/no_books_in_shelf_string"
-                    android:gravity="center"
-                    android:visibility="gone"/>
+                    android:layout_height="300dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical"
+                    android:layout_marginStart="6dp">
 
-                <ProgressBar
-                    android:id="@+id/want_PB"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    style="@style/Widget.AppCompat.ProgressBar"
-                    android:visibility="gone"/>
+                    <LinearLayout
+                        android:id="@+id/want_to_read_TV_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-            </RelativeLayout>
+                        <TextView
+                            android:id="@+id/want_to_read_TV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/want_to_read_string"
+                            android:textStyle="bold"
+                            android:textSize="25sp"
+                            android:layout_marginBottom="6dp"
+                            android:layout_marginStart="10dp"
+                            android:visibility="invisible"/>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_marginTop="15dp"
-                android:orientation="vertical"
-                android:layout_marginStart="6dp">
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/read_TV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/read_string"
-                    android:textStyle="bold"
-                    android:textSize="25sp"
-                    android:layout_marginBottom="6dp"
-                    android:layout_marginStart="10dp"
-                    android:visibility="invisible"/>
+                            <ImageView
+                                android:id="@+id/want_edit_IV"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerInParent="true"
+                                android:layout_marginEnd="60dp"
+                                android:layout_marginStart="40dp"
+                                android:src="@drawable/ic_more_horiz_black_24dp"/>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/read_RV"
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/to_read_RV"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/want_to_read_TV_container"/>
+
+                    <TextView
+                        android:id="@+id/empty_to_read_TV"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/no_books_in_shelf_string"
+                        android:gravity="center"
+                        android:visibility="gone"/>
+
+                    <ProgressBar
+                        android:id="@+id/want_PB"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        style="@style/Widget.AppCompat.ProgressBar"
+                        android:visibility="gone"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/read_TV"/>
+                    android:layout_height="300dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical"
+                    android:layout_marginStart="6dp">
 
-                <TextView
-                    android:id="@+id/empty_read_TV"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@string/no_books_in_shelf_string"
-                    android:gravity="center"
-                    android:visibility="gone"/>
+                    <LinearLayout
+                        android:id="@+id/read_TV_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                <ProgressBar
-                    android:id="@+id/read_PB"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    style="@style/Widget.AppCompat.ProgressBar"
-                    android:visibility="gone"/>
+                        <TextView
+                            android:id="@+id/read_TV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/read_string"
+                            android:textStyle="bold"
+                            android:textSize="25sp"
+                            android:layout_marginBottom="6dp"
+                            android:layout_marginStart="10dp"
+                            android:visibility="invisible"/>
 
-            </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
 
-        </LinearLayout>
+                            <ImageView
+                                android:id="@+id/read_edit_IV"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="60dp"
+                                android:layout_marginStart="40dp"
+                                android:src="@drawable/ic_more_horiz_black_24dp"/>
+                        </RelativeLayout>
 
-    </androidx.core.widget.NestedScrollView>
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/read_RV"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/read_TV_container"/>
+
+                    <TextView
+                        android:id="@+id/empty_read_TV"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/no_books_in_shelf_string"
+                        android:gravity="center"
+                        android:visibility="gone"/>
+
+                    <ProgressBar
+                        android:id="@+id/read_PB"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        style="@style/Widget.AppCompat.ProgressBar"
+                        android:visibility="gone"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
