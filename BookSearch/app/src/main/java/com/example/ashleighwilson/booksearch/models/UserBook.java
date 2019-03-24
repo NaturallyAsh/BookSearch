@@ -93,7 +93,9 @@ public class UserBook implements Parcelable{
                                     SeriesWorks seriesWorks,
 
                             @ElementList(name="similar_books", required=false)
-                                    List<UserBook> similarBooks) {
+                                    List<UserBook> similarBooks,
+                            @Element(name="my_review", required=false)
+                                MyReview myReview) {
 
         this.imageUrl = imageUrl;
         this.numPages = numPages;
@@ -206,6 +208,9 @@ public class UserBook implements Parcelable{
     @ElementList(name="similar_books", required=false)
     List<UserBook> similarBooks;
 
+    @Element(name="my_review", required=false)
+    MyReview myReview;
+
     protected UserBook(Parcel in) {
         imageUrl = in.readString();
         numPages = in.readString();
@@ -252,6 +257,9 @@ public class UserBook implements Parcelable{
         Gson gson = new Gson();
         return gson.fromJson(json, UserBook.class);
     }
+
+    public MyReview getMyReview() {return this.myReview;}
+    public void setMyReview(MyReview value) {this.myReview = value;}
 
     public List<UserBook> getSimilarBooks() {return this.similarBooks;}
     public void setSimilarBooks(List<UserBook> value) {this.similarBooks = value;}

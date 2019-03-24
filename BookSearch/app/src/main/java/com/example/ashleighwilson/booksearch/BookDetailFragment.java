@@ -10,11 +10,13 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -31,6 +33,7 @@ import com.example.ashleighwilson.booksearch.loaders.ReadImageLoader;
 import com.example.ashleighwilson.booksearch.loaders.SeriesBookLoader;
 import com.example.ashleighwilson.booksearch.loaders.SeriesImageLoader;
 import com.example.ashleighwilson.booksearch.loaders.SimilarImageLoader;
+import com.example.ashleighwilson.booksearch.models.Book;
 import com.example.ashleighwilson.booksearch.models.Item;
 import com.example.ashleighwilson.booksearch.models.Review;
 import com.example.ashleighwilson.booksearch.models.Series;
@@ -217,8 +220,9 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
             @Override
             public void onClick(View v) {
                 if (book != null) {
-                    new AddToShelfLoader("read", book.getId().getTextValue()).executeOnExecutor(
-                            AsyncTask.THREAD_POOL_EXECUTOR);
+                    /*new AddToShelfLoader("read", book.getId().getTextValue()).executeOnExecutor(
+                            AsyncTask.THREAD_POOL_EXECUTOR);*/
+                    getShelfPopup(v, book);
                 }
             }
         });
@@ -237,7 +241,13 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
             ratingFloatTV.setText(book.getAverageRating());
             totalRatingsTV.setText(book.getRatingsCount() + " " + getString(R.string.ratings));
             reviewsTotal.setText(book.getWork().getText_reviews_count() + " " + getString(R.string.reviews));
-            authorTV.setText(book.getAuthor().getAuthor().getName());
+            authorTV.setText(book.getAuthor().getAuthor().get(0).getName());
+            if (mReviewIntent != null) {
+                for (int i = 0; i < mReviewIntent.getShelves().size(); i++) {
+                    Log.i(TAG, "shelf: " + mReviewIntent.getShelves().get(i).getShelf().get(i).getName());
+                }
+            }
+            //shelf_BT.setText(mReviewIntent.getShelves().get(0).getShelf().get(0).getName());
             String pubDay = book.getPublicationDay();
             String pubMonth = book.getPublicationMonth();
             String pubYear = book.getPublicationYear();
@@ -261,6 +271,38 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
             getRatings();
             getDescription();
         }
+    }
+
+    private void getShelfPopup(View view, UserBook mBook) {
+        PopupMenu popupMenu = new PopupMenu(getContext(), view);
+        popupMenu.getMenu().clear();
+
+        popupMenu.inflate(R.menu.menu_shelf_popup);
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_current_shelf:
+                        new AddToShelfLoader("currently_reading", mBook.getId().getTextValue())
+                                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        shelf_BT.setText("Currently_Reading");
+                        return true;
+                    case R.id.menu_read_shelf:
+                        new AddToShelfLoader("read", mBook.getId().getTextValue())
+                                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        shelf_BT.setText("Read");
+                        return true;
+                    case R.id.menu_want_shelf:
+                        new AddToShelfLoader("to_read", mBook.getId().getTextValue())
+                                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        shelf_BT.setText("Want_To_Read");
+                        return true;
+                }
+                return false;
+            }
+        });
+        popupMenu.show();
     }
 
     private void loadCover() {
@@ -376,7 +418,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
 
     private void fetchSeriesDetails() {
         if (book != null) {
-            //Log.i(TAG, "series id: " + book.getSeriesWorks().getSeriesWork().getSeries().getId());
+            //Log.i(TAG, "series work: " + book.getSeriesWorks().getSeriesWork().getId());
             new SeriesBookLoader(book.getSeriesWorks().getSeriesWork().getSeries().getId(), this)
                     .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }

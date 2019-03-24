@@ -11,10 +11,10 @@ import java.util.List;
  */
 public class Shelves {
 
-    @Element(name="shelf", required=false)
-    Shelf shelf;
+    @ElementList(name="shelf", required=false, inline = true)
+    List<Shelf> shelf;
 
-    public Shelf getShelf() {return this.shelf;}
-    public void setShelf(Shelf value) {this.shelf = value;}
+    public List<Shelf> getShelf() {return this.shelf;}
+    public void setShelf(List<Shelf> value) {this.shelf = value;}
 
 }

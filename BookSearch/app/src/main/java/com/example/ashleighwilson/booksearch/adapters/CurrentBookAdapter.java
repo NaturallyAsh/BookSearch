@@ -57,7 +57,7 @@ public class CurrentBookAdapter extends RecyclerView.Adapter<CurrentBookAdapter.
                     .into(holder.bookIV);
         }
         holder.titleTV.setText(currentReviews.getBook().getTitle());
-        holder.authorTV.setText(currentReviews.getBook().getAuthor().getAuthor().getName());
+        holder.authorTV.setText(currentReviews.getBook().getAuthor().getAuthor().get(0).getName());
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

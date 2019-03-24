@@ -37,9 +37,11 @@ public class Review implements Parcelable {
 
                           @Element(name="body", required=false)
                                   String body,
+                          @ElementList(name = "shelves", required = false, inline = true)
+                          List<Shelves> shelves,
 
-                          @Element(name="shelves", required=false)
-                                  Shelves shelves,
+                          //@Element(name="shelves", required=false)
+                            //      Shelves shelves,
 
                           @Element(name="date_added", required=false)
                                   String dateAdded,
@@ -106,17 +108,14 @@ public class Review implements Parcelable {
     @Element(name="rating", required=false)
     String rating;
 
-    //@Element(name="link", required=false)
-    //Link link;
+    @ElementList(name = "shelves", required = false, inline = true)
+    List<Shelves> shelves;
 
     @Element(name="body", required=false)
     String body;
 
-    @Element(name="shelves", required=false)
-    Shelves shelves;
-
-    //@Element(name="url", required=false)
-    //Url url;
+    //@Element(name="shelves", required=false)
+    //Shelves shelves;
 
     @Element(name="date_added", required=false)
     String dateAdded;
@@ -217,8 +216,8 @@ public class Review implements Parcelable {
     public String getBody() {return this.body;}
     public void setBody(String value) {this.body = value;}
 
-    public Shelves getShelves() {return this.shelves;}
-    public void setShelves(Shelves value) {this.shelves = value;}
+    public List<Shelves> getShelves() {return this.shelves;}
+    public void setShelves(List<Shelves> value) {this.shelves = value;}
 
     //public Url getUrl() {return this.url;}
     //public void setUrl(Url value) {this.url = value;}

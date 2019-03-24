@@ -162,6 +162,7 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
         wantBookAdapter = new WantBookAdapter(getContext(), wantArrayList, this);
         want_to_read_RV.setAdapter(wantBookAdapter);
 
+
         readRV.setLayoutManager(toReadManager);
         readBookAdapter = new ReadBookAdapter(getContext(), readArrayList, this);
         readRV.setAdapter(readBookAdapter);

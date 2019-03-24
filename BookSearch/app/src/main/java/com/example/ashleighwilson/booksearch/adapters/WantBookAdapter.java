@@ -90,7 +90,7 @@ public class WantBookAdapter extends RecyclerView.Adapter<WantBookAdapter.ViewHo
         }
 
         holder.titleTV.setText(currentReviews.getBook().getTitle());
-        holder.authorTV.setText(currentReviews.getBook().getAuthor().getAuthor().getName());
+        holder.authorTV.setText(currentReviews.getBook().getAuthor().getAuthor().get(0).getName());
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

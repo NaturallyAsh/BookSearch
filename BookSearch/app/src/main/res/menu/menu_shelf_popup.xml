@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/menu_current_shelf"
+            android:title="@string/currently_reading_string"/>
+
+        <item
+            android:id="@+id/menu_want_shelf"
+            android:title="@string/want_to_read_string"/>
+
+        <item
+            android:id="@+id/menu_read_shelf"
+            android:title="@string/read_string"/>
+
+    </group>
+
+</menu>

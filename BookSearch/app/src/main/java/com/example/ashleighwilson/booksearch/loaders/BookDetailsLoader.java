@@ -3,6 +3,7 @@ package com.example.ashleighwilson.booksearch.loaders;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.ashleighwilson.booksearch.BuildConfig;
 import com.example.ashleighwilson.booksearch.dagger.Injector;
 import com.example.ashleighwilson.booksearch.models.BookDetails;
 import com.example.ashleighwilson.booksearch.models.UserBook;
@@ -44,7 +45,7 @@ public class BookDetailsLoader extends AsyncTask<Void, Void, UserBook> {
         if (mId == null) {
             return null;
         }
-        Call<BookShowResponse> bookCall = goodreadsApi.book_show(mId);
+        Call<BookShowResponse> bookCall = goodreadsApi.book_show(mId, BuildConfig.Goodreads_Api_Key);
         try {
             Response<BookShowResponse> response = bookCall.execute();
             BookShowResponse bookDetails = response.body();

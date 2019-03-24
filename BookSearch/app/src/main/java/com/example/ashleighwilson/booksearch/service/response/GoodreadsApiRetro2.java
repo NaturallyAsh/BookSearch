@@ -18,7 +18,8 @@ public interface GoodreadsApiRetro2 {
                                               @Query("shelf") String shelf);
 
     @GET("/book/show/{id}?format=xml")
-    Call<BookShowResponse> book_show(@Path("id") String id);
+    Call<BookShowResponse> book_show(@Path("id") String id,
+                                     @Query("key") String key);
 
     @GET("/series/show/{id}.xml")
     Call<SeriesResponse> series_show(@Path("id") String series_id,
