@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    private FragmentManager getFragmentManagerInstance() {
+    public FragmentManager getFragmentManagerInstance() {
         if (mFragmentManager == null) {
             mFragmentManager = getSupportFragmentManager();
             Log.i(TAG, "getFragInstance null");

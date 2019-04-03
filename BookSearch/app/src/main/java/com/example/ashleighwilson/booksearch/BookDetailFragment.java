@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
@@ -245,6 +246,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
             if (mReviewIntent != null) {
                 for (int i = 0; i < mReviewIntent.getShelves().size(); i++) {
                     Log.i(TAG, "shelf: " + mReviewIntent.getShelves().get(i).getShelf().get(i).getName());
+                    shelf_BT.setText(mReviewIntent.getShelves().get(i).getShelf().get(i).getName());
                 }
             }
             //shelf_BT.setText(mReviewIntent.getShelves().get(0).getShelf().get(0).getName());
@@ -284,7 +286,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.menu_current_shelf:
-                        new AddToShelfLoader("currently_reading", mBook.getId().getTextValue())
+                        new AddToShelfLoader("currently-reading", mBook.getId().getTextValue())
                                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         shelf_BT.setText("Currently_Reading");
                         return true;
@@ -294,7 +296,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
                         shelf_BT.setText("Read");
                         return true;
                     case R.id.menu_want_shelf:
-                        new AddToShelfLoader("to_read", mBook.getId().getTextValue())
+                        new AddToShelfLoader("to-read", mBook.getId().getTextValue())
                                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         shelf_BT.setText("Want_To_Read");
                         return true;
@@ -434,7 +436,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
     public void OnBookDetailsFetched(UserBook bookDetails) {
         if (bookDetails != null) {
             book = bookDetails;
-            //Log.i(TAG, "book asin: " + book.getAsin());
+            Log.i(TAG, "book asin: " + book.getId().getTextValue());
             progressContainer.setVisibility(View.GONE);
             detailsContainer.setVisibility(View.VISIBLE);
             fetchSeriesDetails();
@@ -500,7 +502,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
 
     public boolean goHome() {
         if (mainActivity != null && mainActivity.getSupportFragmentManager() != null) {
-            mainActivity.getSupportFragmentManager().popBackStack();
+            mainActivity.switchToList();
             if (mainActivity.toggle != null) {
                 mainActivity.toggle.setDrawerIndicatorEnabled(true);
             }

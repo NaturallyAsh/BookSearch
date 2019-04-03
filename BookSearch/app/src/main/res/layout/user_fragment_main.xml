@@ -42,8 +42,9 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:layout_marginTop="6dp">
+                    android:layout_height="320dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginStart="6dp">
 
                     <LinearLayout
                         android:id="@+id/currently_reading_TV_container"
@@ -107,7 +108,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="320dp"
                     android:layout_marginTop="15dp"
                     android:orientation="vertical"
                     android:layout_marginStart="6dp">
@@ -174,7 +175,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="320dp"
                     android:layout_marginTop="15dp"
                     android:orientation="vertical"
                     android:layout_marginStart="6dp">

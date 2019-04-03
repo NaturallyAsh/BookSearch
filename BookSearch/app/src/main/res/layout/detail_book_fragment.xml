@@ -27,14 +27,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ImageView
-                    android:id="@+id/detail_imageView"
-                    android:layout_width="200dp"
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerInParent="true"
-                    android:fitsSystemWindows="true"
-                    android:scaleType="fitCenter"
-                    app:layout_collapseMode="parallax" />
+                    app:cardBackgroundColor="@color/transparent"
+                    app:cardElevation="8dp">
+
+                    <ImageView
+                        android:id="@+id/detail_imageView"
+                        android:layout_width="200dp"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:fitsSystemWindows="true"
+                        android:scaleType="fitCenter"
+                        app:layout_collapseMode="parallax" />
+
+                </androidx.cardview.widget.CardView>
 
             </RelativeLayout>
 
@@ -64,6 +73,7 @@
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:background="@drawable/shelf_button_shape"
                 android:minHeight="25dp"
+                android:padding="6dp"
                 android:layout_marginTop="10dp"/>
 
             <LinearLayout
