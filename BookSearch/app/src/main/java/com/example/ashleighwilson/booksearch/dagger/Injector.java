@@ -5,6 +5,7 @@ import android.app.Application;
 import com.example.ashleighwilson.booksearch.BookDetailFragment;
 import com.example.ashleighwilson.booksearch.loaders.AddToShelfLoader;
 import com.example.ashleighwilson.booksearch.loaders.BookDetailsLoader;
+import com.example.ashleighwilson.booksearch.loaders.SearchBookLoader;
 import com.example.ashleighwilson.booksearch.loaders.SeriesBookLoader;
 import com.example.ashleighwilson.booksearch.loaders.SeriesImageLoader;
 import com.example.ashleighwilson.booksearch.loaders.SimilarImageLoader;
@@ -132,5 +133,10 @@ public class Injector implements ApplicationComponent {
     @Override
     public void inject(BookDetailFragment bookDetailFragment) {
         component.inject(bookDetailFragment);
+    }
+
+    @Override
+    public void inject(SearchBookLoader searchBookLoader) {
+        component.inject(searchBookLoader);
     }
 }

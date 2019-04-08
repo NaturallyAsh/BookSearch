@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardView"
-    android:layout_height="wrap_content"
-    android:layout_width="wrap_content"
+    android:layout_height="150dp"
+    android:layout_width="match_parent"
     android:descendantFocusability="blocksDescendants"
     style="@style/AppTheme.Card.Margins">
 
@@ -18,8 +18,8 @@
 
     <ImageView
         android:id="@+id/book_image"
-        android:layout_width="80dp"
-        android:layout_height="150dp"
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
         android:paddingEnd="8dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
@@ -27,7 +27,7 @@
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="200dp"
         android:orientation="vertical"
         android:paddingEnd="18dp"
@@ -61,18 +61,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:textStyle="italic" />
-
-        <TextView
-            android:id="@+id/book_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"/>
-
-        <TextView
-            android:id="@+id/info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="invisible"/>
 
     </LinearLayout>
 

@@ -25,8 +25,10 @@ public interface GoodreadsApiRetro2 {
     Call<SeriesResponse> series_show(@Path("id") String series_id,
                                      @Query("key") String api_key);
 
+    @GET("/search/index.xml")
+    Call<SearchResponse> search_index(@Query("key") String api_key,
+                                      @Query("q") String query);
 
-    //@Headers({"Content-Type: application/xml; charset=utf-8"})
     @POST("/shelf/add_to_shelf")
     Call<Request> add_to_shelf(@Query("name") String shelf_name,
                                     @Query("book_id") String book_id,

@@ -6,6 +6,7 @@ import com.example.ashleighwilson.booksearch.BookDetailFragment;
 import com.example.ashleighwilson.booksearch.loaders.AddToShelfLoader;
 import com.example.ashleighwilson.booksearch.loaders.BookDetailsLoader;
 import com.example.ashleighwilson.booksearch.loaders.ReadImageLoader;
+import com.example.ashleighwilson.booksearch.loaders.SearchBookLoader;
 import com.example.ashleighwilson.booksearch.loaders.SeriesBookLoader;
 import com.example.ashleighwilson.booksearch.loaders.SeriesImageLoader;
 import com.example.ashleighwilson.booksearch.loaders.SimilarImageLoader;
@@ -47,4 +48,5 @@ public interface ApplicationComponent {
     void inject(SimilarImageLoader similarImageLoader);
     void inject(AddToShelfLoader addToShelfLoader);
     void inject(BookDetailFragment bookDetailFragment);
+    void inject(SearchBookLoader searchBookLoader);
 }

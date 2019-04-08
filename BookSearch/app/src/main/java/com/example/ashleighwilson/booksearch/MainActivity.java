@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements
     private FragmentManager mFragmentManager;
     public static final String FRAGMENT_USERFRAG_TAG = "fragment_user";
     public static final String FRAGMENT_BOOKDETAILS_TAG = "fragment_book_details";
+    public static final String FRAGMENT_SEARCH_TAG = "fragment_search";
     public final int TRANSITION_VERTICAL = 0;
     public final int TRANSITION_HORIZONTAL = 1;
     public Direction direction;
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_nav);
 
@@ -216,6 +218,33 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    public void searchToDetail(String bookId, String title) {
+        FragmentTransaction transaction = getFragmentManagerInstance().beginTransaction();
+        animateTransition(transaction, TRANSITION_HORIZONTAL);
+        BookDetailFragment detailFragment = new BookDetailFragment();
+        Bundle bundle = new Bundle();
+        //bundle.putParcelable(BookDetailFragment.SERIES_ARG_ITEM, seriesWork);
+        bundle.putString(BookDetailFragment.SEARCH_ARG_ID, bookId);
+        bundle.putString(BookDetailFragment.SEARCH_ARG_TITLE, title);
+        detailFragment.setArguments(bundle);
+        if (getFragmentManagerInstance().findFragmentByTag(FRAGMENT_BOOKDETAILS_TAG) == null) {
+            transaction.replace(R.id.main_frag_container, detailFragment, FRAGMENT_BOOKDETAILS_TAG)
+                    .addToBackStack(FRAGMENT_SEARCH_TAG)
+                    .commit();
+            if (toggle != null) {
+                toggle.setDrawerIndicatorEnabled(false);
+            }
+        } else {
+            getFragmentManagerInstance().popBackStackImmediate();
+            transaction.replace(R.id.main_frag_container, detailFragment, FRAGMENT_BOOKDETAILS_TAG)
+                    .addToBackStack(FRAGMENT_BOOKDETAILS_TAG)
+                    .commit();
+            if (toggle != null) {
+                toggle.setDrawerIndicatorEnabled(false);
+            }
+        }
+    }
+
     public void seriesSwitchBackToDetail(SeriesWork seriesWork) {
         FragmentTransaction transaction = getFragmentManagerInstance().beginTransaction();
         animateTransition(transaction, TRANSITION_HORIZONTAL);
@@ -235,6 +264,32 @@ public class MainActivity extends AppCompatActivity implements
             getFragmentManagerInstance().popBackStackImmediate();
             transaction.replace(R.id.main_frag_container, detailFragment, FRAGMENT_BOOKDETAILS_TAG)
                     .addToBackStack(FRAGMENT_BOOKDETAILS_TAG)
+                    .commit();
+            if (toggle != null) {
+                toggle.setDrawerIndicatorEnabled(false);
+            }
+        }
+    }
+
+    public void switchToSearch(String query) {
+        FragmentTransaction transaction = getFragmentManagerInstance().beginTransaction();
+        animateTransition(transaction, TRANSITION_HORIZONTAL);
+        SearchFragment searchFragment = new SearchFragment();
+        Bundle bundle = new Bundle();
+        //bundle.putParcelable(BookDetailFragment.SERIES_ARG_ITEM, seriesWork);
+        bundle.putString(SearchFragment.SEARCH_ARG_QUERY, query);
+        searchFragment.setArguments(bundle);
+        if (getFragmentManagerInstance().findFragmentByTag(FRAGMENT_SEARCH_TAG) == null) {
+            transaction.replace(R.id.main_frag_container, searchFragment, FRAGMENT_SEARCH_TAG)
+                    .addToBackStack(FRAGMENT_USERFRAG_TAG)
+                    .commit();
+            if (toggle != null) {
+                toggle.setDrawerIndicatorEnabled(false);
+            }
+        } else {
+            getFragmentManagerInstance().popBackStackImmediate();
+            transaction.replace(R.id.main_frag_container, searchFragment, FRAGMENT_SEARCH_TAG)
+                    .addToBackStack(FRAGMENT_SEARCH_TAG)
                     .commit();
             if (toggle != null) {
                 toggle.setDrawerIndicatorEnabled(false);

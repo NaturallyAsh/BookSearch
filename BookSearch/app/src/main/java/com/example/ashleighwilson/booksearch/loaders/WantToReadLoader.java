@@ -53,7 +53,7 @@ public class WantToReadLoader extends AsyncTask<Long, Void, Reviews> {
         }
         long userId = params[0];
 
-        OkHttpOAuthConsumer2 oAuthConsumer = new OkHttpOAuthConsumer2(
+        /*OkHttpOAuthConsumer2 oAuthConsumer = new OkHttpOAuthConsumer2(
                 BuildConfig.Goodreads_Api_Key,
                 BuildConfig.Goodreads_Secret
         );
@@ -74,7 +74,7 @@ public class WantToReadLoader extends AsyncTask<Long, Void, Reviews> {
                 .client(client)
                 .baseUrl(BuildConfig.Goodreads_Base_Url)
                 .addConverterFactory(SimpleXmlConverterFactory.create())
-                .build();
+                .build();*/
 
         //GoodreadsApi data = retrofit.create(GoodreadsApi.class);
         Call<ReviewsAndShelfResponse> reviewsCall = goodreadsApi.review_list(userId, 2,

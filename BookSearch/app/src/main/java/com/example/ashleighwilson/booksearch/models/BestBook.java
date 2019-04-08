@@ -8,7 +8,7 @@ import org.simpleframework.xml.Root;
 
 public class BestBook {
 
-    /*public BestBook(@Element(name="author", required=false)
+    public BestBook(@Element(name="author", required=false)
                             Author author,
 
                             @Element(name="image_url", required=false)
@@ -24,7 +24,38 @@ public class BestBook {
         this.imageUrl = imageUrl;
         this.id = id;
         this.title = title;
-    }*/
+    }
+
+    private String db_id;
+    private String db_title;
+    private String db_author;
+    private String db_image;
+
+    public String getDb_id() {
+        return db_id;
+    }
+
+    public String getDb_title() {
+        return db_title;
+    }
+
+    public String getDb_author() {
+        return db_author;
+    }
+
+    public String getDb_image() {
+        return db_image;
+    }
+
+
+    public BestBook(String id, String title, String author, String image) {
+        this.db_id = id;
+        this.db_title = title;
+        this.db_author = author;
+        this.db_image = image;
+    }
+
+
     @Element(name="author", required=false)
     Author author;
 

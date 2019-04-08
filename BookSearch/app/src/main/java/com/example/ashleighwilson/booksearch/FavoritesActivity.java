@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.ashleighwilson.booksearch.adapters.FavAdapter;
 import com.example.ashleighwilson.booksearch.data.BookDbHelper;
 import com.example.ashleighwilson.booksearch.data.ImageUtils;
+import com.example.ashleighwilson.booksearch.models.BestBook;
 import com.example.ashleighwilson.booksearch.models.Book;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class FavoritesActivity extends AppCompatActivity {
 
     private RecyclerView favListView;
     private FavAdapter favAdapter;
-    public ArrayList<Book> allBooks = new ArrayList<>();
+    public ArrayList<BestBook> allBooks = new ArrayList<>();
     public BookDbHelper dbHelper;
     public TextView emptyView;
 
@@ -62,12 +63,11 @@ public class FavoritesActivity extends AppCompatActivity {
         if (cursor.moveToFirst())
         {
             do {
-                Book book = new Book(
-                        ImageUtils.getImage(cursor.getBlob(1)),
+                BestBook book = new BestBook(
+                        cursor.getString(1),
                         cursor.getString(2),
                         cursor.getString(3),
-                        cursor.getString(4),
-                        cursor.getString(5));
+                        cursor.getString(4));
                 allBooks.add(book);
             }while (cursor.moveToNext());
         }

@@ -6,7 +6,10 @@ import android.os.Parcelable;
 import com.google.gson.Gson;
 
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
+
+import java.util.List;
 
 public class SeriesWork implements Parcelable {
 
@@ -22,8 +25,8 @@ public class SeriesWork implements Parcelable {
                               @Element(name="id", required=false)
                                       String id,
 
-                              @Element(name = "best_book", required = false)
-                                      BestBook bestBook) {
+                              @ElementList(name = "best_book", required = false, inline = true)
+                              List<BestBook> bestBook) {
 
         this.work = work;
         this.series = series;
@@ -43,8 +46,8 @@ public class SeriesWork implements Parcelable {
     @Element(name="id", required=false)
     String id;
 
-    @Element(name = "best_book", required = false)
-    BestBook bestBook;
+    @ElementList(name = "best_book", required = false, inline = true)
+    List<BestBook> bestBook;
 
     protected SeriesWork(Parcel in) {
         userPosition = in.readString();
@@ -73,11 +76,11 @@ public class SeriesWork implements Parcelable {
         return gson.fromJson(json, SeriesWork.class);
     }
 
-    public BestBook getBestBook() {
+    public List<BestBook> getBestBook() {
         return bestBook;
     }
 
-    public void setBestBook(BestBook bestBook) {
+    public void setBestBook(List<BestBook> bestBook) {
         this.bestBook = bestBook;
     }
 

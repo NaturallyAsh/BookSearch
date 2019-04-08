@@ -11,8 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.bumptech.glide.Glide;
 import com.example.ashleighwilson.booksearch.R;
 import com.example.ashleighwilson.booksearch.data.BookDbHelper;
+import com.example.ashleighwilson.booksearch.models.BestBook;
 import com.example.ashleighwilson.booksearch.models.Book;
 
 import java.util.ArrayList;
@@ -20,14 +22,14 @@ import java.util.List;
 
 public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder>
 {
-    public List<Book> booksInfo;
+    public List<BestBook> booksInfo;
     public BookDbHelper database;
     public Bitmap bp;
     Context context;
     boolean starred = false;
     static ClickListener clickListener;
 
-    public FavAdapter(Context context, ArrayList<Book> bookArrayList)
+    public FavAdapter(Context context, ArrayList<BestBook> bookArrayList)
     {
         this.context = context;
         this.booksInfo = bookArrayList;
@@ -43,14 +45,13 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder>
     @Override
     public void onBindViewHolder(final FavAdapter.FavViewHolder holder, final int position) {
 
-        final Book currentBook = booksInfo.get(position);
+        final BestBook currentBook = booksInfo.get(position);
 
-        holder.titleView.setText(currentBook.getmTitle());
-        holder.authorView.setText(currentBook.getmAuthors());
-        holder.descriptionView.setText(currentBook.getmDescription());
-        holder.infoLink.setText(currentBook.getmInfoLink());
-        bp = currentBook.getmBookCover();
-        holder.bookCover.setImageBitmap(bp);
+        holder.titleView.setText(currentBook.getDb_title());
+        holder.authorView.setText(currentBook.getDb_author());
+        Glide.with(context)
+                .load(currentBook.getDb_image())
+                .into(holder.bookCover);
 
     }
 
@@ -121,13 +122,13 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder>
     {
         boolean check = false;
 
-        ArrayList<Book> itemsInDB = database.getAllBooks();
+        ArrayList<BestBook> itemsInDB = database.getAllBooks();
 
         if (itemsInDB != null)
         {
-            for (Book book : itemsInDB)
+            for (BestBook book : itemsInDB)
             {
-                if (book.getmAuthors().equals(checkStarredItem.getmAuthors()))
+                if (book.getDb_author().equals(checkStarredItem.getmAuthors()))
                 {
                     check = true;
                     break;

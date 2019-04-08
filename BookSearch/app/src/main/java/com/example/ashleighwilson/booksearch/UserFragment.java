@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -124,10 +123,7 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
         Intent searchIntent = mainActivity.getIntent();
         if (Intent.ACTION_SEARCH.equals(searchIntent.getAction())) {
             QUERY_KEY = searchIntent.getStringExtra(SearchManager.QUERY);
-            Log.i(TAG, "QUERY_KEY = " + QUERY_KEY);
-            Intent intent = new Intent(getActivity(), BookActivity.class);
-            intent.putExtra("key", QUERY_KEY);
-            startActivity(intent);
+            mainActivity.switchToSearch(QUERY_KEY);
         }
     }
 
@@ -347,7 +343,7 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
                 String bookSearchString = "isbn:" + scanContent;
                 QUERY_KEY = bookSearchString;
 
-                Intent intent1 = new Intent(getContext(), BookActivity.class);
+                Intent intent1 = new Intent(getContext(), SearchFragment.class);
                 intent1.putExtra("key", QUERY_KEY);
                 startActivity(intent1);
             }

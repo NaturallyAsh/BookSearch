@@ -75,6 +75,8 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
 
     public static final String BOOK_ARG_ITEM = "book_arg_item";
     public static final String SERIES_ARG_ITEM = "series_arg_item";
+    public static final String SEARCH_ARG_ID = "search_arg_id";
+    public static final String SEARCH_ARG_TITLE = "search_arg_title";
 
     @Inject
     GoodreadsApiRetro2 goodreadsApi;
@@ -82,6 +84,8 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
     private UserBook mUserBookIntent;
     private SeriesWork mSeriesBookIntent;
     private UserBook book;
+    private String searchId;
+    private String searchTitle;
     private MainActivity mainActivity;
     private Item item;
     private SeriesBookAdapter seriesBookAdapter;
@@ -150,6 +154,10 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
             //mSeriesBookIntent = bundle.getParcelable(BookDetailFragment.SERIES_ARG_ITEM);
             String seriesJson = bundle.getString(SERIES_ARG_ITEM);
             mSeriesBookIntent = SeriesWork.fromJson(seriesJson);
+        } else if (bundle.containsKey(SEARCH_ARG_ID) && bundle.containsKey(SEARCH_ARG_TITLE)) {
+            searchId = bundle.getString(SEARCH_ARG_ID);
+            searchTitle = bundle.getString(SEARCH_ARG_TITLE);
+            Log.i(TAG, "search id: " + searchId + " search title: " + searchTitle);
         }
     }
 
@@ -217,6 +225,13 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
             Log.i(TAG, "series intent is null");
         }
 
+        if (searchId != null && searchTitle != null) {
+            progressContainer.setVisibility(View.VISIBLE);
+            detailsContainer.setVisibility(View.INVISIBLE);
+            fetchBookDetails(searchId);
+            fetchVolumeDetails(searchTitle);
+        }
+
         shelf_BT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -234,7 +249,8 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
     @SuppressLint("SetTextI18n")
     private void init() {
         if (book != null && mReviewIntent != null || book != null && mUserBookIntent != null
-            || book != null && mSeriesBookIntent != null) {
+            || book != null && mSeriesBookIntent != null || book != null && searchId != null
+                || book != null && searchTitle != null) {
             //float stars = Float.parseFloat(mReviewIntent.getBook().getAverageRating());
             float stars = Float.parseFloat(book.getAverageRating());
             mainActivity.getSupportActionBar().setTitle(book.getTitle());
@@ -421,6 +437,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
     private void fetchSeriesDetails() {
         if (book != null) {
             //Log.i(TAG, "series work: " + book.getSeriesWorks().getSeriesWork().getId());
+
             new SeriesBookLoader(book.getSeriesWorks().getSeriesWork().getSeries().getId(), this)
                     .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
@@ -429,19 +446,6 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
     private void fetchSimilarImages(String id) {
         if (id != null) {
             new SimilarImageLoader(id, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-    }
-
-    @Override
-    public void OnBookDetailsFetched(UserBook bookDetails) {
-        if (bookDetails != null) {
-            book = bookDetails;
-            Log.i(TAG, "book asin: " + book.getId().getTextValue());
-            progressContainer.setVisibility(View.GONE);
-            detailsContainer.setVisibility(View.VISIBLE);
-            fetchSeriesDetails();
-            fetchSimilarImages(book.getId().getTextValue());
-            init();
         }
     }
 
@@ -509,6 +513,19 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
             mainActivity.onDirection(MainActivity.Direction.PARENT);
         }
         return true;
+    }
+
+    @Override
+    public void OnBookDetailsFetched(UserBook bookDetails) {
+        if (bookDetails != null) {
+            book = bookDetails;
+            //Log.i(TAG, "book asin: " + book.getId().getTextValue());
+            progressContainer.setVisibility(View.GONE);
+            detailsContainer.setVisibility(View.VISIBLE);
+            fetchSeriesDetails();
+            fetchSimilarImages(book.getId().getTextValue());
+            init();
+        }
     }
 
     @Override

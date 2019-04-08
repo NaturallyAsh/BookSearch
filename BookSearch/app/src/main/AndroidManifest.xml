@@ -17,7 +17,8 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,15 +31,6 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable_config"/>
 
-        </activity>
-        <activity
-            android:name=".BookActivity"
-            android:label="Search Results"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
         </activity>
         <activity
             android:name=".FavoritesActivity"

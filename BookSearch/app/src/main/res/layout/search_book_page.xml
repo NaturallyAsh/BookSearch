@@ -7,13 +7,12 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <include layout="@layout/main_toolbar"/>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="55dp"
         android:dividerHeight="8dp"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
