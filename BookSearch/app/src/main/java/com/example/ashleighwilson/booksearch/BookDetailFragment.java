@@ -434,12 +434,26 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
         new ReadImageLoader(title, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void fetchSeriesDetails() {
-        if (book != null) {
-            //Log.i(TAG, "series work: " + book.getSeriesWorks().getSeriesWork().getId());
+    private void fetchSeriesDetails(UserBook seriesBook) {
+        if (seriesBook != null) {
+            //Log.i(TAG, "series work: " + seriesBook.getSeriesWorks());
+            String id = "";
 
-            new SeriesBookLoader(book.getSeriesWorks().getSeriesWork().getSeries().getId(), this)
-                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            for (int i = 0; i < seriesBook.getSeriesWorks().size(); i++) {
+                if (seriesBook.getSeriesWorks().get(0).getSeries().getId().equals(String.valueOf(5))) {
+                    //Log.i(TAG, "series work 1: " + seriesBook.getSeriesWorks().get(0).getSeries().getId());
+                    id = seriesBook.getSeriesWorks().get(0).getSeries().getId();
+                } else if (seriesBook.getSeriesWorks().size() > 1 && !seriesBook.getSeriesWorks()
+                    .get(1).getSeries().getId().equals(String.valueOf(5))){
+                    //Log.i(TAG, "series work 2: " + seriesBook.getSeriesWorks().get(1).getSeries().getId());
+                    id = seriesBook.getSeriesWorks().get(1).getSeries().getId();
+                }
+
+            }
+            if (!id.equals("")){
+                new SeriesBookLoader(id, this)
+                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
         }
     }
 
@@ -506,11 +520,15 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
 
     public boolean goHome() {
         if (mainActivity != null && mainActivity.getSupportFragmentManager() != null) {
-            mainActivity.switchToList();
-            if (mainActivity.toggle != null) {
-                mainActivity.toggle.setDrawerIndicatorEnabled(true);
+            if (searchTitle != null) {
+                mainActivity.getSupportFragmentManager().popBackStack();
+            } else {
+                mainActivity.switchToList();
+                if (mainActivity.toggle != null) {
+                    mainActivity.toggle.setDrawerIndicatorEnabled(true);
+                }
+                mainActivity.onDirection(MainActivity.Direction.PARENT);
             }
-            mainActivity.onDirection(MainActivity.Direction.PARENT);
         }
         return true;
     }
@@ -519,10 +537,10 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
     public void OnBookDetailsFetched(UserBook bookDetails) {
         if (bookDetails != null) {
             book = bookDetails;
-            //Log.i(TAG, "book asin: " + book.getId().getTextValue());
             progressContainer.setVisibility(View.GONE);
             detailsContainer.setVisibility(View.VISIBLE);
-            fetchSeriesDetails();
+            Log.i(TAG, "book details series: " + book.getTitle());
+            fetchSeriesDetails(book);
             fetchSimilarImages(book.getId().getTextValue());
             init();
         }

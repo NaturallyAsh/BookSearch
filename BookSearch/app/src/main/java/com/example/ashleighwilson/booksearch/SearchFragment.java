@@ -154,7 +154,8 @@ public class SearchFragment extends Fragment implements SearchBookLoader.OnSearc
 
     public boolean goHome() {
         if (mainActivity != null && mainActivity.getSupportFragmentManager() != null) {
-            mainActivity.switchToList();
+            //mainActivity.switchToList();
+            mainActivity.getSupportFragmentManager().popBackStack();
             if (mainActivity.toggle != null) {
                 mainActivity.toggle.setDrawerIndicatorEnabled(true);
             }

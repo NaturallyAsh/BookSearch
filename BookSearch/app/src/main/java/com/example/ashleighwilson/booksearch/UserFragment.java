@@ -17,6 +17,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.ashleighwilson.booksearch.adapters.CurrentBookAdapter;
 import com.example.ashleighwilson.booksearch.adapters.ReadBookAdapter;
 import com.example.ashleighwilson.booksearch.adapters.WantBookAdapter;
@@ -30,6 +31,7 @@ import com.example.ashleighwilson.booksearch.models.AuthUser;
 import com.example.ashleighwilson.booksearch.models.Item;
 import com.example.ashleighwilson.booksearch.models.Review;
 import com.example.ashleighwilson.booksearch.models.Reviews;
+import com.github.florent37.materialleanback.MaterialLeanBack;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -100,6 +102,7 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
     public static String REVIEW_ITEM = "review_item";
     private MainActivity mainActivity;
     private String QUERY_KEY;
+
 
 
     public UserFragment() {
@@ -244,6 +247,7 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
                 emptyToReadTV.setVisibility(View.GONE);
                 for (int i = 0; i < wantedBookList.size(); i++) {
                     wantBookAdapter.add(wantedBookList);
+                    //reviewList.addAll(wantedBookList);
                     Review review = wantedBookList.get(i);
                     String noPhoto = "noPhoto";
                     if (review.getBook().getImageUrl().toLowerCase().indexOf(noPhoto.toLowerCase()) >= 0) {
@@ -286,6 +290,7 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
         if (googleImages != null) {
             for (int j = 0; j < googleImages.size(); j++) {
                 wantBookAdapter.newImage(googleImages.get(j));
+                //newItem.add(googleImages.get(j));
             }
         }
     }

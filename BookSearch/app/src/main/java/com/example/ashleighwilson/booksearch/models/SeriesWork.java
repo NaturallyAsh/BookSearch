@@ -11,6 +11,7 @@ import org.simpleframework.xml.Root;
 
 import java.util.List;
 
+@Root(name = "series_work")
 public class SeriesWork implements Parcelable {
 
     public SeriesWork(@Element(name="work", required=false)
