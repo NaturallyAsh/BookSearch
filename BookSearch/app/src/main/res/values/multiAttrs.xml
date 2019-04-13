@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MultiRecyclerLayout">
+        <attr name="multi_titleColor" format="color"/>
+        <attr name="multi_titleSize" format="dimension"/>
+        <attr name="multi_overlapCards" format="boolean"/>
+        <attr name="multi_animateCards" format="boolean"/>
+
+        <attr name="multi_cardElevationEnlarged" format="integer"/>
+        <attr name="multi_cardElevationReduced" format="integer"/>
+
+        <attr name="multi_lineSpacing" format="dimension"/>
+
+        <attr name="multi_paddingTop" format="dimension"/>
+        <attr name="multi_paddingBottom" format="dimension"/>
+        <attr name="multi_paddingLeft" format="dimension"/>
+        <attr name="multi_paddingRight" format="dimension"/>
+
+        <attr name="multi_background" format="reference"/>
+        <attr name="multi_backgroundOverlay" format="float"/>
+        <attr name="multi_backgroundOverlayColor" format="color"/>
+
+    </declare-styleable>
+</resources>

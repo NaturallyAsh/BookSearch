@@ -307,6 +307,7 @@ public class MainActivity extends AppCompatActivity implements
         if (toggle != null) {
             toggle.setDrawerIndicatorEnabled(false);
         }
+        getSupportActionBar().setTitle("BookSearch");
         getFragmentManagerInstance().getFragments();
     }
 

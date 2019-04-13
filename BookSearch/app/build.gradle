@@ -89,5 +89,5 @@ dependencies {
     implementation 'com.ms-square:expandableTextView:0.1.4'
     implementation 'org.apache.commons:commons-lang3:3.8.1'
     implementation 'com.github.Inconnu08:android-ratingreviews:1.2.0'
-    implementation 'com.github.florent37:materialleanback:1.0.2'
+    implementation 'com.nineoldandroids:library:2.4.0'
 }

@@ -265,7 +265,9 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
                     shelf_BT.setText(mReviewIntent.getShelves().get(i).getShelf().get(i).getName());
                 }
             }
-            //shelf_BT.setText(mReviewIntent.getShelves().get(0).getShelf().get(0).getName());
+            if (searchTitle != null) {
+                shelf_BT.setText("ADD_TO_SHELF");
+            }
             String pubDay = book.getPublicationDay();
             String pubMonth = book.getPublicationMonth();
             String pubYear = book.getPublicationYear();
@@ -386,8 +388,6 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
         String widgetUrl = remove[0];
         String iFrameUrl = StringUtils.replace(widgetUrl, "\"", "");
 
-        //WebView webView = new WebView(getContext());
-        //webView.loadUrl(iFrameUrl);
         LayoutInflater inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View reviewsView = inflater.inflate(R.layout.reviews_webview, null, false);
         WebView webView = reviewsView.findViewById(R.id.reviews_webView);
@@ -436,19 +436,18 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
 
     private void fetchSeriesDetails(UserBook seriesBook) {
         if (seriesBook != null) {
-            //Log.i(TAG, "series work: " + seriesBook.getSeriesWorks());
+            //Log.i(TAG, "series work: " + seriesBook.getSeriesWorks().get(0).getSeries().getId());
             String id = "";
 
             for (int i = 0; i < seriesBook.getSeriesWorks().size(); i++) {
-                if (seriesBook.getSeriesWorks().get(0).getSeries().getId().equals(String.valueOf(5))) {
-                    //Log.i(TAG, "series work 1: " + seriesBook.getSeriesWorks().get(0).getSeries().getId());
+                if (Integer.valueOf(seriesBook.getSeriesWorks().get(0).getSeries().getId()) >= 5) {
+                    Log.i(TAG, "series work 1: " + seriesBook.getSeriesWorks().get(0).getSeries().getId());
                     id = seriesBook.getSeriesWorks().get(0).getSeries().getId();
-                } else if (seriesBook.getSeriesWorks().size() > 1 && !seriesBook.getSeriesWorks()
-                    .get(1).getSeries().getId().equals(String.valueOf(5))){
-                    //Log.i(TAG, "series work 2: " + seriesBook.getSeriesWorks().get(1).getSeries().getId());
+                } else if (seriesBook.getSeriesWorks().size() > 1 &&
+                        Integer.valueOf(seriesBook.getSeriesWorks().get(1).getSeries().getId()) >= 5){
+                    Log.i(TAG, "series work 2: " + seriesBook.getSeriesWorks().get(1).getSeries().getId());
                     id = seriesBook.getSeriesWorks().get(1).getSeries().getId();
                 }
-
             }
             if (!id.equals("")){
                 new SeriesBookLoader(id, this)
@@ -539,7 +538,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
             book = bookDetails;
             progressContainer.setVisibility(View.GONE);
             detailsContainer.setVisibility(View.VISIBLE);
-            Log.i(TAG, "book details series: " + book.getTitle());
+            Log.i(TAG, "book details id: " + book.getId().getTextValue());
             fetchSeriesDetails(book);
             fetchSimilarImages(book.getId().getTextValue());
             init();

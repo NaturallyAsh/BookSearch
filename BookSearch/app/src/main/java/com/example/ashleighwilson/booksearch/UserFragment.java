@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -31,7 +32,7 @@ import com.example.ashleighwilson.booksearch.models.AuthUser;
 import com.example.ashleighwilson.booksearch.models.Item;
 import com.example.ashleighwilson.booksearch.models.Review;
 import com.example.ashleighwilson.booksearch.models.Reviews;
-import com.github.florent37.materialleanback.MaterialLeanBack;
+import com.example.ashleighwilson.booksearch.views.RecyclerLayout.MultiRecyclerLayout;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -40,6 +41,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -84,7 +86,8 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
     RecyclerView readRV;
     @BindView(R.id.user_swipe_to_refresh)
     SwipeRefreshLayout refreshLayout;
-
+    @BindView(R.id.multi_layout)
+    MultiRecyclerLayout multiRecyclerLayout;
     @Inject
     PreferenceUser preferenceUser;
     @Inject
@@ -102,7 +105,12 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
     public static String REVIEW_ITEM = "review_item";
     private MainActivity mainActivity;
     private String QUERY_KEY;
-
+    private ArrayList<Review> reviewList1 = new ArrayList<>();
+    private List<Item> newItem1 = new ArrayList<>();
+    private ArrayList<Review> reviewList2 = new ArrayList<>();
+    private List<Item> newItem2 = new ArrayList<>();
+    private ArrayList<Review> reviewList3 = new ArrayList<>();
+    private List<Item> newItem3 = new ArrayList<>();
 
 
     public UserFragment() {
@@ -175,10 +183,316 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
 
         init();
 
+        /*multiRecyclerLayout.setCustomizer(new MaterialLeanBack.Customizer() {
+            @Override
+            public void customizeTitle(TextView textView) {
+                textView.setTypeface(null, Typeface.BOLD);
+            }
+        });*/
+
+        multiRecyclerLayout.setAdapter1(new MultiRecyclerLayout.MultiAdapter<CurrentViewHolder>() {
+            @Override
+            public int getLineCount() {
+                return 1;
+            }
+
+            @Override
+            public int getCellsCount(int row) {
+                return reviewList1.size();
+            }
+
+            @Override
+            public String getTitleForRow(int row) {
+                return "Currently Reading";
+            }
+
+            @Override
+            public CurrentViewHolder onCreateViewHolder(ViewGroup viewGroup, int row) {
+                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.current_book_item,
+                        viewGroup, false);
+                return new CurrentViewHolder(view);
+            }
+
+            @Override
+            public void onBindViewHolder(CurrentViewHolder holder, int position) {
+                Review currentReviews = reviewList1.get(position);
+
+                String noPhoto = "noPhoto";
+                if (currentReviews.getBook().getImageUrl() != null ) {
+                    Glide.with(getContext())
+                            .load(currentReviews.getBook().getImageUrl())
+                            .into(holder.bookIV);
+                }
+                if (newItem1 != null) {
+                    Item item;
+
+                    for (int i = 0; i < newItem1.size(); i++) {
+                        item = newItem1.get(i);
+                        String name = item.getVolumeInfo().getTitle();
+                        if (currentReviews.getBook().getTitle().toLowerCase().contains(name.toLowerCase()) &&
+                                currentReviews.getBook().getImageUrl().toLowerCase().indexOf(noPhoto.toLowerCase()) >= 0) {
+                            String identifier = "";
+
+                            for (int j = 0; j < item.getVolumeInfo().getIndustryIdentifiers().size(); j++) {
+                                identifier = item.getVolumeInfo().getIndustryIdentifiers().get(j).getIdentifier();
+                            }
+                            currentReviews.getBook().setImageUrl(currentReviews.getBook().getAltBookCover(identifier));
+                            Glide.with(getContext())
+                                    .load(currentReviews.getBook().getImageUrl())
+                                    .into(holder.bookIV);
+                            if (item.getVolumeInfo().getImageLinks() != null) {
+                                currentReviews.getBook().setImageUrl(item.getVolumeInfo().getImageLinks().getSmallThumbnail());
+                                Glide.with(getContext())
+                                        .load(currentReviews.getBook().getImageUrl())
+                                        .into(holder.bookIV);
+                            }
+                        }
+                    }
+                }
+
+                holder.titleTV.setText(currentReviews.getBook().getTitle());
+                holder.authorTV.setText(currentReviews.getBook().getAuthor().getAuthor().get(0).getName());
+                holder.view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //listener.OnWantedClicke(currentReviews, holder.getAdapterPosition());
+                    }
+                });
+            }
+        });
+
+        multiRecyclerLayout.setOnItemClickListener1(new MultiRecyclerLayout.OnItemClickListener() {
+            @Override
+            public void onTitleClicked(int row, String text) {
+
+            }
+
+            @Override
+            public void onItemClicked(int row, int column) {
+
+            }
+        });
+
+        multiRecyclerLayout.setAdapter2(new MultiRecyclerLayout.MultiAdapter<WantViewHolder>() {
+            @Override
+            public int getLineCount() {
+                return 1;
+            }
+
+            @Override
+            public int getCellsCount(int row) {
+                return reviewList2.size();
+            }
+
+            @Override
+            public String getTitleForRow(int row) {
+                return "Want To Read";
+            }
+
+            @Override
+            public WantViewHolder onCreateViewHolder(ViewGroup viewGroup, int row) {
+                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.want_book_item,
+                        viewGroup, false);
+                return new WantViewHolder(view);
+            }
+
+            @Override
+            public void onBindViewHolder(WantViewHolder holder, int position) {
+                Review currentReviews = reviewList2.get(position);
+
+                String noPhoto = "noPhoto";
+                if (currentReviews.getBook().getImageUrl() != null ) {
+                    Glide.with(getContext())
+                            .load(currentReviews.getBook().getImageUrl())
+                            .into(holder.wantIV);
+                }
+                if (newItem2 != null) {
+                    Item item;
+
+                    for (int i = 0; i < newItem2.size(); i++) {
+                        item = newItem2.get(i);
+                        String name = item.getVolumeInfo().getTitle();
+                        if (currentReviews.getBook().getTitle().toLowerCase().contains(name.toLowerCase()) &&
+                                currentReviews.getBook().getImageUrl().toLowerCase().indexOf(noPhoto.toLowerCase()) >= 0) {
+                            String identifier = "";
+
+                            for (int j = 0; j < item.getVolumeInfo().getIndustryIdentifiers().size(); j++) {
+                                identifier = item.getVolumeInfo().getIndustryIdentifiers().get(j).getIdentifier();
+                            }
+                            currentReviews.getBook().setImageUrl(currentReviews.getBook().getAltBookCover(identifier));
+                            Glide.with(getContext())
+                                    .load(currentReviews.getBook().getImageUrl())
+                                    .into(holder.wantIV);
+                            if (item.getVolumeInfo().getImageLinks() != null) {
+                                currentReviews.getBook().setImageUrl(item.getVolumeInfo().getImageLinks().getSmallThumbnail());
+                                Glide.with(getContext())
+                                        .load(currentReviews.getBook().getImageUrl())
+                                        .into(holder.wantIV);
+                            }
+                        }
+                    }
+                }
+
+                holder.titleTV.setText(currentReviews.getBook().getTitle());
+                holder.authorTV.setText(currentReviews.getBook().getAuthor().getAuthor().get(0).getName());
+                holder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //listener.OnWantedClicke(currentReviews, holder.getAdapterPosition());
+                    }
+                });
+            }
+        });
+
+        multiRecyclerLayout.setOnItemClickListener2(new MultiRecyclerLayout.OnItemClickListener() {
+            @Override
+            public void onTitleClicked(int row, String text) {
+
+            }
+
+            @Override
+            public void onItemClicked(int row, int column) {
+
+            }
+        });
+
+        multiRecyclerLayout.setAdapter3(new MultiRecyclerLayout.MultiAdapter<ReadViewHolder>() {
+            @Override
+            public int getLineCount() {
+                return 1;
+            }
+
+            @Override
+            public int getCellsCount(int row) {
+                return reviewList3.size();
+            }
+
+            @Override
+            public String getTitleForRow(int row) {
+                return "Read";
+            }
+
+            @Override
+            public ReadViewHolder onCreateViewHolder(ViewGroup viewGroup, int row) {
+                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.read_book_item,
+                        viewGroup, false);
+                return new ReadViewHolder(view);
+            }
+
+            @Override
+            public void onBindViewHolder(ReadViewHolder holder, int position) {
+                Review currentReviews = reviewList3.get(position);
+
+                String noPhoto = "noPhoto";
+                if (currentReviews.getBook().getImageUrl() != null ) {
+                    Glide.with(getContext())
+                            .load(currentReviews.getBook().getImageUrl())
+                            .into(holder.readImage);
+                }
+                if (newItem3 != null) {
+                    Item item;
+
+                    for (int i = 0; i < newItem3.size(); i++) {
+                        item = newItem3.get(i);
+                        String name = item.getVolumeInfo().getTitle();
+                        if (currentReviews.getBook().getTitle().toLowerCase().contains(name.toLowerCase()) &&
+                                currentReviews.getBook().getImageUrl().toLowerCase().indexOf(noPhoto.toLowerCase()) >= 0) {
+                            String identifier = "";
+
+                            for (int j = 0; j < item.getVolumeInfo().getIndustryIdentifiers().size(); j++) {
+                                identifier = item.getVolumeInfo().getIndustryIdentifiers().get(j).getIdentifier();
+                            }
+                            currentReviews.getBook().setImageUrl(currentReviews.getBook().getAltBookCover(identifier));
+                            Glide.with(getContext())
+                                    .load(currentReviews.getBook().getImageUrl())
+                                    .into(holder.readImage);
+                            if (item.getVolumeInfo().getImageLinks() != null) {
+                                currentReviews.getBook().setImageUrl(item.getVolumeInfo().getImageLinks().getSmallThumbnail());
+                                Glide.with(getContext())
+                                        .load(currentReviews.getBook().getImageUrl())
+                                        .into(holder.readImage);
+                            }
+                        }
+                    }
+                }
+
+                holder.titleTV.setText(currentReviews.getBook().getTitle());
+                holder.authorTV.setText(currentReviews.getBook().getAuthor().getAuthor().get(0).getName());
+                holder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //listener.OnWantedClicke(currentReviews, holder.getAdapterPosition());
+                    }
+                });
+            }
+        });
+
+        multiRecyclerLayout.setOnItemClickListener3(new MultiRecyclerLayout.OnItemClickListener() {
+            @Override
+            public void onTitleClicked(int row, String text) {
+
+            }
+
+            @Override
+            public void onItemClicked(int row, int column) {
+
+            }
+        });
+
         return rootView;
     }
 
-    private void init() {
+    public class CurrentViewHolder extends MultiRecyclerLayout.MultiViewHolder {
+
+        View view;
+        @BindView(R.id.current_book_image)
+        ImageView bookIV;
+        @BindView(R.id.current_book_title)
+        TextView titleTV;
+        @BindView(R.id.current_book_author)
+        TextView authorTV;
+
+        public CurrentViewHolder(@NonNull View itemView) {
+            super(itemView);
+            view = itemView;
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
+    public class WantViewHolder extends MultiRecyclerLayout.MultiViewHolder {
+        View mView;
+        @BindView(R.id.want_book_image)
+        ImageView wantIV;
+        @BindView(R.id.want_book_title)
+        TextView titleTV;
+        @BindView(R.id.want_book_author)
+        TextView authorTV;
+
+        public WantViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mView = itemView;
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
+    public class ReadViewHolder extends MultiRecyclerLayout.MultiViewHolder {
+
+        View mView;
+        @BindView(R.id.read_book_image)
+        ImageView readImage;
+        @BindView(R.id.read_book_title)
+        TextView titleTV;
+        @BindView(R.id.read_book_author)
+        TextView authorTV;
+
+        public ReadViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mView = itemView;
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
+    public void init() {
         if (user.getId() == -1) {
             mustBeLoggedInTV.setVisibility(View.VISIBLE);
             currentRV.setVisibility(View.GONE);
@@ -229,6 +543,8 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
                 for (int i = 0; i < currentBookList.size(); i++) {
 
                     currentBookAdapter.add(currentBookList);
+                    reviewList1.addAll(currentBookList);
+                    multiRecyclerLayout.notifyDataChanged1();
                 }
             }
         }
@@ -247,7 +563,8 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
                 emptyToReadTV.setVisibility(View.GONE);
                 for (int i = 0; i < wantedBookList.size(); i++) {
                     wantBookAdapter.add(wantedBookList);
-                    //reviewList.addAll(wantedBookList);
+                    reviewList2.addAll(wantedBookList);
+                    multiRecyclerLayout.notifyDataChanged2();
                     Review review = wantedBookList.get(i);
                     String noPhoto = "noPhoto";
                     if (review.getBook().getImageUrl().toLowerCase().indexOf(noPhoto.toLowerCase()) >= 0) {
@@ -272,6 +589,8 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
                 emptyReadTV.setVisibility(View.GONE);
                 for (int i = 0; i < toReadBookList.size(); i++) {
                     readBookAdapter.add(toReadBookList);
+                    reviewList3.addAll(toReadBookList);
+                    multiRecyclerLayout.notifyDataChanged3();
                     Review review = toReadBookList.get(i);
                     String noPhoto = "noPhoto";
                     if (review.getBook().getImageUrl().toLowerCase().indexOf(noPhoto.toLowerCase()) >= 0) {
@@ -290,7 +609,7 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
         if (googleImages != null) {
             for (int j = 0; j < googleImages.size(); j++) {
                 wantBookAdapter.newImage(googleImages.get(j));
-                //newItem.add(googleImages.get(j));
+                newItem2.add(googleImages.get(j));
             }
         }
     }
@@ -300,6 +619,7 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
         if (itemList != null) {
             for (int i = 0; i < itemList.size(); i++) {
                 readBookAdapter.newImage(itemList.get(i));
+                newItem3.add(itemList.get(i));
             }
         }
     }

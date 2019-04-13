@@ -205,9 +205,8 @@ public class UserBook implements Parcelable{
     @Element(name="reviews_widget", required=false)
     String reviewsWidget;
 
-    //@Element(name="series_works", required=false)
-    //SeriesWorks seriesWorks;
-
+    //to avoid duplicate error, made series works an elementlist
+    //remember to send straight to series work (not series works)
     @ElementList(name = "series_works", required = false)
     List<SeriesWork> seriesWorks;
 

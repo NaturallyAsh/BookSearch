@@ -23,10 +23,27 @@
 
     </RelativeLayout>
 
+    <com.example.ashleighwilson.booksearch.views.RecyclerLayout.MultiRecyclerLayout
+        android:id="@+id/multi_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:multi_animateCards="true"
+        app:multi_lineSpacing="20dp"
+        app:multi_overlapCards="true"
+        app:multi_paddingBottom="30dp"
+        app:multi_paddingLeft="30dp"
+        app:multi_paddingRight="30dp"
+        app:multi_paddingTop="40dp"
+        app:multi_titleColor="@color/white"
+        android:visibility="visible">
+
+    </com.example.ashleighwilson.booksearch.views.RecyclerLayout.MultiRecyclerLayout>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/user_swipe_to_refresh"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -110,7 +127,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="320dp"
                     android:layout_marginTop="15dp"
-                    android:orientation="vertical"
                     android:layout_marginStart="6dp">
 
                     <LinearLayout
