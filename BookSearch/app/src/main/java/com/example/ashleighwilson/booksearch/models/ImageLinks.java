@@ -4,8 +4,6 @@ package com.example.ashleighwilson.booksearch.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import androidx.annotation.NonNull;
-
 public class ImageLinks {
 
     @SerializedName("smallThumbnail")

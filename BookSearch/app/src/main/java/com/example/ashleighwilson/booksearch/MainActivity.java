@@ -345,6 +345,9 @@ public class MainActivity extends AppCompatActivity implements
                 Intent readerIntent = new Intent(this, ReaderActivity.class);
                 startActivity(readerIntent);
                 break;
+            case R.id.menu_audiobooks:
+                Intent audiobookIntent = new Intent(this, AudiobookActivity.class);
+                startActivity(audiobookIntent);
             case R.id.nav_logout:
                 if (preferenceUser.getCurrentUser() != null) {
                     preferenceUser.setCurrentUser(null);

@@ -58,32 +58,32 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
 
     private static final String TAG = UserFragment.class.getSimpleName();
 
-    @BindView(R.id.currently_reading_TV)
-    TextView currentlyReadingTV;
-    @BindView(R.id.want_to_read_TV)
-    TextView want_to_read_TV;
-    @BindView(R.id.read_TV)
-    TextView readTV;
+    //@BindView(R.id.currently_reading_TV)
+    //TextView currentlyReadingTV;
+    //@BindView(R.id.want_to_read_TV)
+    //TextView want_to_read_TV;
+    //@BindView(R.id.read_TV)
+    //TextView readTV;
     @BindView(R.id.must_login_TV)
     TextView mustBeLoggedInTV;
-    @BindView(R.id.current_PB)
-    ProgressBar currentPB;
-    @BindView(R.id.want_PB)
-    ProgressBar wantPB;
-    @BindView(R.id.read_PB)
-    ProgressBar readPB;
-    @BindView(R.id.empty_current_TV)
-    TextView emptyCurrentTV;
-    @BindView(R.id.empty_to_read_TV)
-    TextView emptyToReadTV;
-    @BindView(R.id.empty_read_TV)
-    TextView emptyReadTV;
-    @BindView(R.id.current_RV)
-    RecyclerView currentRV;
-    @BindView(R.id.to_read_RV)
-    RecyclerView want_to_read_RV;
-    @BindView(R.id.read_RV)
-    RecyclerView readRV;
+    //@BindView(R.id.current_PB)
+    //ProgressBar currentPB;
+    //@BindView(R.id.want_PB)
+    //ProgressBar wantPB;
+    //@BindView(R.id.read_PB)
+    //ProgressBar readPB;
+    //@BindView(R.id.empty_current_TV)
+    //TextView emptyCurrentTV;
+    //@BindView(R.id.empty_to_read_TV)
+    //TextView emptyToReadTV;
+    //@BindView(R.id.empty_read_TV)
+    //TextView emptyReadTV;
+    //@BindView(R.id.current_RV)
+    //RecyclerView currentRV;
+    //@BindView(R.id.to_read_RV)
+    //RecyclerView want_to_read_RV;
+    //@BindView(R.id.read_RV)
+    //RecyclerView readRV;
     @BindView(R.id.user_swipe_to_refresh)
     SwipeRefreshLayout refreshLayout;
     @BindView(R.id.multi_layout)
@@ -161,18 +161,18 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
         LinearLayoutManager toReadManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,
                 false);
 
-        currentRV.setLayoutManager(currentManager);
-        currentBookAdapter = new CurrentBookAdapter(getContext(), currentArrayList, this);
-        currentRV.setAdapter(currentBookAdapter);
+        //currentRV.setLayoutManager(currentManager);
+        //currentBookAdapter = new CurrentBookAdapter(getContext(), currentArrayList, this);
+        //currentRV.setAdapter(currentBookAdapter);
 
-        want_to_read_RV.setLayoutManager(wantManager);
-        wantBookAdapter = new WantBookAdapter(getContext(), wantArrayList, this);
-        want_to_read_RV.setAdapter(wantBookAdapter);
+        //want_to_read_RV.setLayoutManager(wantManager);
+        //wantBookAdapter = new WantBookAdapter(getContext(), wantArrayList, this);
+        //want_to_read_RV.setAdapter(wantBookAdapter);
 
 
-        readRV.setLayoutManager(toReadManager);
-        readBookAdapter = new ReadBookAdapter(getContext(), readArrayList, this);
-        readRV.setAdapter(readBookAdapter);
+        //readRV.setLayoutManager(toReadManager);
+        //readBookAdapter = new ReadBookAdapter(getContext(), readArrayList, this);
+        //readRV.setAdapter(readBookAdapter);
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -255,7 +255,7 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
                 holder.view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //listener.OnWantedClicke(currentReviews, holder.getAdapterPosition());
+                        mainActivity.switchToDetail(currentReviews);
                     }
                 });
             }
@@ -269,7 +269,7 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
 
             @Override
             public void onItemClicked(int row, int column) {
-
+                Toast.makeText(getContext(), "item name: " + row, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -338,7 +338,7 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
                 holder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //listener.OnWantedClicke(currentReviews, holder.getAdapterPosition());
+                        mainActivity.switchToDetail(currentReviews);
                     }
                 });
             }
@@ -421,7 +421,7 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
                 holder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //listener.OnWantedClicke(currentReviews, holder.getAdapterPosition());
+                        mainActivity.switchToDetail(currentReviews);
                     }
                 });
             }
@@ -495,10 +495,12 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
     public void init() {
         if (user.getId() == -1) {
             mustBeLoggedInTV.setVisibility(View.VISIBLE);
-            currentRV.setVisibility(View.GONE);
+            //currentRV.setVisibility(View.GONE);
+            multiRecyclerLayout.setVisibility(View.GONE);
         } else {
             mustBeLoggedInTV.setVisibility(View.GONE);
-            currentRV.setVisibility(View.VISIBLE);
+            //currentRV.setVisibility(View.VISIBLE);
+            multiRecyclerLayout.setVisibility(View.VISIBLE);
 
             fetchCurrentBooks();
             fetchWantBooks();
@@ -508,21 +510,21 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
 
     private void fetchCurrentBooks() {
         if (!refreshLayout.isRefreshing()) {
-            currentPB.setVisibility(View.VISIBLE);
+            //currentPB.setVisibility(View.VISIBLE);
         }
         new CurrentlyReadingLoader(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, user.getId());
     }
 
     private void fetchWantBooks() {
         if (!refreshLayout.isRefreshing()) {
-            wantPB.setVisibility(View.VISIBLE);
+            //wantPB.setVisibility(View.VISIBLE);
         }
         new WantToReadLoader(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, user.getId());
     }
 
     private void fetchReadBooks() {
         if (!refreshLayout.isRefreshing()) {
-            readPB.setVisibility(View.VISIBLE);
+            //readPB.setVisibility(View.VISIBLE);
         }
         new ToReadBookLoader(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, user.getId());
     }
@@ -531,18 +533,18 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
     public void ReviewsFetched(Reviews reviews) {
         if (reviews != null) {
             String noPhoto = "noPhoto";
-            currentPB.setVisibility(View.GONE);
+            //currentPB.setVisibility(View.GONE);
             refreshLayout.setRefreshing(false);
-            currentlyReadingTV.setVisibility(View.VISIBLE);
+            //currentlyReadingTV.setVisibility(View.VISIBLE);
             currentBookList = reviews.getReview();
 
             if (currentBookList == null) {
-                emptyCurrentTV.setVisibility(View.VISIBLE);
+                //emptyCurrentTV.setVisibility(View.VISIBLE);
             } else {
-                emptyCurrentTV.setVisibility(View.GONE);
+                //emptyCurrentTV.setVisibility(View.GONE);
                 for (int i = 0; i < currentBookList.size(); i++) {
 
-                    currentBookAdapter.add(currentBookList);
+                    //currentBookAdapter.add(currentBookList);
                     reviewList1.addAll(currentBookList);
                     multiRecyclerLayout.notifyDataChanged1();
                 }
@@ -553,16 +555,16 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
     @Override
     public void WantedFetched(Reviews reviews) {
         if (reviews != null) {
-            wantPB.setVisibility(View.GONE);
-            want_to_read_TV.setVisibility(View.VISIBLE);
+            //wantPB.setVisibility(View.GONE);
+            //want_to_read_TV.setVisibility(View.VISIBLE);
             wantedBookList = reviews.getReview();
 
             if (wantedBookList == null) {
-                emptyToReadTV.setVisibility(View.VISIBLE);
+                //emptyToReadTV.setVisibility(View.VISIBLE);
             } else {
-                emptyToReadTV.setVisibility(View.GONE);
+                //emptyToReadTV.setVisibility(View.GONE);
                 for (int i = 0; i < wantedBookList.size(); i++) {
-                    wantBookAdapter.add(wantedBookList);
+                    //wantBookAdapter.add(wantedBookList);
                     reviewList2.addAll(wantedBookList);
                     multiRecyclerLayout.notifyDataChanged2();
                     Review review = wantedBookList.get(i);
@@ -579,16 +581,16 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
     @Override
     public void ReadFetched(Reviews reviews) {
         if (reviews != null) {
-            readPB.setVisibility(View.GONE);
-            readTV.setVisibility(View.VISIBLE);
+            //readPB.setVisibility(View.GONE);
+            //readTV.setVisibility(View.VISIBLE);
             toReadBookList = reviews.getReview();
 
             if (toReadBookList == null) {
-                emptyReadTV.setVisibility(View.VISIBLE);
+                //emptyReadTV.setVisibility(View.VISIBLE);
             } else {
-                emptyReadTV.setVisibility(View.GONE);
+                //emptyReadTV.setVisibility(View.GONE);
                 for (int i = 0; i < toReadBookList.size(); i++) {
-                    readBookAdapter.add(toReadBookList);
+                    //readBookAdapter.add(toReadBookList);
                     reviewList3.addAll(toReadBookList);
                     multiRecyclerLayout.notifyDataChanged3();
                     Review review = toReadBookList.get(i);
@@ -608,7 +610,7 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
     public void OnWantedImageLoaded(List<Item> googleImages) {
         if (googleImages != null) {
             for (int j = 0; j < googleImages.size(); j++) {
-                wantBookAdapter.newImage(googleImages.get(j));
+                //wantBookAdapter.newImage(googleImages.get(j));
                 newItem2.add(googleImages.get(j));
             }
         }
@@ -618,7 +620,7 @@ public class UserFragment extends Fragment implements CurrentlyReadingLoader.OnR
     public void OnReadImageFetched(List<Item> itemList) {
         if (itemList != null) {
             for (int i = 0; i < itemList.size(); i++) {
-                readBookAdapter.newImage(itemList.get(i));
+                //readBookAdapter.newImage(itemList.get(i));
                 newItem3.add(itemList.get(i));
             }
         }

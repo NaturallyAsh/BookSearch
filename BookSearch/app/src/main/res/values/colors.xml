@@ -192,4 +192,5 @@
 
     <color name="star_disabled">@color/DarkGray</color>
     <color name="star_enabled">@color/Gold</color>
+
 </resources>

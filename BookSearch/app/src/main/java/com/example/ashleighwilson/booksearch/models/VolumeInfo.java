@@ -3,7 +3,6 @@ package com.example.ashleighwilson.booksearch.models;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,6 +11,9 @@ public class VolumeInfo {
     @SerializedName("title")
     @Expose
     private String title;
+    @SerializedName("authors")
+    @Expose
+    private List<String> authors = new ArrayList<String>();
     @SerializedName("imageLinks")
     @Expose
     private ImageLinks imageLinks;
@@ -24,6 +26,14 @@ public class VolumeInfo {
     @SerializedName("publishedDate")
     @Expose
     private String publishedDate;
+
+    public List<String> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<String> authors) {
+        this.authors = authors;
+    }
 
     public String getDescription() {
         return description;
@@ -42,7 +52,7 @@ public class VolumeInfo {
     }
 
     /**
-     * 
+     *
      * @return
      *     The title
      */
@@ -51,7 +61,7 @@ public class VolumeInfo {
     }
 
     /**
-     * 
+     *
      * @param title
      *     The title
      */
@@ -60,7 +70,7 @@ public class VolumeInfo {
     }
 
     /**
-     * 
+     *
      * @return
      *     The imageLinks
      */
@@ -69,7 +79,7 @@ public class VolumeInfo {
     }
 
     /**
-     * 
+     *
      * @param imageLinks
      *     The imageLinks
      */
@@ -82,3 +92,4 @@ public class VolumeInfo {
     }
 
 }
+

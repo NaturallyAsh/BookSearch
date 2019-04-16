@@ -52,4 +52,7 @@
     <string name="view_more_string">View More</string>
     <string name="logout_string">Logout</string>
     <string name="exit_string">Exit</string>
+    <string name="audiobooks">Audiobooks</string>
+    <string name="audiobook_library">Audiobook Library</string>
+    <string name="now_playing">Now Playing</string>
 </resources>

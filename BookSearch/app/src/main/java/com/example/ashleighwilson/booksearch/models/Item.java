@@ -14,7 +14,7 @@ public class Item {
     private VolumeInfo volumeInfo;
 
     /**
-     * 
+     *
      * @return
      *     The id
      */
@@ -23,7 +23,7 @@ public class Item {
     }
 
     /**
-     * 
+     *
      * @param id
      *     The id
      */
@@ -32,7 +32,7 @@ public class Item {
     }
 
     /**
-     * 
+     *
      * @return
      *     The volumeInfo
      */
@@ -41,7 +41,7 @@ public class Item {
     }
 
     /**
-     * 
+     *
      * @param volumeInfo
      *     The volumeInfo
      */

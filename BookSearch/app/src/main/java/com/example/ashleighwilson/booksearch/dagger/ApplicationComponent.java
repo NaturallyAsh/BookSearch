@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.example.ashleighwilson.booksearch.BookDetailFragment;
 import com.example.ashleighwilson.booksearch.loaders.AddToShelfLoader;
+import com.example.ashleighwilson.booksearch.loaders.AudiobookImageLoader;
 import com.example.ashleighwilson.booksearch.loaders.BookDetailsLoader;
 import com.example.ashleighwilson.booksearch.loaders.ReadImageLoader;
 import com.example.ashleighwilson.booksearch.loaders.SearchBookLoader;
@@ -49,4 +50,5 @@ public interface ApplicationComponent {
     void inject(AddToShelfLoader addToShelfLoader);
     void inject(BookDetailFragment bookDetailFragment);
     void inject(SearchBookLoader searchBookLoader);
+    void inject(AudiobookImageLoader audiobookImageLoader);
 }

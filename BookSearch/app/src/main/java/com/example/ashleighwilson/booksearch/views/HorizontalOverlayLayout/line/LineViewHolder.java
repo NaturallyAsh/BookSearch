@@ -98,9 +98,9 @@ public class LineViewHolder extends RecyclerView.ViewHolder{
             @Override
             public void onHeightCalculated(int height) {
                 if (!wrapped) {
-                    recyclerView.getLayoutParams().height = height;
-                    recyclerView.requestLayout();
-                    wrapped = true;
+                    //recyclerView.getLayoutParams().height = height;
+                    //recyclerView.requestLayout();
+                    //wrapped = true;
                 }
             }
         }));
