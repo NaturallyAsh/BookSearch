@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.example.ashleighwilson.booksearch.adapters.AudiobookGridViewAdapter;
 import com.example.ashleighwilson.booksearch.loaders.AudiobookImageLoader;
@@ -29,7 +30,8 @@ import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AudiobookListFragment extends Fragment implements AudiobookImageLoader.OnAudiobookImageLoadedListener {
+public class AudiobookListFragment extends Fragment implements AudiobookImageLoader.OnAudiobookImageLoadedListener,
+        AudiobookGridViewAdapter.OnAudiobookClickListener {
 
     private static final String TAG = AudiobookListFragment.class.getSimpleName();
 
@@ -63,7 +65,7 @@ public class AudiobookListFragment extends Fragment implements AudiobookImageLoa
 
         audiobookActivity.getSupportActionBar().setTitle("Audiobook Library");
 
-        adapter = new AudiobookGridViewAdapter(getContext(), audioBookList);
+        adapter = new AudiobookGridViewAdapter(getContext(), audioBookList, this);
         audioGridView.setAdapter(adapter);
 
         init();
@@ -82,7 +84,7 @@ public class AudiobookListFragment extends Fragment implements AudiobookImageLoa
         nowPlayingBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                audiobookActivity.switchToPlayer();
+                audiobookActivity.switchToPlayer(null);
             }
         });
     }
@@ -152,5 +154,10 @@ public class AudiobookListFragment extends Fragment implements AudiobookImageLoa
             );
             adapter.add(audioBookItem);
         }
+    }
+
+    @Override
+    public void OnAudiobookClicked(AudioBook audioBook) {
+        audiobookActivity.switchToPlayer(audioBook);
     }
 }

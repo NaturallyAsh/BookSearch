@@ -2,17 +2,14 @@ package com.example.ashleighwilson.booksearch;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.GridView;
+
+import com.example.ashleighwilson.booksearch.models.AudioBook;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class AudiobookActivity extends AppCompatActivity {
 
@@ -64,9 +61,12 @@ public class AudiobookActivity extends AppCompatActivity {
         return result;
     }
 
-    public void switchToPlayer() {
+    public void switchToPlayer(AudioBook audioBook) {
         FragmentTransaction transaction = getFragmentManagerInstance().beginTransaction();
         AudiobookPlayerFragment playerFragment = new AudiobookPlayerFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(AudiobookPlayerFragment.PLAYER_ARG, audioBook);
+        playerFragment.setArguments(bundle);
         if (getFragmentManagerInstance().findFragmentByTag(FRAGMENT_AUDIOPLAYER_TAG) == null) {
             transaction.replace(R.id.audiobook_frag_container, playerFragment, FRAGMENT_AUDIOPLAYER_TAG)
                     .addToBackStack(FRAGMENT_AUDIOPLAYER_LIST_TAG)

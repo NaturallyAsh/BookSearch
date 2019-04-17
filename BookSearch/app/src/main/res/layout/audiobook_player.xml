@@ -17,10 +17,10 @@
 
     <ImageView
         android:layout_below="@+id/audio_player_title"
-        android:id="@+id/book_cover_image_view"
+        android:id="@+id/audio_player_book_cover_IV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:layout_above="@+id/control_layout"/>
 
 
@@ -95,13 +95,14 @@
             >
 
             <TextView
-                android:id="@+id/start_text_view"
+                android:id="@+id/audio_player_start_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="00:00"
                 android:maxLines="1"
                 />
             <SeekBar
+                android:id="@+id/audio_player_seekbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
@@ -109,7 +110,7 @@
 
                 />
             <TextView
-                android:id="@+id/duration_text_view"
+                android:id="@+id/audio_player_duration_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="40:55"
@@ -129,20 +130,30 @@
             >
 
             <ImageView
+                android:id="@+id/audio_player_rewind_IV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_fast_rewind_black_24dp"
                 android:layout_weight="1"
                 />
             <ImageView
+                android:id="@+id/audio_player_play_IV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_play_arrow_black_24dp"
-                android:layout_weight="1"
+                android:layout_marginEnd="30dp"
                 />
             <ImageView
+                android:id="@+id/audio_player_stop_IV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:src="@drawable/ic_stop_black_24dp"
+                />
+            <ImageView
+                android:id="@+id/audio_player_forward_IV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
                 android:src="@drawable/ic_fast_forward_black_24dp"
                 android:layout_weight="1"
                 />

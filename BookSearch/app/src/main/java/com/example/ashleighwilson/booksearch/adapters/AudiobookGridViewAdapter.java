@@ -20,12 +20,17 @@ public class AudiobookGridViewAdapter extends BaseAdapter {
 
     private List<AudioBook> audioBookList;
     private Context mContext;
+    private OnAudiobookClickListener listener;
 
-    public AudiobookGridViewAdapter(Context context, List<AudioBook> audioBooks) {
+    public AudiobookGridViewAdapter(Context context, List<AudioBook> audioBooks, OnAudiobookClickListener listener) {
         this.audioBookList = audioBooks;
         this.mContext = context;
+        this.listener = listener;
     }
 
+    public interface OnAudiobookClickListener {
+        void OnAudiobookClicked(AudioBook audioBook);
+    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -44,6 +49,13 @@ public class AudiobookGridViewAdapter extends BaseAdapter {
                 .into(coverIV);
         title.setText(currentBook.getmName());
         author.setText(currentBook.getmAuthor());
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.OnAudiobookClicked(currentBook);
+            }
+        });
 
         return convertView;
     }
