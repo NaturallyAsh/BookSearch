@@ -36,7 +36,7 @@ public class FavoritesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        dbHelper = new BookDbHelper(getApplicationContext());
+        dbHelper = BookDbHelper.getInstance();
         //allBooks = dbHelper.getAllBooks();
 
         emptyView = findViewById(R.id.empty_view);

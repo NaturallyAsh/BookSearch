@@ -19,13 +19,18 @@ public class AudioBook implements Parcelable {
     private long mSize;
     private int mCurrentPosition;
 
-    public AudioBook(String name, String author, String image, String published, String path) {
+    public AudioBook(int id, String name, String author, String image, String published,
+                     int currentPosition, String path) {
+        this.mId = id;
         this.mName = name;
         this.mAuthor = author;
         this.mImage = image;
         this.mPublished = published;
+        this.mCurrentPosition = currentPosition;
         this.mFilePath = path;
     }
+
+    public AudioBook(){}
 
     protected AudioBook(Parcel in) {
         mName = in.readString();

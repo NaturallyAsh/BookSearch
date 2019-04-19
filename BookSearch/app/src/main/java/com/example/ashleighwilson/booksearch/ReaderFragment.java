@@ -46,7 +46,7 @@ public class ReaderFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dbHelper = new BookDbHelper(getActivity());
+        dbHelper = BookDbHelper.getInstance();
         readerActivity = (ReaderActivity) getActivity();
 
     }

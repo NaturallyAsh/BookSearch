@@ -42,7 +42,7 @@ public class SearchBookAdapter extends RecyclerView.Adapter<SearchBookAdapter.Vi
         this.searches = searches;
         this.context = context;
         this.listener = listener;
-        this.database = new BookDbHelper(context);
+        this.database = BookDbHelper.getInstance();
     }
 
     public interface OnSearchItemClickedListener {

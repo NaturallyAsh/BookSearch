@@ -8,8 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import com.example.ashleighwilson.booksearch.MyApp;
+import com.example.ashleighwilson.booksearch.models.AudioBook;
 import com.example.ashleighwilson.booksearch.models.BestBook;
-import com.example.ashleighwilson.booksearch.models.Book;
 import com.example.ashleighwilson.booksearch.models.Reader;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class BookDbHelper extends SQLiteOpenHelper
     private static BookDbHelper dbHelper = null;
 
     private static final String DATABASE_NAME = "book.db";
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 18;
     public static final String CONTENT_AUTHORITY = "com.example.ashleighwilson.booksearch";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_BOOKS = "booksearch";
@@ -32,10 +33,14 @@ public class BookDbHelper extends SQLiteOpenHelper
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public static BookDbHelper getDBHelper(Context context)
+    public static synchronized BookDbHelper getInstance() {
+        return getDBHelper(MyApp.getInstance());
+    }
+
+    private static BookDbHelper getDBHelper(Context context)
     {
         if (dbHelper == null)
-            dbHelper = new BookDbHelper(context.getApplicationContext());
+            dbHelper = new BookDbHelper(context);
 
         return dbHelper;
     }
@@ -54,6 +59,16 @@ public class BookDbHelper extends SQLiteOpenHelper
           ReaderEntry.COLUMN_AUTHOR,
           ReaderEntry.COLUMN_COVER,
           ReaderEntry.COLUMN_PATH
+    };
+
+    String[] audiobookColumns = new String[] {
+            AudiobookEntry._ID,
+            AudiobookEntry.COLUMN_TITLE,
+            AudiobookEntry.COLUMN_AUTHOR,
+            AudiobookEntry.COLUMN_COVER,
+            AudiobookEntry.COLUMN_PUBLISHED,
+            AudiobookEntry.COLUMN_CURRENT_POSITION,
+            AudiobookEntry.COLUMN_PATH
     };
 
     public static final class BookEntry implements BaseColumns
@@ -92,11 +107,33 @@ public class BookDbHelper extends SQLiteOpenHelper
             + ReaderEntry.COLUMN_COVER + " BLOB NOT NULL, "
             + ReaderEntry.COLUMN_PATH + " TEXT);";
 
+    public static final class AudiobookEntry implements BaseColumns {
+        public static final String TABLE_NAME = "audiobooks";
+        public static final String _ID = BaseColumns._ID;
+        public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_AUTHOR = "author";
+        public static final String COLUMN_COVER = "cover";
+        public static final String COLUMN_PUBLISHED = "published";
+        public static final String COLUMN_CURRENT_POSITION = "current_position";
+        public static final String COLUMN_PATH = "path";
+    }
+
+    String SQL_CREATE_AUDIOBOOK_TABLE = "CREATE TABLE " + AudiobookEntry.TABLE_NAME +
+            " ("
+            + AudiobookEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + AudiobookEntry.COLUMN_TITLE + " TEXT, "
+            + AudiobookEntry.COLUMN_AUTHOR + " TEXT, "
+            + AudiobookEntry.COLUMN_COVER + " TEXT, "
+            + AudiobookEntry.COLUMN_PUBLISHED + " TEXT, "
+            + AudiobookEntry.COLUMN_CURRENT_POSITION + " INTEGER, "
+            + AudiobookEntry.COLUMN_PATH + " TEXT);";
+
     @Override
     public void onCreate(SQLiteDatabase db)
     {
         db.execSQL(SQL_CREATE_BOOKS_TABLE);
         db.execSQL(SQL_CREATE_READER_TABLE);
+        db.execSQL(SQL_CREATE_AUDIOBOOK_TABLE);
     }
 
     @Override
@@ -104,6 +141,7 @@ public class BookDbHelper extends SQLiteOpenHelper
     {
         db.execSQL("DROP TABLE IF EXISTS " + BookEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ReaderEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + AudiobookEntry.TABLE_NAME);
         onCreate(db);
     }
 
@@ -227,6 +265,42 @@ public class BookDbHelper extends SQLiteOpenHelper
         boolean exists = cursor.moveToFirst();
         cursor.close();
         return exists;
+    }
+
+    public long addAudiobook(AudioBook model) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        if (model.getmId() != 0) {
+            values.put(AudiobookEntry._ID, model.getmId());
+        }
+        values.put(AudiobookEntry.COLUMN_TITLE, model.getmName());
+        values.put(AudiobookEntry.COLUMN_AUTHOR, model.getmAuthor());
+        values.put(AudiobookEntry.COLUMN_COVER, model.getmImage());
+        values.put(AudiobookEntry.COLUMN_PUBLISHED, model.getmPublished());
+        values.put(AudiobookEntry.COLUMN_CURRENT_POSITION, model.getmCurrentPosition());
+        values.put(AudiobookEntry.COLUMN_PATH, model.getmFilePath());
+
+        long res = db.insertWithOnConflict(AudiobookEntry.TABLE_NAME, null, values,
+                SQLiteDatabase.CONFLICT_REPLACE);
+
+        db.close();
+
+        return res;
+    }
+
+    public void updateAudiobook(AudioBook model) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(AudiobookEntry.COLUMN_CURRENT_POSITION, model.getmCurrentPosition());
+        db.update(AudiobookEntry.TABLE_NAME, values, AudiobookEntry._ID + " = ?",
+                new String[]{String.valueOf(model.getmId())});
+    }
+
+    public Cursor getAudioBooks() {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        return db.query(AudiobookEntry.TABLE_NAME, audiobookColumns, null, null,
+                null, null, null);
     }
 
 }

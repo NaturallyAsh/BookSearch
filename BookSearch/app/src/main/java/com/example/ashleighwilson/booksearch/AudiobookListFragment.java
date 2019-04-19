@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.example.ashleighwilson.booksearch.adapters.AudiobookGridViewAdapter;
+import com.example.ashleighwilson.booksearch.data.BookDbHelper;
 import com.example.ashleighwilson.booksearch.loaders.AudiobookImageLoader;
 import com.example.ashleighwilson.booksearch.models.AudioBook;
 import com.example.ashleighwilson.booksearch.models.Item;
@@ -47,6 +49,8 @@ public class AudiobookListFragment extends Fragment implements AudiobookImageLoa
     private AudiobookGridViewAdapter adapter;
     private String path = "";
     private ArrayList<AudioBook> audioBookList = new ArrayList<>();
+    private BookDbHelper dbHelper;
+
 
     public AudiobookListFragment(){}
 
@@ -54,6 +58,7 @@ public class AudiobookListFragment extends Fragment implements AudiobookImageLoa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         audiobookActivity = (AudiobookActivity) getActivity();
+        dbHelper = BookDbHelper.getInstance();
     }
 
     @Override
@@ -68,12 +73,14 @@ public class AudiobookListFragment extends Fragment implements AudiobookImageLoa
         adapter = new AudiobookGridViewAdapter(getContext(), audioBookList, this);
         audioGridView.setAdapter(adapter);
 
-        init();
+        initButtons();
+
+        loadAudiobooksFromDb();
 
         return rootView;
     }
 
-    private void init() {
+    private void initButtons() {
         addBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +94,39 @@ public class AudiobookListFragment extends Fragment implements AudiobookImageLoa
                 audiobookActivity.switchToPlayer(null);
             }
         });
+    }
+
+    private void loadAudiobooksFromDb() {
+        audioBookList.clear();
+        Cursor cursor = dbHelper.getAudioBooks();
+
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(0);
+            String title = cursor.getString(1);
+            String author = cursor.getString(2);
+            String cover = cursor.getString(3);
+            String published = cursor.getString(4);
+            int currentPosition = cursor.getInt(5);
+            String path = cursor.getString(6);
+
+            AudioBook model = new AudioBook(id, title, author, cover,
+                    published, currentPosition, path);
+
+            audioBookList.add(model);
+
+            updateUI();
+        }
+    }
+
+    private void updateUI() {
+        if (adapter.getCount() == 0) {
+            audioGridView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        } else {
+            audioGridView.setAdapter(adapter);
+            adapter.setData(audioBookList);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void getPermission() {
@@ -145,14 +185,28 @@ public class AudiobookListFragment extends Fragment implements AudiobookImageLoa
             if (item.getVolumeInfo().getImageLinks() != null) {
                 image = item.getVolumeInfo().getImageLinks().getSmallThumbnail();
             }
-            AudioBook audioBookItem = new AudioBook(
+            AudioBook audioBookItem = new AudioBook();/*(
                     item.getVolumeInfo().getTitle(),
                     item.getVolumeInfo().getAuthors().get(0),
                     image,
                     item.getVolumeInfo().getPublishedDate(),
                     path
-            );
+            );*/
+            String title = item.getVolumeInfo().getTitle();
+            String author = item.getVolumeInfo().getAuthors().get(0);
+            String mImage = image;
+            String published = item.getVolumeInfo().getPublishedDate();
+            String mPath = path;
+
+            audioBookItem.setmName(title);
+            audioBookItem.setmAuthor(author);
+            audioBookItem.setmImage(mImage);
+            audioBookItem.setmPublished(published);
+            audioBookItem.setmFilePath(mPath);
+
             adapter.add(audioBookItem);
+
+            dbHelper.addAudiobook(audioBookItem);
         }
     }
 

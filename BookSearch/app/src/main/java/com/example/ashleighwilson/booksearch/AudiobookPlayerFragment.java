@@ -1,6 +1,7 @@
 package com.example.ashleighwilson.booksearch;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -18,10 +19,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.ashleighwilson.booksearch.data.BookDbHelper;
 import com.example.ashleighwilson.booksearch.models.AudioBook;
 
 import java.io.IOException;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +32,8 @@ import butterknife.ButterKnife;
 public class AudiobookPlayerFragment extends Fragment {
 
     private static final String TAG = AudiobookPlayerFragment.class.getSimpleName();
+
+    //sygi/AudiobookPlayer
 
     private AudiobookActivity audiobookActivity;
     public static final String PLAYER_ARG = "player_arg";
@@ -58,6 +63,8 @@ public class AudiobookPlayerFragment extends Fragment {
     private boolean isPlaying = false;
     private boolean data_set = false;
     private boolean reverse_counter = false;
+    private int currentPosition = 0;
+    private BookDbHelper dbHelper;
 
 
     public AudiobookPlayerFragment(){}
@@ -67,6 +74,7 @@ public class AudiobookPlayerFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         audiobookActivity = (AudiobookActivity) getActivity();
+        dbHelper = BookDbHelper.getInstance();
 
         Bundle bundle = getArguments();
         if (bundle.containsKey(PLAYER_ARG)) {
@@ -98,7 +106,33 @@ public class AudiobookPlayerFragment extends Fragment {
 
     private void goHome() {
         if (audiobookActivity != null && audiobookActivity.getSupportActionBar() != null) {
-            audiobookActivity.switchToList();
+            if (currentPosition > 0) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage("Save your current position?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.i(TAG, "position: " + currentPosition);
+                        audioBook.setmCurrentPosition(currentPosition);
+                        dbHelper.updateAudiobook(audioBook);
+                        //dialog.dismiss();
+                        audiobookActivity.switchToList();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        if (dialog != null) {
+                            //dialog.dismiss();
+                            audiobookActivity.switchToList();
+                        }
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            } else {
+                audiobookActivity.switchToList();
+            }
         }
     }
 
@@ -120,6 +154,14 @@ public class AudiobookPlayerFragment extends Fragment {
     private void init() {
         title.setText(audioBook.getmName());
         loadCoverImage(audioBook.getmImage());
+        if (audioBook.getmCurrentPosition() > 0) {
+            Log.i(TAG, "arg position: " + audioBook.getmCurrentPosition());
+            //mediaPlayer.seekTo(audioBook.getmCurrentPosition() / 1000, MediaPlayer.SEEK_CLOSEST);
+            //seekBar.setProgress(audioBook.getmCurrentPosition() /1000);
+            int position = mediaPlayer.getCurrentPosition() / 1000;
+            durationTV.setText(getTime(position));
+
+        }
         durationTV.setText("0:00:00");
 
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -179,6 +221,7 @@ public class AudiobookPlayerFragment extends Fragment {
                     playIV.setImageResource(R.drawable.ic_pause_black_24dp);
                 } else if (mediaPlayer != null && mediaPlayer.isPlaying()){
                     pausePlayback();
+                    currentPosition = mediaPlayer.getCurrentPosition();
                 } else if (mediaPlayer == null) {
                     Log.i(TAG, "read file called");
                     //readUriFile();
@@ -239,15 +282,17 @@ public class AudiobookPlayerFragment extends Fragment {
     private void setFileToPlayBT(Uri uri) {
         if (audioBook != null) {
             try {
-                //Uri uri = Uri.parse(audioBook.getmFilePath());
-                //stopPlayback();
-                //mediaPlayer.reset();
                 Log.i(TAG, "path: " + uri);
                 mediaPlayer.setDataSource(uri.getPath());
                 mediaPlayer.prepare();
                 data_set = true;
                 seekBar.setMax(mediaPlayer.getDuration() / 1000);
-                //mediaPlayer.start();
+                if (audioBook.getmCurrentPosition() > 0) {
+                    int currentPosition = audioBook.getmCurrentPosition() / 1000;
+                    //seekBar.setProgress(currentPosition);
+                    mediaPlayer.seekTo(currentPosition);
+                    durationTV.setText(getTime(currentPosition));
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -258,7 +303,11 @@ public class AudiobookPlayerFragment extends Fragment {
         audiobookActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (data_set) {
+                if (data_set && audioBook.getmCurrentPosition() > 0) {
+                    int currentPosition = audioBook.getmCurrentPosition() / 1000;
+                    seekBar.setProgress(currentPosition);
+                    durationTV.setText(getTime(currentPosition));
+                } else if (data_set) {
                     int currentPosition = mediaPlayer.getCurrentPosition() / 1000;
                     seekBar.setProgress(currentPosition);
                     durationTV.setText(getTime(currentPosition));
@@ -299,9 +348,15 @@ public class AudiobookPlayerFragment extends Fragment {
         isPlaying = true;
     }
 
+    @SuppressLint("SetTextI18n")
     private void stopPlayback() {
         Log.i(TAG, "media player stopped");
         if (mediaPlayer != null) {
+            if (mediaPlayer.getCurrentPosition() != 0) {
+                //Log.i(TAG, "position: " + mediaPlayer.getCurrentPosition() / 1000);
+                currentPosition = mediaPlayer.getCurrentPosition();
+            }
+            durationTV.setText("00:00:00");
             mediaPlayer.stop();
             mediaPlayer.reset();
             mediaPlayer.release();

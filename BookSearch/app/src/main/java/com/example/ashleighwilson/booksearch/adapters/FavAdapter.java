@@ -33,7 +33,7 @@ public class FavAdapter extends RecyclerView.Adapter<FavAdapter.FavViewHolder>
     {
         this.context = context;
         this.booksInfo = bookArrayList;
-        this.database = new BookDbHelper(context);
+        this.database = BookDbHelper.getInstance();
     }
 
     @Override

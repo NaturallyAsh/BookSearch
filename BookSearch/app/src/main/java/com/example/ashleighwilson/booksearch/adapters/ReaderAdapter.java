@@ -29,7 +29,7 @@ public class ReaderAdapter extends RecyclerView.Adapter<ReaderAdapter.ViewHolder
 
     public ReaderAdapter(Context context, ReaderActivity activity) {
         this.mContext = context;
-        dbHelper = new BookDbHelper(context);
+        dbHelper = BookDbHelper.getInstance();
         this.readerActivity = activity;
     }
 

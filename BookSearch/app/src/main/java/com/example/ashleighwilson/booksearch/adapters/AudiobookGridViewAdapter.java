@@ -80,4 +80,9 @@ public class AudiobookGridViewAdapter extends BaseAdapter {
         audioBookList.add(audioBook);
         notifyDataSetChanged();
     }
+
+    public void setData(List<AudioBook> data) {
+        this.audioBookList = data;
+        notifyDataSetChanged();
+    }
 }
