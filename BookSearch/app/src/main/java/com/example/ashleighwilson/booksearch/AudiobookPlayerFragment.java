@@ -154,15 +154,9 @@ public class AudiobookPlayerFragment extends Fragment {
     private void init() {
         title.setText(audioBook.getmName());
         loadCoverImage(audioBook.getmImage());
-        if (audioBook.getmCurrentPosition() > 0) {
-            Log.i(TAG, "arg position: " + audioBook.getmCurrentPosition());
-            //mediaPlayer.seekTo(audioBook.getmCurrentPosition() / 1000, MediaPlayer.SEEK_CLOSEST);
-            //seekBar.setProgress(audioBook.getmCurrentPosition() /1000);
-            int position = mediaPlayer.getCurrentPosition() / 1000;
-            durationTV.setText(getTime(position));
 
-        }
-        durationTV.setText("0:00:00");
+        durationTV.setText("00:00:00");
+        startTV.setText("00:00:00");
 
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -173,17 +167,22 @@ public class AudiobookPlayerFragment extends Fragment {
                 stopPlayback();
             }
         });
+        mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
+            @Override
+            public void onSeekComplete(MediaPlayer mp) {
+                //Log.i(TAG, "seek complete called");
+                int position = audioBook.getmCurrentPosition() / 1000;
+                seekBar.setProgress(position);
+                durationTV.setText(getTime(position));
+                startTV.setText(getReverseTime(position));
+            }
+        });
         readUriFile();
         setThread();
+        if (audioBook.getmCurrentPosition() > 0) {
+            mediaPlayer.seekTo(audioBook.getmCurrentPosition(), MediaPlayer.SEEK_CLOSEST);
 
-
-        /*durationTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reverse_counter ^= true;
-            }
-        });*/
-        //setFileToPlayBT();
+        }
     }
 
     private void loadCoverImage(String image) {
@@ -224,7 +223,6 @@ public class AudiobookPlayerFragment extends Fragment {
                     currentPosition = mediaPlayer.getCurrentPosition();
                 } else if (mediaPlayer == null) {
                     Log.i(TAG, "read file called");
-                    //readUriFile();
                     initMediaPlayer();
                 }
             }
@@ -271,6 +269,18 @@ public class AudiobookPlayerFragment extends Fragment {
         }
     }
 
+    private String getReverseTime(int current) {
+        current = mediaPlayer.getDuration() / 1000 - current;
+
+        int minutes = current / 60;
+        int hours = minutes / 60;
+        minutes %= 60;
+        int seconds = current % 60;
+        String current_time = String.format("%d:%02d:%02d", hours, minutes, seconds);
+
+        return " " + current_time;
+    }
+
     private void readUriFile() {
         String path = audioBook.getmFilePath();
         if (path != null) {
@@ -282,17 +292,11 @@ public class AudiobookPlayerFragment extends Fragment {
     private void setFileToPlayBT(Uri uri) {
         if (audioBook != null) {
             try {
-                Log.i(TAG, "path: " + uri);
+                //Log.i(TAG, "path: " + uri);
                 mediaPlayer.setDataSource(uri.getPath());
                 mediaPlayer.prepare();
                 data_set = true;
                 seekBar.setMax(mediaPlayer.getDuration() / 1000);
-                if (audioBook.getmCurrentPosition() > 0) {
-                    int currentPosition = audioBook.getmCurrentPosition() / 1000;
-                    //seekBar.setProgress(currentPosition);
-                    mediaPlayer.seekTo(currentPosition);
-                    durationTV.setText(getTime(currentPosition));
-                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -303,14 +307,11 @@ public class AudiobookPlayerFragment extends Fragment {
         audiobookActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (data_set && audioBook.getmCurrentPosition() > 0) {
-                    int currentPosition = audioBook.getmCurrentPosition() / 1000;
-                    seekBar.setProgress(currentPosition);
-                    durationTV.setText(getTime(currentPosition));
-                } else if (data_set) {
+                if (data_set) {
                     int currentPosition = mediaPlayer.getCurrentPosition() / 1000;
                     seekBar.setProgress(currentPosition);
                     durationTV.setText(getTime(currentPosition));
+                    startTV.setText(getReverseTime(currentPosition));
                 }
                 handler.postDelayed(this, 1000);
             }
@@ -337,7 +338,6 @@ public class AudiobookPlayerFragment extends Fragment {
 
     private void startPlayback() {
         if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
-            //setFileToPlayBT();
             Log.i(TAG, "media player start");
             mediaPlayer.start();
         } else if (data_set) {
@@ -353,10 +353,10 @@ public class AudiobookPlayerFragment extends Fragment {
         Log.i(TAG, "media player stopped");
         if (mediaPlayer != null) {
             if (mediaPlayer.getCurrentPosition() != 0) {
-                //Log.i(TAG, "position: " + mediaPlayer.getCurrentPosition() / 1000);
                 currentPosition = mediaPlayer.getCurrentPosition();
             }
             durationTV.setText("00:00:00");
+            startTV.setText("00:00:00");
             mediaPlayer.stop();
             mediaPlayer.reset();
             mediaPlayer.release();
