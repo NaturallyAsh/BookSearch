@@ -4,19 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:visibility="visible"
-        android:id="@+id/audio_player_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:padding="8dp"
-        />
+
 
     <ImageView
-        android:layout_below="@+id/audio_player_title"
         android:id="@+id/audio_player_book_cover_IV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,12 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         >
-        <Button
-            android:id="@+id/audio_player_library_BT"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Library"
-            />
+
     </RelativeLayout>
 
 
@@ -45,7 +30,7 @@
         android:id="@+id/control_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:layout_marginBottom="20dp"
         android:background="@color/white">
 
         <LinearLayout
@@ -56,13 +41,6 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="00:00"
-                android:maxLines="1"
-                />
 
             <TextView
                 android:id="@+id/audio_player_book_title_text_view"
@@ -163,7 +141,6 @@
 
     <RelativeLayout
         android:id="@+id/information_layout"
-        android:layout_below="@id/audio_player_title"
         android:layout_above="@id/control_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

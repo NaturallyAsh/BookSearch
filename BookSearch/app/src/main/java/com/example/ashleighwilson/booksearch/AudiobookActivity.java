@@ -84,12 +84,10 @@ public class AudiobookActivity extends AppCompatActivity {
         AudiobookListFragment listFragment = new AudiobookListFragment();
         if (getFragmentManagerInstance().findFragmentByTag(FRAGMENT_AUDIOPLAYER_LIST_TAG) == null) {
             transaction.replace(R.id.audiobook_frag_container, listFragment, FRAGMENT_AUDIOPLAYER_LIST_TAG)
-                    //.addToBackStack(FRAGMENT_AUDIOPLAYER_LIST_TAG)
                     .commit();
         } else {
             getFragmentManagerInstance().popBackStackImmediate();
             transaction.replace(R.id.audiobook_frag_container, listFragment, FRAGMENT_AUDIOPLAYER_LIST_TAG)
-                    //.addToBackStack(FRAGMENT_AUDIOPLAYER_LIST_TAG)
                     .commit();
         }
     }
@@ -98,4 +96,7 @@ public class AudiobookActivity extends AppCompatActivity {
         return this.toolbar;
     }
 
+    public void onBackPressed() {
+     super.onBackPressed();
+    }
 }

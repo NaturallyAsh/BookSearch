@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.bartwell.exfilepicker.ExFilePicker;
+import ru.bartwell.exfilepicker.data.ExFilePickerResult;
 
 public class AudiobookListFragment extends Fragment implements AudiobookImageLoader.OnAudiobookImageLoadedListener,
         AudiobookGridViewAdapter.OnAudiobookClickListener {
@@ -50,6 +53,7 @@ public class AudiobookListFragment extends Fragment implements AudiobookImageLoa
     private String path = "";
     private ArrayList<AudioBook> audioBookList = new ArrayList<>();
     private BookDbHelper dbHelper;
+    private ExFilePicker exFilePicker;
 
 
     public AudiobookListFragment(){}
@@ -59,6 +63,7 @@ public class AudiobookListFragment extends Fragment implements AudiobookImageLoa
         super.onCreate(savedInstanceState);
         audiobookActivity = (AudiobookActivity) getActivity();
         dbHelper = BookDbHelper.getInstance();
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -67,6 +72,8 @@ public class AudiobookListFragment extends Fragment implements AudiobookImageLoa
         View rootView = inflater.inflate(R.layout.audiobook_list_fragment, container,
                 false);
         ButterKnife.bind(this, rootView);
+
+        exFilePicker = new ExFilePicker();
 
         audiobookActivity.getSupportActionBar().setTitle("Audiobook Library");
 
@@ -135,11 +142,14 @@ public class AudiobookListFragment extends Fragment implements AudiobookImageLoa
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     REQUEST_PERMS);
         } else {
-            Intent addFileIntent = new Intent();
+            exFilePicker.setCanChooseOnlyOneItem(false);
+            //exFilePicker.setStartDirectory("/Download");
+            exFilePicker.start(this, 1);
+            /*Intent addFileIntent = new Intent();
             addFileIntent.setAction(Intent.ACTION_OPEN_DOCUMENT);
             addFileIntent.addCategory(Intent.CATEGORY_OPENABLE);
-            addFileIntent.setType("audio/*");
-            startActivityForResult(addFileIntent, 1);
+            addFileIntent.setType("audio/*");*/
+            //startActivityForResult(addFileIntent, 1);
         }
     }
 
@@ -147,8 +157,12 @@ public class AudiobookListFragment extends Fragment implements AudiobookImageLoa
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 1 && data != null) {
-                Uri uri = data.getData();
-                path = uri.getPath();
+                ExFilePickerResult result = ExFilePickerResult.getFromIntent(data);
+                //Uri uri = data.getData();
+                //path = uri.getPath();
+                path = result.getPath() + result.getNames().get(0);
+                String testPath = result.getPath();
+                Log.i(TAG, "path: " + path);
 
                 String name = StringUtils.substringAfterLast(path, "/");
                 String bookTitle = StringUtils.substringBefore(name, ".");
@@ -162,11 +176,15 @@ public class AudiobookListFragment extends Fragment implements AudiobookImageLoa
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == REQUEST_PERMS) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Intent addFileIntent = new Intent();
+                exFilePicker.setCanChooseOnlyOneItem(false);
+                //exFilePicker.setStartDirectory("/Download");
+                exFilePicker.start(this, 1);
+                /*Intent addFileIntent = new Intent();
                 addFileIntent.setAction(Intent.ACTION_OPEN_DOCUMENT);
                 addFileIntent.addCategory(Intent.CATEGORY_OPENABLE);
-                addFileIntent.setType("audio/*");
-                startActivityForResult(addFileIntent, 1);
+                addFileIntent.setType("audio/*");*/
+
+                //startActivityForResult(addFileIntent, 1);
             }
         }
     }
@@ -213,5 +231,11 @@ public class AudiobookListFragment extends Fragment implements AudiobookImageLoa
     @Override
     public void OnAudiobookClicked(AudioBook audioBook) {
         audiobookActivity.switchToPlayer(audioBook);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUI();
     }
 }

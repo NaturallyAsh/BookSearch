@@ -76,7 +76,7 @@ public class AudiobookGridViewAdapter extends BaseAdapter {
     }
 
     public void add(AudioBook audioBook) {
-        audioBookList.clear();
+        //audioBookList.clear();
         audioBookList.add(audioBook);
         notifyDataSetChanged();
     }

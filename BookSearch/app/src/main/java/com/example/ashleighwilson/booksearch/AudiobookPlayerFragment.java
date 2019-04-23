@@ -3,7 +3,6 @@ package com.example.ashleighwilson.booksearch;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,18 +21,24 @@ import com.bumptech.glide.Glide;
 import com.example.ashleighwilson.booksearch.data.BookDbHelper;
 import com.example.ashleighwilson.booksearch.models.AudioBook;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+
+import org.apache.commons.lang3.StringUtils;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class AudiobookPlayerFragment extends Fragment {
 
     private static final String TAG = AudiobookPlayerFragment.class.getSimpleName();
-
-    //sygi/AudiobookPlayer
 
     private AudiobookActivity audiobookActivity;
     public static final String PLAYER_ARG = "player_arg";
@@ -56,16 +61,18 @@ public class AudiobookPlayerFragment extends Fragment {
     ImageView playIV;
     @BindView(R.id.audio_player_stop_IV)
     ImageView stopIV;
-    @BindView(R.id.audio_player_library_BT)
-    Button libraryBT;
+
     private MediaPlayer mediaPlayer;
     private Handler handler;
     private boolean isPlaying = false;
     private boolean data_set = false;
-    private boolean reverse_counter = false;
     private int currentPosition = 0;
     private BookDbHelper dbHelper;
-
+    private String pathName;
+    private ArrayList<HashMap<String, String>> audioList = new ArrayList<>();
+    private ArrayList<HashMap<String, String>> audioList2 = new ArrayList<>();
+    private ArrayList<HashMap<String, String>> audioListFinal = new ArrayList<>();
+    private int currentAudioIndex = 0;
 
     public AudiobookPlayerFragment(){}
 
@@ -80,6 +87,17 @@ public class AudiobookPlayerFragment extends Fragment {
         if (bundle.containsKey(PLAYER_ARG)) {
             audioBook = bundle.getParcelable(PLAYER_ARG);
             Log.i(TAG, "arg item: " + audioBook.getmName());
+            if (!StringUtils.substringAfter(audioBook.getmFilePath(), ".").equals("mp3")) {
+                String name = StringUtils.substringAfterLast(audioBook.getmFilePath(), "/");
+                pathName = "/storage/emulated/0/Download/" + name;
+                Log.i(TAG, "not equal to mp3: " + pathName);
+                audioList2 = getAudioList();
+                for (int i = 0; i < audioList2.size(); i++) {
+                    HashMap<String, String> audio = audioList2.get(i);
+                    audioListFinal.add(audio);
+                    //Log.i(TAG, "audio list: " + audio.values());
+                }
+            }
         }
     }
 
@@ -104,6 +122,28 @@ public class AudiobookPlayerFragment extends Fragment {
         return rootView;
     }
 
+    private ArrayList<HashMap<String, String>> getAudioList() {
+        File mFile = new File(pathName);
+        //Log.i(TAG, "files: " + Arrays.toString(mFile.listFiles()));
+
+        if (mFile.listFiles(new FileExtensionFilter()).length > 0) {
+            for (File file : mFile.listFiles(new FileExtensionFilter())) {
+                HashMap<String, String> audioFiles = new HashMap<>();
+                audioFiles.put("title", file.getName().substring(0, (file.getName().length() - 4)));
+                audioFiles.put("path", file.getPath());
+
+                audioList.add(audioFiles);
+            }
+        }
+        return audioList;
+    }
+
+    class FileExtensionFilter implements FilenameFilter {
+        public boolean accept(File dir, String name) {
+            return (name.endsWith(".mp3") || name.endsWith(".MP3"));
+        }
+    }
+
     private void goHome() {
         if (audiobookActivity != null && audiobookActivity.getSupportActionBar() != null) {
             if (currentPosition > 0) {
@@ -115,7 +155,6 @@ public class AudiobookPlayerFragment extends Fragment {
                         Log.i(TAG, "position: " + currentPosition);
                         audioBook.setmCurrentPosition(currentPosition);
                         dbHelper.updateAudiobook(audioBook);
-                        //dialog.dismiss();
                         audiobookActivity.switchToList();
                     }
                 });
@@ -123,7 +162,6 @@ public class AudiobookPlayerFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         if (dialog != null) {
-                            //dialog.dismiss();
                             audiobookActivity.switchToList();
                         }
                     }
@@ -161,16 +199,30 @@ public class AudiobookPlayerFragment extends Fragment {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                int length = mediaPlayer.getDuration() / 1000;
-                seekBar.setProgress(length);
-                durationTV.setText(getTime(length));
-                stopPlayback();
+                if (pathName != null) {
+                    if (currentAudioIndex < (audioListFinal.size() - 1)) {
+                        //setFileToPlayBT(null,currentAudioIndex + 1);
+                        //mediaPlayer.stop();
+                        //mediaPlayer.reset();
+                        readUriFile();
+                        currentAudioIndex = currentAudioIndex + 1;
+                    } else {
+                        int length = mediaPlayer.getDuration() / 1000;
+                        seekBar.setProgress(length);
+                        durationTV.setText(getTime(length));
+                        stopPlayback();
+                    }
+                } else {
+                    int length = mediaPlayer.getDuration() / 1000;
+                    seekBar.setProgress(length);
+                    durationTV.setText(getTime(length));
+                    stopPlayback();
+                }
             }
         });
         mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
             @Override
             public void onSeekComplete(MediaPlayer mp) {
-                //Log.i(TAG, "seek complete called");
                 int position = audioBook.getmCurrentPosition() / 1000;
                 seekBar.setProgress(position);
                 durationTV.setText(getTime(position));
@@ -254,19 +306,14 @@ public class AudiobookPlayerFragment extends Fragment {
     }
 
     private String getTime(int current) {
-        if (reverse_counter) {
-            current = mediaPlayer.getDuration() / 1000 - current;
-        }
+
         int minutes = current / 60;
         int hours = minutes / 60;
         minutes %= 60;
         int seconds = current % 60;
         String current_time = String.format("%d:%02d:%02d", hours, minutes, seconds);
-        if (reverse_counter) {
-            return "-" + current_time;
-        } else {
-            return " " + current_time;
-        }
+
+        return " " + current_time;
     }
 
     private String getReverseTime(int current) {
@@ -283,18 +330,29 @@ public class AudiobookPlayerFragment extends Fragment {
 
     private void readUriFile() {
         String path = audioBook.getmFilePath();
-        if (path != null) {
-            Uri uri = Uri.parse(path);
-            setFileToPlayBT(uri);
+        if (pathName != null) {
+            setFileToPlayBT(null, currentAudioIndex);
+        } else {
+            if (path != null) {
+                Uri uri = Uri.parse(path);
+                setFileToPlayBT(uri, 0);
+            }
         }
     }
 
-    private void setFileToPlayBT(Uri uri) {
+    private void setFileToPlayBT(Uri uri, int index) {
         if (audioBook != null) {
             try {
-                //Log.i(TAG, "path: " + uri);
-                mediaPlayer.setDataSource(uri.getPath());
-                mediaPlayer.prepare();
+                if (pathName != null) {
+                    mediaPlayer.reset();
+                    mediaPlayer.setDataSource(audioListFinal.get(index).get("path"));
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
+                } else {
+                    mediaPlayer.setDataSource(uri.getPath());
+                    mediaPlayer.prepare();
+                }
+                //Log.i(TAG, "path: " + uri.getPath());
                 data_set = true;
                 seekBar.setMax(mediaPlayer.getDuration() / 1000);
             } catch (IOException e) {

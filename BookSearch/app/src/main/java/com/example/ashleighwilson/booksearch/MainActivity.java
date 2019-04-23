@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         init();
 
