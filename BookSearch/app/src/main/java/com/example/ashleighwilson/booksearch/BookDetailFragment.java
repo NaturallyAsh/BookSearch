@@ -201,7 +201,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
             progressContainer.setVisibility(View.VISIBLE);
             detailsContainer.setVisibility(View.INVISIBLE);
             fetchBookDetails(mReviewIntent.getBook().getId().getTextValue());
-            fetchVolumeDetails(mReviewIntent.getBook().getTitle());
+            //fetchVolumeDetails(mReviewIntent.getBook().getTitle());
             //init();
         } else {
             Log.i(TAG, "review intent is null");
@@ -211,7 +211,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
             progressContainer.setVisibility(View.VISIBLE);
             detailsContainer.setVisibility(View.INVISIBLE);
             fetchBookDetails(mUserBookIntent.getId().getTextValue());
-            fetchVolumeDetails(mUserBookIntent.getTitle());
+            //fetchVolumeDetails(mUserBookIntent.getTitle());
         } else {
             Log.i(TAG, "book intent is null");
         }
@@ -220,7 +220,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
             progressContainer.setVisibility(View.VISIBLE);
             detailsContainer.setVisibility(View.INVISIBLE);
             fetchBookDetails(mSeriesBookIntent.getWork().getBestBook().getId());
-            fetchVolumeDetails(mSeriesBookIntent.getWork().getBestBook().getTitle());
+            //fetchVolumeDetails(mSeriesBookIntent.getWork().getBestBook().getTitle());
         } else {
             Log.i(TAG, "series intent is null");
         }
@@ -229,7 +229,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
             progressContainer.setVisibility(View.VISIBLE);
             detailsContainer.setVisibility(View.INVISIBLE);
             fetchBookDetails(searchId);
-            fetchVolumeDetails(searchTitle);
+            //fetchVolumeDetails(searchTitle);
         }
 
         shelf_BT.setOnClickListener(new View.OnClickListener() {
@@ -287,7 +287,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
                     getMoreReviews(book.getReviewsWidget());
                 }
             });
-            loadCover();
+            //loadCover();
             getRatings();
             getDescription();
         }
@@ -350,6 +350,32 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
                         .load(book.getImageUrl())
                         .into(bookCoverIV);
             }
+
+
+            /*book.setImageUrl(item.getVolumeInfo().getImageLinks().getSmallThumbnail());
+            Glide.with(getContext())
+                    .load(book.getImageUrl())
+                    .into(bookCoverIV);
+
+            if (item.getVolumeInfo().getImageLinks() != null) {
+                Log.i(TAG, "image links not null");
+                book.setImageUrl(book.getAltBookCover(identifier));
+                Glide.with(getContext())
+                        .load(book.getImageUrl())
+                        .into(bookCoverIV);
+
+            } else {
+                Glide.with(getContext())
+                        .load(book.getAltBookCover(identifier))
+                        .into(bookCoverIV);
+            }
+
+        } else {
+            {
+                Glide.with(getContext())
+                        .load(book.getImageUrl())
+                        .into(bookCoverIV);
+            }*/
         }
     }
 
@@ -430,7 +456,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
     }
 
     private void fetchVolumeDetails(String title) {
-        //Log.i(TAG, "title: " + mReview.getBook().getTitle());
+        //Log.i(TAG, "title: " + title);
         new ReadImageLoader(title, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -441,11 +467,11 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
 
             for (int i = 0; i < seriesBook.getSeriesWorks().size(); i++) {
                 if (Integer.valueOf(seriesBook.getSeriesWorks().get(0).getSeries().getId()) >= 5) {
-                    Log.i(TAG, "series work 1: " + seriesBook.getSeriesWorks().get(0).getSeries().getId());
+                    //Log.i(TAG, "series work 1: " + seriesBook.getSeriesWorks().get(0).getSeries().getId());
                     id = seriesBook.getSeriesWorks().get(0).getSeries().getId();
                 } else if (seriesBook.getSeriesWorks().size() > 1 &&
                         Integer.valueOf(seriesBook.getSeriesWorks().get(1).getSeries().getId()) >= 5){
-                    Log.i(TAG, "series work 2: " + seriesBook.getSeriesWorks().get(1).getSeries().getId());
+                    //Log.i(TAG, "series work 2: " + seriesBook.getSeriesWorks().get(1).getSeries().getId());
                     id = seriesBook.getSeriesWorks().get(1).getSeries().getId();
                 }
             }
@@ -539,6 +565,7 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
             progressContainer.setVisibility(View.GONE);
             detailsContainer.setVisibility(View.VISIBLE);
             Log.i(TAG, "book details id: " + book.getId().getTextValue());
+            fetchVolumeDetails(book.getTitle());
             fetchSeriesDetails(book);
             fetchSimilarImages(book.getId().getTextValue());
             init();
@@ -552,7 +579,8 @@ public class BookDetailFragment extends Fragment implements BookDetailsLoader.On
                 for (int i = 0; i < itemList.size(); i++) {
                     if (book.getTitle().toLowerCase().contains(itemList.get(i).getVolumeInfo().getTitle().toLowerCase())) {
                         item = itemList.get(i);
-                        //Log.i(TAG, "items: " + item.getVolumeInfo().getTitle());
+                        Log.i(TAG, "items: " + item.getVolumeInfo().getTitle());
+                        loadCover();
                     }
                 }
             }

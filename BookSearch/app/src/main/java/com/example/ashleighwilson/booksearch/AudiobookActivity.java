@@ -11,6 +11,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class AudiobookActivity extends AppCompatActivity {
 
     private static final String TAG = AudiobookActivity.class.getSimpleName();
@@ -18,6 +21,8 @@ public class AudiobookActivity extends AppCompatActivity {
     private FragmentManager mFragmentManager;
     public static final String FRAGMENT_AUDIOPLAYER_LIST_TAG = "audiobook_player";
     public static final String FRAGMENT_AUDIOPLAYER_TAG = "audiobook_player";
+    public static final String FRAGMENT_PLAYLIST_TAG = "audiobook_playerlist";
+
     public Toolbar toolbar;
 
 
@@ -88,6 +93,24 @@ public class AudiobookActivity extends AppCompatActivity {
         } else {
             getFragmentManagerInstance().popBackStackImmediate();
             transaction.replace(R.id.audiobook_frag_container, listFragment, FRAGMENT_AUDIOPLAYER_LIST_TAG)
+                    .commit();
+        }
+    }
+
+    public void switchToPlaylist(ArrayList<HashMap<String, String>> map) {
+        FragmentTransaction transaction = getFragmentManagerInstance().beginTransaction();
+        AudioPlayListViewFrag listFragment = new AudioPlayListViewFrag();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(AudioPlayListViewFrag.PLAYLIST_ARG, map);
+        listFragment.setArguments(bundle);
+        if (getFragmentManagerInstance().findFragmentByTag(FRAGMENT_AUDIOPLAYER_LIST_TAG) == null) {
+            transaction.replace(R.id.audiobook_frag_container, listFragment, FRAGMENT_AUDIOPLAYER_LIST_TAG)
+                    .addToBackStack(FRAGMENT_AUDIOPLAYER_TAG)
+                    .commit();
+        } else {
+            getFragmentManagerInstance().popBackStackImmediate();
+            transaction.replace(R.id.audiobook_frag_container, listFragment, FRAGMENT_AUDIOPLAYER_LIST_TAG)
+                    .addToBackStack(FRAGMENT_AUDIOPLAYER_TAG)
                     .commit();
         }
     }

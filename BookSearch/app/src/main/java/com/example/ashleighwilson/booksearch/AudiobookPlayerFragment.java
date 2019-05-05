@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -25,7 +24,6 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import androidx.appcompat.app.AlertDialog;
@@ -61,6 +59,8 @@ public class AudiobookPlayerFragment extends Fragment {
     ImageView playIV;
     @BindView(R.id.audio_player_stop_IV)
     ImageView stopIV;
+    @BindView(R.id.audio_player_chapters)
+    ImageView chapterIV;
 
     private MediaPlayer mediaPlayer;
     private Handler handler;
@@ -95,8 +95,31 @@ public class AudiobookPlayerFragment extends Fragment {
                 for (int i = 0; i < audioList2.size(); i++) {
                     HashMap<String, String> audio = audioList2.get(i);
                     audioListFinal.add(audio);
-                    //Log.i(TAG, "audio list: " + audio.values());
+                    Log.i(TAG, "audio list: " + audio.values());
+                    /*Object[] a = audio.entrySet().toArray();
+                    Arrays.sort(a, new Comparator() {
+                        public int compare(Object o1, Object o2) {
+                            return ((Map.Entry<String, String>) o2).getKey()
+                                    .compareTo(((Map.Entry<String, String>) o1).getKey());
+                        }
+                    });
+                    for (Object e : a) {
+                        Log.i(TAG, "sort list: " + ((Map.Entry<String, String>) e).getKey() + " : "
+                                + ((Map.Entry<String, String>) e).getValue());
+                    }*/
+                    /*Map<String, String> sorted = audio
+                            .entrySet()
+                            .stream()
+                            .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                            .collect(
+                                    Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                                            (e1, e2) -> e2, LinkedHashMap::new)
+                            );
+
+                    Log.i(TAG, "sorted: " + sorted);*/
+
                 }
+
             }
         }
     }
@@ -122,7 +145,7 @@ public class AudiobookPlayerFragment extends Fragment {
         return rootView;
     }
 
-    private ArrayList<HashMap<String, String>> getAudioList() {
+    public ArrayList<HashMap<String, String>> getAudioList() {
         File mFile = new File(pathName);
         //Log.i(TAG, "files: " + Arrays.toString(mFile.listFiles()));
 
@@ -204,8 +227,8 @@ public class AudiobookPlayerFragment extends Fragment {
                         //setFileToPlayBT(null,currentAudioIndex + 1);
                         //mediaPlayer.stop();
                         //mediaPlayer.reset();
-                        readUriFile();
                         currentAudioIndex = currentAudioIndex + 1;
+                        readUriFile();
                     } else {
                         int length = mediaPlayer.getDuration() / 1000;
                         seekBar.setProgress(length);
@@ -303,6 +326,12 @@ public class AudiobookPlayerFragment extends Fragment {
 
             }
         });
+        chapterIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                audiobookActivity.switchToPlaylist(audioListFinal);
+            }
+        });
     }
 
     private String getTime(int current) {
@@ -344,17 +373,21 @@ public class AudiobookPlayerFragment extends Fragment {
         if (audioBook != null) {
             try {
                 if (pathName != null) {
+                    Log.i(TAG, "index: " + index);
                     mediaPlayer.reset();
                     mediaPlayer.setDataSource(audioListFinal.get(index).get("path"));
                     mediaPlayer.prepare();
+                    data_set = true;
+                    seekBar.setMax(mediaPlayer.getDuration() / 1000);
                     mediaPlayer.start();
                 } else {
                     mediaPlayer.setDataSource(uri.getPath());
                     mediaPlayer.prepare();
+                    data_set = true;
+                    seekBar.setMax(mediaPlayer.getDuration() / 1000);
                 }
                 //Log.i(TAG, "path: " + uri.getPath());
-                data_set = true;
-                seekBar.setMax(mediaPlayer.getDuration() / 1000);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

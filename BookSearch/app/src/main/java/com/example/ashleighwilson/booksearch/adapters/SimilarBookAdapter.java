@@ -1,6 +1,7 @@
 package com.example.ashleighwilson.booksearch.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,17 +61,18 @@ public class SimilarBookAdapter extends RecyclerView.Adapter<SimilarBookAdapter.
             Item item;
             for (int i = 0; i < newItem.size(); i++) {
                 item = newItem.get(i);
-                String itemTitle = item.getVolumeInfo().getTitle();
                 if (currentSimilarBooks.getImageUrl().toLowerCase().indexOf(noPhoto
                         .toLowerCase()) >= 0) {
                     String identifier = "";
                     for (int j = 0; j < item.getVolumeInfo().getIndustryIdentifiers().size(); j++) {
                         identifier = item.getVolumeInfo().getIndustryIdentifiers().get(j).getIdentifier();
+                        Log.i(TAG, "adapt identifier: " + identifier);
                     }
                     currentSimilarBooks.setImageUrl(currentSimilarBooks.getAltBookCover(identifier));
                     Glide.with(mContext)
                             .load(currentSimilarBooks.getImageUrl())
                             .into(holder.similarImage);
+
                     if (item.getVolumeInfo().getImageLinks() != null) {
                         currentSimilarBooks.setImageUrl(item.getVolumeInfo()
                                 .getImageLinks().getSmallThumbnail());

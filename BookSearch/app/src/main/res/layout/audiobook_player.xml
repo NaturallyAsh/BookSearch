@@ -54,11 +54,10 @@
                 android:textStyle="bold"
                 />
             <ImageView
+                android:id="@+id/audio_player_chapters"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_av_timer_black_24dp"
-                android:text="40:55"
-                android:maxLines="1"
+                android:src="@drawable/ic_playlist_play_black_24dp"
                 />
         </LinearLayout>
 
@@ -131,7 +130,6 @@
                 android:id="@+id/audio_player_forward_IV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:src="@drawable/ic_fast_forward_black_24dp"
                 android:layout_weight="1"
                 />
